@@ -1,0 +1,975 @@
+// Escalera de niveles NQ y ES — indicador para TradingView (Pine Script v6)
+//
+// El mismo indicador sirve para los dos índices: añádelo una vez al gráfico
+// del NQ (pega el texto ESC2 del NQ) y otra vez al gráfico del ES (pega el del
+// ES). El texto dice de qué índice es (sym=NQ / sym=ES) y, si el gráfico es de
+// otro índice, sale un aviso en rojo. El ES lleva precios con decimales.
+//
+// Cada nivel es una ZONA (banda de ± unos puntos alrededor del strike) que
+// SALE DE LA ÚLTIMA VELA QUE LA TOCÓ y va hacia la derecha, con el precio en
+// la escala. El color indica el tipo de nivel y el grosor su importancia:
+//   principal (muros, imán, frontera y los de más gamma) → borde grueso y relleno;
+//   secundario → borde normal; menor → fino y semitransparente (se puede ocultar).
+// Los rangos del 68 % y del 95 % se ven como bandas sombreadas, y la gamma de
+// la 0DTE como zonas grises aparte (no son niveles: sin etiqueta en la escala).
+//
+// Cómo se usa: en la página, botón «Copiar para TradingView»; aquí, en los
+// ajustes del indicador, pega el texto en «Niveles del día». Acepta el
+// formato nuevo (ESC2|sym=NQ|...) y el antiguo (ESCNQ1|...).
+// Úsalo en el gráfico del contrato que indica el texto (p. ej. NQZ2026 o
+// MNQZ2026; ESZ2026 o MESZ2026). No envía órdenes ni se conecta a nada: solo dibuja.
+//
+// Fiabilidad (Fase F-3, 2026-11-12): con el 11.º campo de cada L= del ESC2 (estudio de fiabilidad del
+// índice), el estado de los muros cambia en vivo con la frontera (solo si el texto trae fb=R: el NQ;
+// con fb=N, el ES, sin etiquetas de régimen); el OI máximo (antes imán) solo dice «objetivo» a ≤ 0,25σ
+// del precio actual; los niveles de contexto, finos y grises. Los textos sin ese campo, como siempre.
+//
+// Límite de TradingView: 64 "plots". Las etiquetas de la escala son plots y
+// las que tienen color variable cuentan doble: 27 etiquetas × 2 + máximo,
+// mínimo y NY Open = 57. Las zonas y bandas son cajas (box), que no cuentan.
+// Si hay más niveles que etiquetas, se quedan sin etiqueta primero los de
+// categoría menor más alejados del precio (la zona se dibuja igual).
+
+//@version=6
+indicator("Escalera", shorttitle = "Escalera", overlay = true, max_lines_count = 20, max_boxes_count = 100)
+
+// ─── Entradas ──────────────────────────────────────────────────────────────
+string TEXTO = input.text_area("", "Niveles del día",
+     tooltip = "Pega aquí el texto del botón «Copiar para TradingView» de la página del índice de este gráfico (NQ o ES). Empieza por ESC2|sym=NQ o ESC2|sym=ES (o ESCNQ1| el antiguo, solo NQ)")
+
+string G_TIPOS = "Tipos de nivel (mostrar · color)"
+bool  verC = input.bool(true, "Muro de calls", inline = "c", group = G_TIPOS)
+color colC = input.color(#1E3A5F, "", inline = "c", group = G_TIPOS)
+bool  verP = input.bool(true, "Muro de puts", inline = "p", group = G_TIPOS)
+color colP = input.color(#8B1E1E, "", inline = "p", group = G_TIPOS)
+bool  verR = input.bool(true, "Resistencia", inline = "r", group = G_TIPOS)
+color colR = input.color(#4F4F6B, "", inline = "r", group = G_TIPOS)
+bool  verI = input.bool(true, "OI máximo (antes imán)", inline = "i", group = G_TIPOS)
+color colI = input.color(#1F5C45, "", inline = "i", group = G_TIPOS)
+bool  verA = input.bool(true, "Aceleración", inline = "a", group = G_TIPOS)
+color colA = input.color(#B0601E, "", inline = "a", group = G_TIPOS)
+bool  verO = input.bool(true, "OI relevante", inline = "o", group = G_TIPOS)
+color colO = input.color(#7A7468, "", inline = "o", group = G_TIPOS)
+bool  verF = input.bool(true, "Frontera (gamma flip)", inline = "f", group = G_TIPOS)
+color colF = input.color(#111111, "", inline = "f", group = G_TIPOS)
+bool  verG = input.bool(true, "Zonas de gamma 0DTE (no son niveles)", inline = "g", group = G_TIPOS,
+     tooltip = "Strikes donde casi toda la gamma es de las opciones que vencen hoy. Zona gris, sin etiqueta en la escala.")
+color colG = input.color(#8E877A, "", inline = "g", group = G_TIPOS)
+bool  verRef = input.bool(false, "Precio de referencia", inline = "ref", group = G_TIPOS)
+color colRef = input.color(#b2b5be, "", inline = "ref", group = G_TIPOS)
+bool  verMaxMin = input.bool(true, "Máximo y mínimo de la sesión", inline = "mm", group = G_TIPOS,
+     tooltip = "Sesión Globex (desde las 17:00 de Chicago). La línea sale de la vela del máximo/mínimo.")
+color colMaxMin = input.color(#5A4632, "", inline = "mm", group = G_TIPOS)
+bool  verNY = input.bool(true, "NY Open (00:00 de Nueva York)", inline = "ny", group = G_TIPOS,
+     tooltip = "Precio de apertura a las 00:00 de Nueva York (Midnight Open de ICT): 6:00 en España, o 5:00 las semanas en que solo ha cambiado la hora uno de los dos países. Se calcula solo, en gráficos de 1 hora o menos.")
+color colNY = input.color(#3B3B3B, "", inline = "ny", group = G_TIPOS)
+
+string G_JERARQUIA = "Importancia de los niveles"
+int  grosorPrincipal  = input.int(2, "Grosor de los principales", minval = 1, maxval = 4, group = G_JERARQUIA)
+int  grosorSecundario = input.int(1, "Grosor de los secundarios", minval = 1, maxval = 4, group = G_JERARQUIA)
+bool verMenor = input.bool(true, "Mostrar los niveles menores", group = G_JERARQUIA,
+     tooltip = "Los de menos gamma del día (por debajo del percentil 40). Se dibujan finos y semitransparentes.")
+bool verZonas = input.bool(true, "Rellenar las zonas", group = G_JERARQUIA)
+bool verExt = input.bool(true, "Niveles extendidos (más allá del 95 %)", group = G_JERARQUIA,
+     tooltip = "Muros, aceleraciones y OI relevante principales y secundarios entre 2σ y 4σ (claves «LX=» del texto), con los mismos umbrales que dentro del 95 %. Se dibujan más finos, con borde discontinuo.")
+
+string G_CONF = "Confluencia con QQQ / NDX (si el texto la trae)"
+bool soloConf = input.bool(false, "Solo confluencias (★)", group = G_CONF,
+     tooltip = "Oculta los niveles del NQ que no tienen cerca un nivel de las opciones de QQQ o NDX (trasladado a precio NQ). La frontera se ve siempre.")
+bool verSoloQ = input.bool(false, "Mostrar niveles solo QQQ", inline = "sq", group = G_CONF,
+     tooltip = "Niveles de QQQ/NDX que no coinciden con ninguno del NQ: línea fina punteada (no son niveles de la escalera).")
+color colQ = input.color(#7A7468, "", inline = "sq", group = G_CONF)
+float anchoAntiguo = input.float(0, "Ancho de zona con el texto antiguo (puntos)", minval = 0, group = G_JERARQUIA,
+     tooltip = "El texto ESCNQ1 no trae el ancho de las zonas: con 0 se dibujan líneas.")
+
+string G_RANGOS = "Rangos del día"
+bool  verRangos = input.bool(false, "Rangos 68 % y 95 % (bandas)", inline = "rg", group = G_RANGOS,
+     tooltip = "Movimiento esperado del día: 68 % (±1σ) más oscuro, 95 % (±2σ) más claro.")
+color colRango = input.color(#9A9282, "", inline = "rg", group = G_RANGOS)
+
+string G_CORTA = "Vista corta (solo los próximos días)"
+bool  verCorta = input.bool(false, "Frontera corta", inline = "fc", group = G_CORTA,
+     tooltip = "Gamma flip con solo los vencimientos de los próximos días (7 por defecto). Línea discontinua fina.")
+color colFC = input.color(#6E5A1E, "", inline = "fc", group = G_CORTA)
+bool  verMurosCortos = input.bool(false, "Muros cortos", group = G_CORTA,
+     tooltip = "Strike con más GEX de calls / de puts en los próximos días: «C·corto» / «P·corto» en el nivel que coincide, o línea fina punteada si no coincide con ninguno.")
+bool  verRegimen = input.bool(true, "Régimen combinado en la esquina", group = G_CORTA)
+bool  verCharm = input.bool(false, "Charm y vanna en la esquina", group = G_CORTA,
+     tooltip = "Lo que tendrían que comprar o vender los creadores de mercado (mismo supuesto que la GEX). Charm: por el paso del tiempo hacia el cierre. Vanna: si baja la IV. Solo si el texto trae «ch=» y «va=».")
+
+string G_VIVO = "En vivo (si el texto trae el bloque «gv=»)"
+bool verVivo = input.bool(true, "Recalcular frontera, régimen y fuerza con el precio actual", group = G_VIVO,
+     tooltip = "Con los datos por strike del texto y Black-76. La gamma de la 0DTE cambia con el tiempo que queda hasta las 16:00 NY. Si el texto no trae el bloque, no hace nada.")
+int  cadaN = input.int(5, "Recalcular cada N velas", minval = 1, group = G_VIVO,
+     tooltip = "Solo en la última vela (no en el histórico) y luego cada N velas nuevas.")
+bool verFlipVivo = input.bool(true, "Línea de la frontera en vivo", inline = "fv", group = G_VIVO)
+color colFV = input.color(#d95926, "", inline = "fv", group = G_VIVO)
+bool verNivVivo = input.bool(true, "Niveles en vivo cuando el precio sale del rango", group = G_VIVO,
+     tooltip = "Escalera que se recentra sola: con los datos por strike del bloque «gv=» busca, alrededor del precio actual, el muro de calls (encima), el muro de puts (debajo) y los strikes con más gamma ahora mismo, y los dibuja punteados con «· vivo». No sustituye a los niveles del día: los completa cuando el precio se va lejos. Llega hasta 4σ del precio de la escalera.")
+string cuandoNV = input.string("Fuera del 68 %", "Mostrarlos", options = ["Fuera del 68 %", "Fuera del 95 %", "Siempre"], group = G_VIVO)
+float radioNV = input.float(1.5, "Buscar a ± (σ) del precio actual", minval = 0.5, step = 0.25, group = G_VIVO)
+int   cuantosNV = input.int(4, "Niveles de OI además de los dos muros", minval = 0, maxval = 8, group = G_VIVO)
+bool verFuerza = input.bool(true, "Fuerza en vivo en cada zona (×)", group = G_VIVO,
+     tooltip = "Gamma de la zona al precio actual dividida por la de la apertura: ×1.5 = la mitad más fuerte que al abrir.")
+
+string G_FIAB = "Fiabilidad histórica (si el texto la trae)"
+bool  verFiab = input.bool(true, "Estado de los muros, OI máximo y contexto en vivo", group = G_FIAB,
+     tooltip = "Solo con el 11.º campo del texto ESC2 (estudio de fiabilidad del índice). Muros (solo si el texto trae fb=R, p. ej. el NQ): por encima de la frontera, sólidos; por debajo, discontinuos con «ruptura» (por debajo todo rompe más: el muro no protege más que un precio cualquiera). OI máximo: «objetivo» solo cerca del precio actual. Contexto (aceleración, OI relevante, resistencia: sin ventaja histórica): fino y gris.")
+float objetivoSigmas = input.float(0.25, "OI máximo «objetivo» a menos de (σ)", minval = 0, step = 0.05, group = G_FIAB)
+color colCtx = input.color(#8E877A, "Color del borde de los niveles de contexto", group = G_FIAB)
+
+string G_ASPECTO = "Aspecto"
+int  grosor     = input.int(1, "Grosor de máximo, mínimo y NY Open", minval = 1, maxval = 4, group = G_ASPECTO)
+bool verEscala  = input.bool(true, "Precio de cada nivel en la escala", group = G_ASPECTO,
+     tooltip = "Si no ves los precios: clic derecho en la escala → Etiquetas → valores de los indicadores.")
+bool verLeyenda = input.bool(true, "Leyenda de colores en una esquina", group = G_ASPECTO)
+string posTxt   = input.string("Abajo a la derecha", "Posición de la leyenda",
+     options = ["Abajo a la derecha", "Abajo a la izquierda", "Arriba a la derecha", "Arriba a la izquierda"],
+     group = G_ASPECTO)
+
+color C_FONDO = #1a1a19
+color C_TEXTO = #d1d4dc
+color C_AVISO = #fab219
+color C_MAL   = #e66767
+int ETIQUETAS = 27      // etiquetas de la escala (un plot fijo por etiqueta)
+
+// ─── Funciones de ayuda ────────────────────────────────────────────────────
+colorDe(string t) =>
+    switch t
+        "C" => colC
+        "P" => colP
+        "R" => colR
+        "I" => colI
+        "A" => colA
+        "O" => colO
+        => colG
+
+visible(string t) =>
+    switch t
+        "C" => verC
+        "P" => verP
+        "R" => verR
+        "I" => verI
+        "A" => verA
+        "O" => verO
+        "G" => verG
+        => false
+
+// Prioridad del color cuando un nivel tiene varios tipos: muros primero
+prioridad(string t) =>
+    switch t
+        "C" => 1
+        "P" => 2
+        "R" => 3
+        "I" => 4
+        "A" => 5
+        "O" => 6
+        => 7
+
+// Categoría: 1 principal · 2 secundario · 3 menor · 4 solo gamma 0DTE · 5 referencia
+catDeLetra(string c) =>
+    switch c
+        "P" => 1
+        "S" => 2
+        "M" => 3
+        => 4
+
+// Texto antiguo (ESCNQ1, sin categoría): se deduce de los tipos
+catDeTipos(string letras) =>
+    str.contains(letras, "C") or str.contains(letras, "P") or str.contains(letras, "I") ? 1 :
+         str.contains(letras, "R") or str.contains(letras, "A") ? 2 : str.contains(letras, "O") ? 3 : 4
+
+DIAS  = array.from("dom", "lun", "mar", "mié", "jue", "vie", "sáb")
+MESES = array.from("ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic")
+
+// "2026-10-26" -> marca de tiempo (00:00 UTC), o na si no se entiende
+fechaATiempo(string f) =>
+    array<string> p = str.split(f, "-")
+    int resultado = na
+    if array.size(p) == 3
+        float a = str.tonumber(array.get(p, 0))
+        float m = str.tonumber(array.get(p, 1))
+        float d = str.tonumber(array.get(p, 2))
+        if not na(a) and not na(m) and not na(d)
+            resultado := timestamp("UTC", int(a), int(m), int(d), 0, 0)
+    resultado
+
+fechaCorta(int t) =>
+    array.get(DIAS, dayofweek(t, "UTC") - 1) + " " + str.tostring(dayofmonth(t, "UTC")) + " " +
+         array.get(MESES, month(t, "UTC") - 1)
+
+posicion() =>
+    switch posTxt
+        "Abajo a la izquierda"  => position.bottom_left
+        "Arriba a la derecha"   => position.top_right
+        "Arriba a la izquierda" => position.top_left
+        => position.bottom_right
+
+// "NQZ2026" -> "Z2026" (mes y año del contrato; sirve también para MNQ)
+mesContrato(string c) =>
+    int n = str.length(c)
+    n >= 5 ? str.substring(c, n - 5, n) : c
+
+// "28500-28530" -> [28500, 28530] ; "28500" -> [28500, 28500]
+rango(string v) =>
+    array<string> r = str.split(v, "-")
+    float lo = array.size(r) > 0 ? str.tonumber(array.get(r, 0)) : na
+    float hi = array.size(r) > 1 ? str.tonumber(array.get(r, 1)) : lo
+    [lo, hi]
+
+// Tipo que da el color: el visible de más prioridad ("" si ninguno está visible)
+elegirTipo(string letras) =>
+    string elegido = ""
+    for i = 0 to str.length(letras) - 1
+        string t = str.substring(letras, i, i + 1)
+        if visible(t) and (elegido == "" or prioridad(t) < prioridad(elegido))
+            elegido := t
+    elegido
+
+// ─── Lectura del texto (una sola vez, en la primera vela) ─────────────────
+// Arrays paralelos por nivel: zona (lo-hi), precio de la etiqueta, color,
+// estilo, grosor, categoría y HORA de la última vela que tocó la zona (se
+// dibuja por hora, no por número de vela: así funciona igual en
+// temporalidades bajas, donde el último toque puede estar a miles de velas).
+var array<float>  nLo     = array.new<float>()
+var array<float>  nHi     = array.new<float>()
+var array<float>  nPrecio = array.new<float>()
+var array<color>  nCol    = array.new<color>()
+var array<string> nEst    = array.new<string>()
+var array<int>    nAncho  = array.new<int>()
+var array<int>    nCat    = array.new<int>()
+var array<int>    nToque  = array.new<int>()
+var array<bool>   nExt    = array.new<bool>()    // nivel de la escalera extendida (más allá del 95 %)
+var array<string> nLet    = array.new<string>()  // letras de sus tipos (C, P, R, I, A, O)
+var array<string> nFb     = array.new<string>()  // 11.º campo del ESC2 (fiabilidad): F, M, B, O, L, c o "" si no lo trae
+// Etiquetas de la escala (las ETIQUETAS más importantes)
+var array<float>  sPrecio = array.new<float>()
+// Zonas grises de gamma 0DTE (aparte: no tienen etiqueta ni categoría)
+var array<float>  gLo     = array.new<float>()
+var array<float>  gHi     = array.new<float>()
+var array<color>  sCol    = array.new<color>()
+var string fecha    = ""
+var string contrato = ""
+var string sym      = ""
+var float  refPrecio = na
+var float  lo68 = na
+var float  hi68 = na
+var float  lo95 = na
+var float  hi95 = na
+var bool   valido   = false
+// Vista corta (campos opcionales del texto ESC2)
+var array<string> nCorto = array.new<string>()   // "c", "p", "cp" o "" por nivel
+var array<string> nConf  = array.new<string>()   // ★: "Q", "N", "QN" o "" por nivel
+var array<float>  qLo    = array.new<float>()    // niveles solo QQQ/NDX (claves "LQ=")
+var array<float>  qHi    = array.new<float>()
+var array<string> qF     = array.new<string>()
+var float  fCorta  = na
+var float  mcCorta = na
+var float  mpCorta = na
+var string rcTipo  = ""
+var string chTxt   = ""      // charm: dirección:fuerza:contratos:0DTE:resto (opcional)
+var string vaTxt   = ""      // vanna: dirección si baja la IV:contratos (opcional)
+var bool   hayConf = false   // el texto trae confluencia con QQQ/NDX ("cq=")
+var float  wNiv    = na      // ancho de las zonas (clave "w")
+var string gvTxt   = ""      // gamma en vivo: bloque "gv=" (opcional, salida/gamma_vivo.py)
+var float  flipTxt = na      // frontera de la escalera (en la apertura)
+var float  rfLo    = na
+var float  rfHi    = na
+var string fbTxt   = ""      // "R": el régimen cambia cómo aguantan los muros (NQ) · "N": no (ES) · "": texto antiguo
+
+agregar(float lo, float hi, float precio, color col, string est, int cat, string corto, string conf = "", bool ext = false, string letras = "", string fbc = "") =>
+    array.push(nLo, lo)
+    array.push(nHi, hi)
+    array.push(nPrecio, precio)
+    array.push(nCol, col)
+    array.push(nEst, ext ? line.style_dashed : est)
+    array.push(nAncho, ext ? 1 : cat == 1 ? grosorPrincipal : cat == 2 ? grosorSecundario : 1)
+    array.push(nExt, ext)
+    array.push(nCat, cat)
+    array.push(nToque, int(na))
+    array.push(nCorto, corto)
+    array.push(nConf, conf)
+    array.push(nLet, letras)
+    array.push(nFb, fbc)
+
+// Un nivel, si su tipo y su categoría están visibles. Zona: la que trae el
+// texto (zlo-zhi) o, si no trae, desde-w .. hasta+w. Etiqueta en el centro del nivel.
+nivel(string letras, float lo, float hi, int cat, float w, float zlo, float zhi, string corto, string conf = "", bool ext = false, string fbc = "") =>
+    string elegido = elegirTipo(letras)
+    if elegido != "" and not na(lo) and (cat != 3 or verMenor) and (cat != 4 or verG) and (not soloConf or not hayConf or conf != "") and (not ext or verExt)
+        agregar(na(zlo) ? lo - w : zlo, na(zhi) ? hi + w : zhi, (lo + hi) / 2, colorDe(elegido),
+             cat == 4 ? line.style_dotted : line.style_solid, cat, corto, conf, ext, letras, fbc)
+    elegido
+
+zonaGris(float lo, float hi) =>
+    if verG and not na(lo)
+        array.push(gLo, lo)
+        array.push(gHi, hi)
+    verG
+
+if barstate.isfirst
+    string limpio = str.replace_all(str.replace_all(str.replace_all(TEXTO, "\n", ""), "\r", ""), " ", "")
+    array<string> partes = str.split(limpio, "|")
+    string formato = array.size(partes) > 1 ? array.get(partes, 0) : ""
+    valido := formato == "ESC2" or formato == "ESCNQ1"
+    sym := formato == "ESCNQ1" ? "NQ" : ""
+    float w = anchoAntiguo
+    if valido
+        // 1.ª pasada: cabecera (el ancho "w" hace falta antes de los niveles)
+        for tok in partes
+            array<string> kv = str.split(tok, "=")
+            if array.size(kv) == 2
+                string clave = array.get(kv, 0)
+                string v = array.get(kv, 1)
+                [lo, hi] = rango(v)
+                if clave == "fecha"
+                    fecha := v
+                else if clave == "contrato"
+                    contrato := v
+                else if clave == "sym"
+                    sym := v
+                else if clave == "w" and not na(str.tonumber(v))
+                    w := str.tonumber(v)
+                    wNiv := w
+                else if clave == "ref"
+                    refPrecio := lo
+                else if clave == "68"
+                    lo68 := lo
+                    hi68 := hi
+                else if clave == "95"
+                    lo95 := lo
+                    hi95 := hi
+                else if clave == "fc"
+                    fCorta := lo
+                else if clave == "mc"
+                    mcCorta := lo
+                else if clave == "mp"
+                    mpCorta := lo
+                else if clave == "rc"
+                    rcTipo := v
+                else if clave == "ch"
+                    chTxt := v
+                else if clave == "va"
+                    vaTxt := v
+                else if clave == "gv"
+                    gvTxt := v
+                else if clave == "cq"
+                    hayConf := true
+                else if clave == "flip"
+                    flipTxt := lo
+                else if clave == "rf"
+                    rfLo := lo
+                    rfHi := hi
+                else if clave == "fb"
+                    fbTxt := v
+        // 2.ª pasada: niveles
+        for tok in partes
+            array<string> kv = str.split(tok, "=")
+            if array.size(kv) == 2
+                string clave = array.get(kv, 0)
+                if clave == "ref"
+                    if verRef and not na(refPrecio)
+                        agregar(refPrecio, refPrecio, refPrecio, colRef, line.style_dotted, 5, "")
+                else if clave == "flip"
+                    [f, f2] = rango(array.get(kv, 1))
+                    if verF and not na(f)
+                        agregar(f, f, f, colF, line.style_dashed, 1, "")
+                else if formato == "ESC2" and clave == "L"
+                    // L=letras:desde-hasta:categoría:calls/puts:desglose:estado:zona[:muros cortos]
+                    array<string> c = str.split(array.get(kv, 1), ":")
+                    if array.size(c) >= 3
+                        [lo, hi] = rango(array.get(c, 1))
+                        [zlo, zhi] = rango(array.size(c) >= 7 ? array.get(c, 6) : "")
+                        string marca = array.size(c) >= 8 ? array.get(c, 7) : "-"
+                        string conf = array.size(c) >= 10 ? array.get(c, 9) : "-"     // 10.º campo: ★ (opcional)
+                        // 11.º campo: fiabilidad (opcional; sin él, como siempre). "-" = sin clasificación especial
+                        string fbc = array.size(c) >= 11 ? (array.get(c, 10) == "-" ? "x" : array.get(c, 10)) : ""
+                        nivel(array.get(c, 0), lo, hi, catDeLetra(array.get(c, 2)), w, zlo, zhi, marca == "-" ? "" : marca,
+                             conf == "-" ? "" : conf, false, fbc)
+                else if formato == "ESC2" and clave == "LX"
+                    // LX=letras:desde-hasta:categoría:calls/puts:desglose:estado:zona (escalera extendida)
+                    array<string> c = str.split(array.get(kv, 1), ":")
+                    if array.size(c) >= 3
+                        [lo, hi] = rango(array.get(c, 1))
+                        [zlo, zhi] = rango(array.size(c) >= 7 ? array.get(c, 6) : "")
+                        nivel(array.get(c, 0), lo, hi, catDeLetra(array.get(c, 2)), w, zlo, zhi, "", "", true)
+                else if formato == "ESC2" and clave == "LQ"
+                    // LQ=desde-hasta:Q|N : nivel que solo tienen QQQ/NDX (en precio NQ)
+                    array<string> c = str.split(array.get(kv, 1), ":")
+                    [lo, hi] = rango(array.get(c, 0))
+                    if verSoloQ and not na(lo)
+                        array.push(qLo, lo)
+                        array.push(qHi, hi)
+                        array.push(qF, array.size(c) > 1 and array.get(c, 1) == "N" ? "NDX" : "QQQ")
+                else if formato == "ESC2" and clave == "Z"
+                    [lo, hi] = rango(array.get(kv, 1))
+                    zonaGris(lo, hi)
+                else if formato == "ESCNQ1" and str.length(clave) > 0 and clave != "fecha" and clave != "contrato" and
+                     clave != "68" and clave != "95" and clave != "roll"
+                    // Nivel antiguo: la clave son las letras de sus tipos (p. ej. "AP").
+                    // El valor puede llevar "@calls/puts" y "~estado": aquí solo se usa el precio
+                    string valor = array.get(str.split(array.get(str.split(array.get(kv, 1), "~"), 0), "@"), 0)
+                    [lo, hi] = rango(valor)
+                    if clave == "G"
+                        zonaGris(lo - 5, hi + 5)      // gamma 0DTE: zona gris, no es nivel
+                    else
+                        nivel(clave, lo, hi, catDeTipos(clave), w, na, na, "")
+    // Etiquetas de la escala: por categoría y, dentro de cada una, por cercanía al precio
+    int n = array.size(nPrecio)
+    if n > 0
+        array<float> orden = array.new<float>()
+        for i = 0 to n - 1
+            float distancia = na(refPrecio) ? 0.0 : math.abs(array.get(nPrecio, i) - refPrecio)
+            // Los extendidos, detrás de los principales y secundarios de dentro del 95 %
+            array.push(orden, array.get(nCat, i) * 1000000.0 + (array.get(nExt, i) ? 1500000.0 : 0.0) + distancia)
+        array<int> indices = array.sort_indices(orden, order.ascending)
+        for k = 0 to math.min(n, ETIQUETAS) - 1
+            int i = array.get(indices, k)
+            array.push(sPrecio, array.get(nPrecio, i))
+            array.push(sCol, array.get(nCol, i))
+
+var int tNiveles = fechaATiempo(fecha)
+
+// ─── Última vela que tocó cada zona ───────────────────────────────────────
+int nNiveles = array.size(nPrecio)
+if nNiveles > 0
+    for i = 0 to nNiveles - 1
+        float lo = array.get(nLo, i)
+        float hi = array.get(nHi, i)
+        // La vela entra en la zona, o el precio la saltó con un hueco desde la vela anterior
+        bool toca = (high >= lo and low <= hi) or (low > hi and high[1] < lo) or (high < lo and low[1] > hi)
+        if toca
+            array.set(nToque, i, time)
+
+// ─── Máximo y mínimo de la sesión (Globex) ────────────────────────────────
+var float maxSesion = na
+var float minSesion = na
+var int   tMax = na
+var int   tMin = na
+var int   tInicioDia = na
+bool nuevoDia = na(maxSesion) or time_tradingday != nz(time_tradingday[1])
+if nuevoDia
+    tInicioDia := time
+if nuevoDia or high > maxSesion
+    maxSesion := high
+    tMax := time
+if nuevoDia or low < minSesion
+    minSesion := low
+    tMin := time
+
+// ─── New York Open: apertura de las 00:00 de Nueva York (Midnight Open) ────
+// Solo en gráficos de 1 hora o menos (ahí siempre hay una vela que abre a las 00:00).
+var float nyOpen = na
+var int   tNY = na
+bool tfValidoNY = timeframe.isintraday and timeframe.in_seconds() <= 3600
+bool velaMedianoche = tfValidoNY and hour(time, "America/New_York") == 0 and minute(time, "America/New_York") == 0
+if velaMedianoche
+    nyOpen := open
+    tNY := time
+
+// ─── Gamma en vivo (bloque "gv=", opcional) ────────────────────────────────
+// Mismas cuentas que salida/gamma_vivo.py: gamma de Black-76 sin descuento, φ(d1)/(F·s), con
+// s = σ√T por strike y grupo de vencimientos; cada s baja como √(T que queda / T en la apertura).
+int GRUPOS_V = 6
+var array<float> vK   = array.new<float>()   // una entrada por strike y grupo (solo las que tienen algo)
+var array<float> vNet = array.new<float>()   // calls − puts (efectivas)
+var array<float> vBru = array.new<float>()   // calls + puts
+var array<float> vS   = array.new<float>()   // σ√T en la apertura
+var array<int>   vG   = array.new<int>()     // grupo (0 = 0DTE)
+var array<float> vT   = array.new<float>()   // T de cada grupo en la apertura (años de 252 días)
+var float vF    = na
+var float vMult = na
+if barstate.isfirst and gvTxt != ""
+    array<string> t = str.split(gvTxt, ";")
+    if array.size(t) > 5 + GRUPOS_V and array.get(t, 0) == "1"
+        vF := str.tonumber(array.get(t, 1))
+        float baseV = str.tonumber(array.get(t, 2))
+        float pasoV = str.tonumber(array.get(t, 3))
+        for g = 0 to GRUPOS_V - 1
+            array.push(vT, nz(str.tonumber(array.get(t, 4 + g))))
+        vMult := str.tonumber(array.get(t, 4 + GRUPOS_V))
+        for j = 5 + GRUPOS_V to array.size(t) - 1
+            array<string> c = str.split(array.get(t, j), ",")
+            float kV = baseV + nz(str.tonumber(array.get(c, 0))) * pasoV
+            for g = 0 to GRUPOS_V - 1
+                int b = 1 + 3 * g
+                if array.size(c) > b + 2
+                    float cc = nz(str.tonumber(array.get(c, b)))
+                    float pp = nz(str.tonumber(array.get(c, b + 1)))
+                    float ss = nz(str.tonumber(array.get(c, b + 2))) / 10000
+                    if ss > 0 and (cc != 0 or pp != 0)
+                        array.push(vK, kV)
+                        array.push(vNet, cc - pp)
+                        array.push(vBru, cc + pp)
+                        array.push(vS, ss)
+                        array.push(vG, g)
+
+// Factor de σ√T de cada grupo cuando han pasado `dtAnios` desde la apertura (mínimo 1 hora)
+factorVivo(float dtAnios) =>
+    array<float> f = array.new<float>(GRUPOS_V, 1.0)
+    float minimo = 1.0 / 24 / 252
+    for g = 0 to GRUPOS_V - 1
+        float T0 = array.get(vT, g)
+        if T0 > 0
+            array.set(f, g, math.sqrt(math.max(T0 - dtAnios, minimo) / T0))
+    f
+
+// Gamma (neta o bruta) de las entradas con strike entre lo y hi, en dólares por 1 % al precio F
+gammaVivo(float F, array<float> fac, bool neta, float lo, float hi) =>
+    float tot = 0.0
+    int n = array.size(vK)
+    if n > 0
+        for i = 0 to n - 1
+            float k = array.get(vK, i)
+            if k >= lo and k <= hi
+                float s = array.get(vS, i) * array.get(fac, array.get(vG, i))
+                float d1 = (math.log(F / k) + s * s / 2) / s
+                tot += (neta ? array.get(vNet, i) : array.get(vBru, i)) * math.exp(-d1 * d1 / 2) / s
+    tot / math.sqrt(2 * math.pi) / F * vMult * F * F * 0.01
+
+gexVivo(float F, array<float> fac) =>
+    gammaVivo(F, fac, true, -1e12, 1e12)
+
+// Frontera: malla de 61 precios en ±3σ, cruce más cercano al precio y 25 bisecciones
+fronteraVivo(float precio, float sigma, array<float> fac) =>
+    int PUNTOS = 61
+    float paso = 6 * sigma / (PUNTOS - 1)
+    float mejor = na
+    float pPrev = precio - 3 * sigma
+    float gPrev = gexVivo(pPrev, fac)
+    for i = 1 to PUNTOS - 1
+        float p = precio - 3 * sigma + i * paso
+        float g = gexVivo(p, fac)
+        if (g < 0) != (gPrev < 0)
+            float a = pPrev
+            float z = p
+            float ga = gPrev
+            for k = 1 to 25
+                float m = (a + z) / 2
+                float gm = gexVivo(m, fac)
+                if (gm < 0) == (ga < 0)
+                    a := m
+                    ga := gm
+                else
+                    z := m
+            float x = (a + z) / 2
+            if na(mejor) or math.abs(x - precio) < math.abs(mejor - precio)
+                mejor := x
+        pPrev := p
+        gPrev := g
+    mejor
+
+// Niveles en vivo (escalera que se recentra sola): por strike, gamma de calls y de puts al precio F
+// con el tiempo que queda; muro de calls = más gamma de calls encima, muro de puts = más gamma de puts
+// debajo, y los `cuantos` strikes con más gamma total. Solo strikes reales (a ≤ 4σ del precio de la
+// escalera: fuera, el bloque gv= trae tramos agrupados). Devuelve "K:C;K:P;K:O;..."
+nivelesVivo(float F, float sigma, array<float> fac, float radio, int cuantos) =>
+    array<float> ks = array.new<float>()
+    array<float> gc = array.new<float>()
+    array<float> gp = array.new<float>()
+    int n = array.size(vK)
+    if n > 0
+        for i = 0 to n - 1
+            float k = array.get(vK, i)
+            if math.abs(k - F) <= radio and math.abs(k - vF) <= 4.001 * sigma
+                float s = array.get(vS, i) * array.get(fac, array.get(vG, i))
+                float d1 = (math.log(F / k) + s * s / 2) / s
+                float g = math.exp(-d1 * d1 / 2) / s
+                float bru = array.get(vBru, i)
+                float net = array.get(vNet, i)
+                int j = array.indexof(ks, k)
+                if j < 0
+                    array.push(ks, k)
+                    array.push(gc, 0.0)
+                    array.push(gp, 0.0)
+                    j := array.size(ks) - 1
+                array.set(gc, j, array.get(gc, j) + (bru + net) / 2 * g)
+                array.set(gp, j, array.get(gp, j) + (bru - net) / 2 * g)
+    string res = ""
+    int m = array.size(ks)
+    if m > 0
+        int iC = -1
+        int iP = -1
+        float maxB = 0.0
+        for j = 0 to m - 1
+            float k = array.get(ks, j)
+            if k > F and (iC < 0 or array.get(gc, j) > array.get(gc, iC))
+                iC := j
+            if k < F and (iP < 0 or array.get(gp, j) > array.get(gp, iP))
+                iP := j
+            maxB := math.max(maxB, array.get(gc, j) + array.get(gp, j))
+        if iC >= 0 and array.get(gc, iC) > 0
+            res += str.tostring(array.get(ks, iC)) + ":C"
+        if iP >= 0 and array.get(gp, iP) > 0
+            res += (res != "" ? ";" : "") + str.tostring(array.get(ks, iP)) + ":P"
+        array<bool> usado = array.new<bool>(m, false)
+        if iC >= 0
+            array.set(usado, iC, true)
+        if iP >= 0
+            array.set(usado, iP, true)
+        if cuantos > 0
+            for r = 1 to cuantos
+                int mejor = -1
+                for j = 0 to m - 1
+                    if not array.get(usado, j) and (mejor < 0 or array.get(gc, j) + array.get(gp, j) > array.get(gc, mejor) + array.get(gp, mejor))
+                        mejor := j
+                // solo los que tienen al menos un 25 % de la gamma del strike más fuerte
+                if mejor >= 0 and array.get(gc, mejor) + array.get(gp, mejor) >= 0.25 * maxB
+                    array.set(usado, mejor, true)
+                    res += (res != "" ? ";" : "") + str.tostring(array.get(ks, mejor)) + ":O"
+    res
+
+bool hayVivo = verVivo and array.size(vK) > 0 and not na(lo68) and not na(hi68)
+float sigmaV = (hi68 - lo68) / 2
+var float gexApertura = na
+if barstate.isfirst and array.size(vK) > 0
+    gexApertura := gexVivo(vF, factorVivo(0.0))
+// Resultados en vivo: varip para no repetir el cálculo en cada tick de la misma vela
+varip float flipVivo   = na
+varip float gexAhora   = na
+varip string fuerzas   = ""
+varip int   ultimaCalc = -1
+varip string nivVivoTxt = ""
+if hayVivo and barstate.islast and (ultimaCalc < 0 or bar_index - ultimaCalc >= cadaN)
+    int tAper = na(tNiveles) ? na : timestamp("America/New_York", year(tNiveles, "UTC"), month(tNiveles, "UTC"),
+         dayofmonth(tNiveles, "UTC"), 9, 30)
+    float dtA = na(tAper) ? 0.0 : (time_close - tAper) / 3600000.0 / 24 / 252
+    array<float> fac = factorVivo(dtA)
+    array<float> fac0 = factorVivo(0.0)
+    flipVivo := fronteraVivo(close, sigmaV, fac)
+    gexAhora := gexVivo(close, fac)
+    string txt = ""
+    if array.size(nLo) > 0
+        for i = 0 to array.size(nLo) - 1
+            float antes = gammaVivo(vF, fac0, false, array.get(nLo, i), array.get(nHi, i))
+            float ahora = gammaVivo(close, fac, false, array.get(nLo, i), array.get(nHi, i))
+            txt += (i > 0 ? ";" : "") + (antes > 0 ? str.tostring(ahora / antes, "0.0") : "")
+    fuerzas := txt
+    nivVivoTxt := verNivVivo ? nivelesVivo(close, sigmaV, fac, radioNV * sigmaV, cuantosNV) : ""
+    ultimaCalc := bar_index
+// ¿Toca enseñar los niveles en vivo? (precio fuera del rango elegido)
+bool fueraNV = cuandoNV == "Siempre" or (cuandoNV == "Fuera del 68 %" ? (close > hi68 or close < lo68) : (close > hi95 or close < lo95))
+bool mostrarNV = hayVivo and verNivVivo and nivVivoTxt != "" and fueraNV
+
+// ─── Fiabilidad en vivo (Fase F-3) ──────────────────────────────────────────
+// Frontera de ahora: la recalculada en vivo (bloque gv=) o, si no hay, la de la apertura.
+// Día positivo: precio de referencia por encima de la frontera de la apertura (como en el estudio).
+float fronteraAhora = hayVivo and not na(flipVivo) ? flipVivo : flipTxt
+bool  diaPositivo = not na(refPrecio) and not na(flipTxt) and refPrecio >= flipTxt
+
+// ─── Dibujo (en la última vela) ───────────────────────────────────────────
+var array<line> lineas = array.new<line>()
+var array<box>  cajas  = array.new<box>()
+
+if barstate.islast
+    for l in lineas
+        line.delete(l)
+    array.clear(lineas)
+    for b in cajas
+        box.delete(b)
+    array.clear(cajas)
+    // Rangos del día: bandas desde el inicio de la sesión (la del 68 % se ve más oscura al solaparse)
+    if verRangos and not na(lo95) and not na(lo68)
+        array.push(cajas, box.new(tInicioDia, hi95, time, lo95, xloc = xloc.bar_time, extend = extend.right,
+             border_color = color(na), bgcolor = color.new(colRango, 94)))
+        array.push(cajas, box.new(tInicioDia, hi68, time, lo68, xloc = xloc.bar_time, extend = extend.right,
+             border_color = color(na), bgcolor = color.new(colRango, 90)))
+    // Zonas grises de gamma 0DTE: desde el inicio de la sesión, sin borde
+    if array.size(gLo) > 0
+        for i = 0 to array.size(gLo) - 1
+            array.push(cajas, box.new(tInicioDia, array.get(gHi, i), time, array.get(gLo, i), xloc = xloc.bar_time,
+                 extend = extend.right, border_color = color.new(colG, 60), border_style = line.style_dotted,
+                 bgcolor = color.new(colG, 70)))
+    if nNiveles > 0
+        for i = 0 to nNiveles - 1
+            int origen = array.get(nToque, i)
+            int x = na(origen) ? time : origen
+            int cat = array.get(nCat, i)
+            color c = array.get(nCol, i)
+            // Relleno y borde según la importancia del nivel
+            bool ext = array.get(nExt, i)
+            int fondo = ext ? 94 : cat == 1 ? 75 : cat == 2 ? 86 : cat == 3 ? 93 : 96
+            color borde = ext ? color.new(c, 35) : cat == 3 ? color.new(c, 50) : c
+            // Muro corto dentro de esta zona: «C·corto» / «P·corto» escrito en la zona
+            string mk = array.get(nCorto, i)
+            string rotulo = not verMurosCortos or mk == "" ? "" : mk == "c" ? "C·corto" : mk == "p" ? "P·corto" : "C·P corto"
+            if array.get(nConf, i) != ""
+                rotulo := "★" + (rotulo != "" ? " " + rotulo : "")
+            if hayVivo and verFuerza and fuerzas != ""
+                array<string> fz = str.split(fuerzas, ";")
+                string f = i < array.size(fz) ? array.get(fz, i) : ""
+                if f != ""
+                    rotulo := rotulo + (rotulo != "" ? " · " : "") + "×" + f
+            // Fiabilidad en vivo (solo con el 11.º campo del ESC2; los textos antiguos se dibujan como siempre)
+            int anchoI = array.get(nAncho, i)
+            string estI = array.get(nEst, i)
+            string fbc = array.get(nFb, i)
+            if verFiab and fbc != "" and not ext
+                string letI = array.get(nLet, i)
+                float centro = array.get(nPrecio, i)
+                bool esMuro = str.contains(letI, "C") or str.contains(letI, "P")
+                if esMuro and fbTxt == "R" and not na(fronteraAhora)
+                    // Muro por debajo de la frontera (en vivo): discontinuo y «ruptura»; por encima: sólido
+                    if centro < fronteraAhora
+                        estI := line.style_dashed
+                        rotulo := rotulo + (rotulo != "" ? " · " : "") + "ruptura"       // una sola etiqueta: «×1.0 · ruptura»
+                    else
+                        estI := line.style_solid
+                        anchoI := diaPositivo ? anchoI + 1 : anchoI
+                else if str.contains(letI, "I") and not esMuro
+                    // OI máximo (antes «imán»): «objetivo» solo a ≤ 0,25σ del precio actual; si no, fino
+                    if not na(sigmaV) and math.abs(centro - close) <= objetivoSigmas * sigmaV
+                        rotulo := rotulo + (rotulo != "" ? " · " : "") + "objetivo"
+                    else
+                        anchoI := 1
+                else if str.contains(fbc, "c")
+                    // Contexto (aceleración, OI relevante, resistencia): sin ventaja histórica → fino y gris
+                    anchoI := 1
+                    borde := color.new(colCtx, 40)
+                    fondo := math.min(fondo + 5, 97)
+            array.push(cajas, box.new(x, array.get(nHi, i), time, array.get(nLo, i), xloc = xloc.bar_time,
+                 extend = extend.right, border_color = borde, border_width = anchoI,
+                 border_style = estI, bgcolor = verZonas and cat < 5 ? color.new(c, fondo) : color(na),
+                 text = rotulo, text_color = c, text_size = size.small, text_halign = text.align_right))
+    // Niveles solo QQQ/NDX (opcional): caja fina punteada, sin relleno ni etiqueta en la escala
+    if array.size(qLo) > 0
+        for i = 0 to array.size(qLo) - 1
+            array.push(cajas, box.new(tInicioDia, array.get(qHi, i) + 0.5 * syminfo.mintick, time,
+                 array.get(qLo, i) - 0.5 * syminfo.mintick, xloc = xloc.bar_time, extend = extend.right,
+                 border_color = colQ, border_style = line.style_dotted, border_width = 1, bgcolor = color(na),
+                 text = "solo " + array.get(qF, i), text_color = colQ, text_size = size.tiny, text_halign = text.align_right))
+    // Vista corta: frontera corta (discontinua fina) y muros cortos que no caen en ningún nivel (punteados)
+    bool mcEnNivel = false
+    bool mpEnNivel = false
+    for mk in nCorto
+        mcEnNivel := mcEnNivel or str.contains(mk, "c")
+        mpEnNivel := mpEnNivel or str.contains(mk, "p")
+    if hayVivo and verFlipVivo and not na(flipVivo)
+        array.push(lineas, line.new(tInicioDia, flipVivo, time, flipVivo, xloc = xloc.bar_time, extend = extend.right,
+             color = colFV, style = line.style_dotted, width = 2))
+    // Niveles en vivo (punteados, «· vivo»), salvo los que ya caen dentro de un nivel del día
+    if mostrarNV
+        float wz = na(wNiv) ? 0.0 : wNiv
+        for it in str.split(nivVivoTxt, ";")
+            array<string> pz = str.split(it, ":")
+            if array.size(pz) == 2
+                float k = str.tonumber(array.get(pz, 0))
+                string tp = array.get(pz, 1)
+                bool yaEsta = false
+                if nNiveles > 0
+                    for i = 0 to nNiveles - 1
+                        if k >= array.get(nLo, i) and k <= array.get(nHi, i)
+                            yaEsta := true
+                if not na(k) and not yaEsta
+                    color cv = tp == "C" ? colC : tp == "P" ? colP : colO
+                    string rotV = (tp == "C" ? "Muro calls" : tp == "P" ? "Muro puts" : "OI") + " · vivo"
+                    array.push(cajas, box.new(tInicioDia, k + wz, time, k - wz, xloc = xloc.bar_time, extend = extend.right,
+                         border_color = cv, border_style = line.style_dotted, border_width = tp == "O" ? 1 : 2,
+                         bgcolor = verZonas ? color.new(cv, tp == "O" ? 92 : 82) : color(na),
+                         text = rotV, text_color = cv, text_size = size.small, text_halign = text.align_right))
+    if verCorta and not na(fCorta)
+        array.push(lineas, line.new(tInicioDia, fCorta, time, fCorta, xloc = xloc.bar_time, extend = extend.right,
+             color = colFC, style = line.style_dashed, width = 1))
+    if verMurosCortos and not na(mcCorta) and not mcEnNivel
+        array.push(lineas, line.new(tInicioDia, mcCorta, time, mcCorta, xloc = xloc.bar_time, extend = extend.right,
+             color = colC, style = line.style_dotted, width = 1))
+    if verMurosCortos and not na(mpCorta) and not mpEnNivel
+        array.push(lineas, line.new(tInicioDia, mpCorta, time, mpCorta, xloc = xloc.bar_time, extend = extend.right,
+             color = colP, style = line.style_dotted, width = 1))
+    if verMaxMin
+        array.push(lineas, line.new(tMax, maxSesion, time, maxSesion, xloc = xloc.bar_time,
+             extend = extend.right, color = colMaxMin, width = grosor))
+        array.push(lineas, line.new(tMin, minSesion, time, minSesion, xloc = xloc.bar_time,
+             extend = extend.right, color = colMaxMin, width = grosor))
+    if verNY and not na(nyOpen)
+        // Más gruesa que el resto para que destaque
+        array.push(lineas, line.new(tNY, nyOpen, time, nyOpen, xloc = xloc.bar_time,
+             extend = extend.right, color = colNY, width = math.max(2, grosor + 1)))
+
+// ─── Precio de cada nivel en la escala ────────────────────────────────────
+// 27 plots con color variable (cuentan 2 cada uno) + máximo, mínimo, NY Open y
+// frontera corta (color fijo: 1 cada uno) = 58 de los 64 posibles.
+valorNivel(int i) =>
+    verEscala and i < array.size(sPrecio) ? array.get(sPrecio, i) : na
+colorNivel(int i) =>
+    i < array.size(sCol) ? array.get(sCol, i) : color(na)
+
+plot(valorNivel(0),  "Nivel 1",  color = colorNivel(0),  display = display.price_scale, editable = false)
+plot(valorNivel(1),  "Nivel 2",  color = colorNivel(1),  display = display.price_scale, editable = false)
+plot(valorNivel(2),  "Nivel 3",  color = colorNivel(2),  display = display.price_scale, editable = false)
+plot(valorNivel(3),  "Nivel 4",  color = colorNivel(3),  display = display.price_scale, editable = false)
+plot(valorNivel(4),  "Nivel 5",  color = colorNivel(4),  display = display.price_scale, editable = false)
+plot(valorNivel(5),  "Nivel 6",  color = colorNivel(5),  display = display.price_scale, editable = false)
+plot(valorNivel(6),  "Nivel 7",  color = colorNivel(6),  display = display.price_scale, editable = false)
+plot(valorNivel(7),  "Nivel 8",  color = colorNivel(7),  display = display.price_scale, editable = false)
+plot(valorNivel(8),  "Nivel 9",  color = colorNivel(8),  display = display.price_scale, editable = false)
+plot(valorNivel(9),  "Nivel 10", color = colorNivel(9),  display = display.price_scale, editable = false)
+plot(valorNivel(10), "Nivel 11", color = colorNivel(10), display = display.price_scale, editable = false)
+plot(valorNivel(11), "Nivel 12", color = colorNivel(11), display = display.price_scale, editable = false)
+plot(valorNivel(12), "Nivel 13", color = colorNivel(12), display = display.price_scale, editable = false)
+plot(valorNivel(13), "Nivel 14", color = colorNivel(13), display = display.price_scale, editable = false)
+plot(valorNivel(14), "Nivel 15", color = colorNivel(14), display = display.price_scale, editable = false)
+plot(valorNivel(15), "Nivel 16", color = colorNivel(15), display = display.price_scale, editable = false)
+plot(valorNivel(16), "Nivel 17", color = colorNivel(16), display = display.price_scale, editable = false)
+plot(valorNivel(17), "Nivel 18", color = colorNivel(17), display = display.price_scale, editable = false)
+plot(valorNivel(18), "Nivel 19", color = colorNivel(18), display = display.price_scale, editable = false)
+plot(valorNivel(19), "Nivel 20", color = colorNivel(19), display = display.price_scale, editable = false)
+plot(valorNivel(20), "Nivel 21", color = colorNivel(20), display = display.price_scale, editable = false)
+plot(valorNivel(21), "Nivel 22", color = colorNivel(21), display = display.price_scale, editable = false)
+plot(valorNivel(22), "Nivel 23", color = colorNivel(22), display = display.price_scale, editable = false)
+plot(valorNivel(23), "Nivel 24", color = colorNivel(23), display = display.price_scale, editable = false)
+plot(valorNivel(24), "Nivel 25", color = colorNivel(24), display = display.price_scale, editable = false)
+plot(valorNivel(25), "Nivel 26", color = colorNivel(25), display = display.price_scale, editable = false)
+plot(valorNivel(26), "Nivel 27", color = colorNivel(26), display = display.price_scale, editable = false)
+plot(verMaxMin and verEscala ? maxSesion : na, "Máximo", color = colMaxMin, display = display.price_scale)
+plot(verMaxMin and verEscala ? minSesion : na, "Mínimo", color = colMaxMin, display = display.price_scale)
+plot(verNY and verEscala ? nyOpen : na, "NY Open", color = colNY, display = display.price_scale)
+plot(verCorta and verEscala ? fCorta : na, "Frontera corta", color = colFC, display = display.price_scale)
+
+// ─── Charm y vanna (texto de la leyenda) ───────────────────────────────────
+// "C1300" -> "compra 1300" ; "V220" -> "venta 220"
+conDireccion(string t) =>
+    string d = str.length(t) > 0 ? str.substring(t, 0, 1) : ""
+    string n = str.length(t) > 1 ? str.substring(t, 1) : "0"
+    (d == "C" ? "compra " : d == "V" ? "venta " : "") + n
+
+// "V:F:1520:V1300:V220" -> "Charm: venta hacia el cierre, fuerte (1520 contratos/día; 0DTE venta 1300 · resto venta 220)"
+textoCharm(string v) =>
+    array<string> c = str.split(v, ":")
+    string res = ""
+    if array.size(c) >= 3
+        string d = array.get(c, 0)
+        string cabeza = d == "C" ? "compra hacia el cierre, " : d == "V" ? "venta hacia el cierre, " : "neutro, "
+        res := "Charm: " + cabeza + (array.get(c, 1) == "F" ? "fuerte" : "débil") + " (" + array.get(c, 2) + " contratos/día" +
+             (array.size(c) >= 5 ? "; 0DTE " + conDireccion(array.get(c, 3)) + " · resto " + conDireccion(array.get(c, 4)) : "") + ")"
+    res
+
+// "C:850" -> "Vanna: si baja la IV, flujo comprador (850 contratos por punto de IV)"
+textoVanna(string v) =>
+    array<string> c = str.split(v, ":")
+    string res = ""
+    if array.size(c) >= 1
+        string d = array.get(c, 0)
+        res := "Vanna: si baja la IV, flujo " + (d == "C" ? "comprador" : d == "V" ? "vendedor" : "neutro") +
+             (array.size(c) >= 2 ? " (" + array.get(c, 1) + " contratos por punto de IV)" : "")
+    res
+
+colorFlujo(string v) =>
+    string d = str.length(v) > 0 ? str.substring(v, 0, 1) : ""
+    d == "C" ? #0ca30c : d == "V" ? C_MAL : C_TEXTO
+
+// ─── Avisos (solo si algo no cuadra) y leyenda opcional ───────────────────
+// Tipo de color aclarado para que la muestra de línea se vea sobre el fondo oscuro
+aclarar(color c) =>
+    color.rgb(math.min(255, color.r(c) * 1.4 + 80), math.min(255, color.g(c) * 1.4 + 80), math.min(255, color.b(c) * 1.4 + 80))
+
+// Dos columnas: 0 = muestra de línea de la leyenda (vacía en el resto de filas), 1 = texto
+var table cuadro = table.new(posicion(), 2, 24, bgcolor = color.new(C_FONDO, 10),
+     frame_color = color.new(color.white, 85), frame_width = 1, border_width = 0)
+
+if barstate.islast
+    table.clear(cuadro, 0, 0, 1, 23)
+    int fila = 0
+    // Cabecera: de qué día y contrato son los niveles
+    if verLeyenda and valido
+        table.cell(cuadro, 1, fila, "ESCALERA " + sym + " · " + (na(tNiveles) ? "fecha desconocida" : fechaCorta(tNiveles)) +
+             (contrato != "" ? " · " + contrato : ""), text_color = C_TEXTO, text_size = size.small,
+             text_halign = text.align_left)
+        fila += 1
+    // Régimen combinado (vista corta y escalera completa)
+    if verRegimen and valido and rcTipo != ""
+        string franja = na(rfLo) ? "" : " (" + str.tostring(rfLo, format.mintick) + "–" + str.tostring(rfHi, format.mintick) + ")"
+        string txtRegimen = rcTipo == "P" ? "Régimen: Positivo (corto y completo)" :
+             rcTipo == "N" ? "Régimen: Negativo (corto y completo)" : "Régimen: Transición" + franja
+        color colRegimen = rcTipo == "P" ? #0ca30c : rcTipo == "N" ? C_MAL : C_AVISO
+        table.cell(cuadro, 1, fila, txtRegimen, text_color = colRegimen, text_size = size.small, text_halign = text.align_left)
+        fila += 1
+    // Frontera y régimen en vivo, junto a los de la apertura (solo con el bloque "gv=")
+    if hayVivo and valido
+        string fa = na(flipTxt) ? "—" : str.tostring(flipTxt, format.mintick)
+        table.cell(cuadro, 1, fila, "Frontera en vivo: " + (na(flipVivo) ? "no hay cruce en ±3σ" :
+             str.tostring(flipVivo, format.mintick)) + " (apertura " + fa + ")", text_color = colFV,
+             text_size = size.small, text_halign = text.align_left)
+        fila += 1
+        string ra = na(gexApertura) ? "—" : gexApertura >= 0 ? "positiva" : "negativa"
+        string rv = na(gexAhora) ? "—" : gexAhora >= 0 ? "positiva" : "negativa"
+        table.cell(cuadro, 1, fila, "Régimen en vivo: gamma " + rv + " (apertura " + ra + ")",
+             text_color = rv == "positiva" ? #0ca30c : rv == "negativa" ? C_MAL : C_TEXTO,
+             text_size = size.small, text_halign = text.align_left)
+        fila += 1
+        if mostrarNV
+            string mcv = ""
+            string mpv = ""
+            for it in str.split(nivVivoTxt, ";")
+                array<string> pz = str.split(it, ":")
+                if array.size(pz) == 2
+                    if array.get(pz, 1) == "C"
+                        mcv := array.get(pz, 0)
+                    else if array.get(pz, 1) == "P"
+                        mpv := array.get(pz, 0)
+            table.cell(cuadro, 1, fila, "Fuera del rango · niveles en vivo: muro calls " + (mcv == "" ? "—" : mcv) +
+                 " · muro puts " + (mpv == "" ? "—" : mpv), text_color = C_AVISO,
+                 text_size = size.small, text_halign = text.align_left)
+            fila += 1
+    // Fiabilidad de los muros en vivo (solo si el estudio del índice muestra efecto de régimen: fb=R)
+    if verFiab and valido and fbTxt == "R" and not na(fronteraAhora)
+        bool encima = close >= fronteraAhora
+        string txtF = encima and diaPositivo ? "Muros fiables (precio por encima de la frontera, día positivo)" :
+             encima ? "Muros normales (precio por encima de la frontera, día negativo)" :
+             "Todo rompe más (precio por debajo de la frontera)"
+        table.cell(cuadro, 1, fila, txtF, text_color = encima and diaPositivo ? #0ca30c : encima ? C_TEXTO : C_MAL,
+             text_size = size.small, text_halign = text.align_left)
+        fila += 1
+    // Charm y vanna del día (solo si el texto los trae: los ESC2 antiguos no)
+    if verCharm and valido and chTxt != ""
+        table.cell(cuadro, 1, fila, textoCharm(chTxt), text_color = colorFlujo(chTxt), text_size = size.small,
+             text_halign = text.align_left)
+        fila += 1
+    if verCharm and valido and vaTxt != ""
+        table.cell(cuadro, 1, fila, textoVanna(vaTxt), text_color = colorFlujo(vaTxt), text_size = size.small,
+             text_halign = text.align_left)
+        fila += 1
+    string grafico = na(syminfo.current_contract) ? syminfo.ticker : syminfo.current_contract
+    // El gráfico debe ser del mismo índice (NQ vale para NQ y MNQ; ES para ES y MES)
+    bool mismoIndice = sym == "" or syminfo.root == sym or syminfo.root == "M" + sym
+    if not valido
+        table.cell(cuadro, 1, fila, "Escalera: pega los niveles del día en los ajustes",
+             text_color = C_AVISO, text_size = size.small, text_halign = text.align_left)
+        fila += 1
+    else if not mismoIndice
+        table.cell(cuadro, 1, fila, "⚠ Niveles de " + sym + " y el gráfico es " + grafico + ": NO corresponden",
+             text_color = C_MAL, text_size = size.normal, text_halign = text.align_left)
+        fila += 1
+    else if not na(tNiveles) and tNiveles < time_tradingday
+        table.cell(cuadro, 1, fila, "⚠ Niveles del " + fechaCorta(tNiveles) + ": son de otro día",
+             text_color = C_MAL, text_size = size.small, text_halign = text.align_left)
+        fila += 1
+    if valido and mismoIndice and contrato != "" and mesContrato(grafico) != mesContrato(contrato)
+        table.cell(cuadro, 1, fila, "⚠ Niveles de " + contrato + ", gráfico " + grafico + ": desplazados",
+             text_color = C_MAL, text_size = size.small, text_halign = text.align_left)
+        fila += 1
+    if verLeyenda
+        // Una fila por tipo visible: muestra en su color + qué es
+        array<string> nombres = array.from("━━━  Muro de calls (más calls abiertas)",
+             "━━━  Muro de puts (más puts abiertas)", "━━━  Resistencia (gamma positiva)",
+             "━━━  OI máximo (antes imán; «objetivo» a ≤ 0,25σ)", "━━━  Aceleración (gamma negativa)",
+             "━━━  OI relevante (mucho open interest)", "╌╌╌  Frontera (gamma flip)", "━━━  Máximo / mínimo de la sesión", "━━━  NY Open (00:00 Nueva York)",
+             "▒▒▒  Gamma 0DTE (no es nivel)", "┄┄┄  Precio de referencia", "▓▓▓  Rango 68 % · ░░░ 95 %",
+             "╌╌╌  Frontera corta (próximos días)")
+        array<color> colores = array.from(colC, colP, colR, colI, colA, colO, colF, colMaxMin, colNY, colG, colRef, colRango, colFC)
+        array<bool> activos = array.from(verC, verP, verR, verI, verA, verO, verF, verMaxMin, verNY, verG, verRef, verRangos, verCorta)
+        for i = 0 to array.size(nombres) - 1
+            if array.get(activos, i) and fila < 23
+                string nm = array.get(nombres, i)
+                table.cell(cuadro, 0, fila, str.substring(nm, 0, 3), text_color = aclarar(array.get(colores, i)),
+                     text_size = size.small, text_halign = text.align_left)
+                table.cell(cuadro, 1, fila, str.substring(nm, 5), text_color = C_TEXTO,
+                     text_size = size.small, text_halign = text.align_left)
+                fila += 1
+        if fbTxt == "R" and verFiab and fila < 23
+            table.cell(cuadro, 1, fila, "Muros: sólido = encima de la frontera · ╌╌╌ ruptura = debajo",
+                 text_color = C_TEXTO, text_size = size.small, text_halign = text.align_left)
+            fila += 1
+        if fila < 24
+            table.cell(cuadro, 1, fila, "Grueso = principal · normal = secundario · fino = menor",
+                 text_color = C_TEXTO, text_size = size.small, text_halign = text.align_left)
