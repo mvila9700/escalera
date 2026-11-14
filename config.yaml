@@ -1,0 +1,379 @@
+# ============================================================
+#  Configuración de la escalera de niveles del NQ y del ES
+#  Todos los umbrales están aquí: cámbialos sin tocar el código.
+#  Los valores globales son los del NQ; los del ES que cambian están en
+#  indices -> ES -> parametros (se superponen solo para el ES).
+# ============================================================
+
+# Tipo de interés libre de riesgo anual (en tanto por uno: 0.04 = 4 %).
+# Se usa en Black-76 para descontar el precio de la opción.
+tipo_interes: 0.04
+
+# Multiplicador de cada contrato (dólares por punto).
+multiplicadores:
+  NQ: 20
+  NDX: 100
+  ES: 50      # E-mini S&P 500 (el MES cotiza igual, 5 $)
+  GC: 100     # oro COMEX, 100 onzas (el MGC cotiza igual, 10 $)
+
+# Signo de la GEX por tipo de opción.
+# SUPOSICIÓN (no es un dato): no sabemos quién tiene cada opción. Se usa el
+# supuesto estándar de que los creadores de mercado (dealers) están largos
+# de calls (+1) y cortos de puts (-1). Si la realidad es otra, el signo de la
+# GEX, el régimen (positivo/negativo) y el gamma flip cambiarían.
+# Confirmado por el usuario el 2026-10-26: calls +, puts −.
+signo_gex:
+  call: 1
+  put: -1
+
+# Índices y nombres de producto del Daily Bulletin de cada uno.
+# "indice" es el que se usa por defecto (el NQ). En cada índice:
+#   subyacente: código en la tabla de opciones (y en "multiplicadores")
+#   cme_pdf:    cómo leer su boletín (secciones, etiquetas, columnas)
+#   parametros: valores que sustituyen a los globales de este archivo SOLO
+#               para ese índice (el NQ no tiene: usa los globales tal cual)
+indice: NQ
+indices:
+  NQ:
+    subyacente: NQ
+    velas_patron: "(?<![A-Z])M?NQ(?:[FGHJKMNQUVXZ]\\d{2,4})?(?![A-Z])"   # CSV de velas del NQ/MNQ (por el nombre del archivo)
+    cme_pdf:
+      secciones: [40]                # un solo PDF con calls y puts
+      archivos: ["Section40"]        # cómo empieza el nombre del PDF
+      palabra_seccion: NASDAQ        # las cabeceras de sección la llevan
+      paginas_cabecera: 1            # páginas con fechas, rangos y futuros
+      # Código de las semanales en su etiqueta: "QN1 PUT" = WEEKLY-1.
+      semanal: "QN(\\d)"
+      # Rangos de strikes de la cabecera ("QZ 2500-44000 ..."): código -> producto.
+      # Cada rango se asigna a su mes por la posición horizontal.
+      rangos:
+        QZ: TRIMESTRAL
+      # Fechas de vencimiento de la cabecera (fila -> producto). Los
+      # vencimientos que no salen aquí se calculan (tercer viernes, etc.).
+      fechas:
+        "E-MINI NASDAQ OPT": TRIMESTRAL
+      # Futuros: tabla de la página 1 (apertura/máximo/mínimo por posición x);
+      # la liquidación sale de las opciones ("DEC26 EMINI NASD CALL (FUTURES SETT. ...)").
+      futuros:
+        etiqueta: "EMINI NASD FUT"
+        columnas_x0: {apertura: [60, 120], maximo: [120, 212], minimo: [212, 260]}
+        liquidacion: opciones
+        etiqueta_liquidacion: "EMINI NASD CALL"
+        alcance: "Sesión electrónica completa de Globex (de las 17:00 del día anterior a las 16:00 de Chicago); columnas «GLOBEX HIGH/LOW» del Daily Bulletin."
+      # Etiqueta del bloque (sin CALL/PUT/C/P al final) -> producto.
+      # Se compara el principio de la etiqueta (expresión regular).
+      productos:
+        "EMINI NASD": TRIMESTRAL
+        "QN OOF": MENSUAL
+        "QMW": LUNES
+        "QTW": MARTES
+        "QWW": MIERCOLES
+        "QRW": JUEVES
+        "MINI NSDQ EOM": FIN_DE_MES
+      # Etiquetas que se leen (para no perder la secuencia) pero se descartan.
+      descartar:
+        "RTM|RTO|RMW|RRW|RTW|RWW": "Russell (no es Nasdaq)"
+        "MN\\d": "Micro Nasdaq (varias series por mes sin fecha distinguible)"
+  ES:
+    subyacente: ES
+    velas_patron: "(?<![A-Z])M?ES(?:[FGHJKMNQUVXZ]\\d{2,4})?(?![A-Z])"   # CSV de velas del ES/MES
+    tradingview_decimales: 2         # ESC2 con decimales (zonas de pocos puntos); el NQ, enteros
+    cme_pdf:
+      secciones: [47, 48]            # 47 = calls, 48 = puts (dos PDFs del mismo boletín)
+      archivos: ["Section47", "Section48"]
+      palabra_seccion: "S&P"
+      paginas_cabecera: 3            # fechas (pág. 1), rangos (pág. 2-3), futuros (pág. 3)
+      semanal: "EOW(\\d)"            # "EOW1 MINI S&P P" = 1.er viernes
+      rangos:
+        EZ: TRIMESTRAL
+        EW: FIN_DE_MES
+      fechas:
+        "EMINI S&P OPT": TRIMESTRAL
+        "EOM EMINI S&P OPT": FIN_DE_MES
+        "EOW(\\d) E?MINI S&P OPT": "W\\1"
+      productos:
+        "EMINI S&P": TRIMESTRAL       # "EMINI S&P CALL" / "EMINI S&P PUT"
+        "EOM EMINI S&P": FIN_DE_MES   # puts "EOM EMINI S&P P"; en las calls va sin etiqueta
+        "MMW": LUNES                  # la sección EOO lo confirma: "MONDAY WEEKLY OPT"
+        "MTW": MARTES
+        "MDW": MIERCOLES
+        "MRW": JUEVES
+      descartar:
+        "RTM": "Russell (no es S&P)"
+      # Diarias: un bloque de un mes (p. ej. "NOV26 MMW MID") mezcla varias semanas,
+      # el mismo strike una vez por semana. Sus fechas reales salen de la página 1
+      # (filas sin etiqueta, emparejadas con estos códigos de la página 2: E1A = 1.ª
+      # semana, lunes...). Con diarias_por_precio, los strikes que tienen todas las
+      # semanas se fechan por precio (más plazo vale más); el resto, como siempre.
+      diarias_codigos: "E([1-5])([A-D])"
+      diarias_por_precio: true       # opción (b), aprobada el 2026-10-27
+      # Futuros: tabla "EMINI S&P FUT" de la página 3 de la sección 47, con la
+      # liquidación en la propia tabla.
+      futuros:
+        etiqueta: "EMINI S&P FUT"
+        columnas_x0: {apertura: [40, 120], maximo: [120, 165], minimo: [165, 212], liquidacion: [290, 336]}
+        liquidacion: tabla
+        alcance: "Sesión completa: según la nota del boletín, las cifras reflejan las sesiones de CME Globex y del horario regular (columnas «HIGH/LOW» de la tabla de futuros de la sección 47)."
+    # Parámetros propios del ES: escalados por r = ES/NQ = 0,2631 (liquidaciones
+    # DEC26 del 23-oct-2026) y ajustados a su rejilla de strikes. Aprobados el 2026-10-26.
+    parametros:
+      distancia_agrupar_puntos: 7.5   # NQ 30
+      tramo_puntos: 5                 # NQ 25 (paso de strike de la 0DTE del ES)
+      vanna_charm:
+        # Percentil 67 de |charm| en nov-25 a jul-26 (escaleras reconstruidas: 16.971). 2026-11-02
+        charm_fuerte_contratos: 17000
+      niveles:
+        rejilla_umbral_oi: 5          # NQ 25 × r ≈ 6,6 → 5 (paso de strike del ES); decidido el 2026-10-27
+        numero_redondo_cada: 100      # NQ 500
+        iman_distancia_puntos: 40     # NQ 150
+      jerarquia:
+        ancho_minimo: 2.5             # NQ 10
+        ancho_maximo: 7.5             # NQ 30
+      gamma_0dte:
+        ancho_puntos: 2.5             # NQ 5
+      estado:
+        umbral_rotura_puntos: 2.5     # NQ 10 (× r ≈ 2,6 → 2,5); decidido el 2026-10-28
+
+  GC:
+    # ORO (futuros GC de COMEX). Lector propio: fuentes/cme_pdf_oro.py (sección 64, «Metals Option
+    # Products»). Fase ORO-1, 2026-11-07.
+    subyacente: GC
+    velas_patron: "(?<![A-Z])M?GC(?:[FGHJKMNQUVXZ]\\d{2,4})?(?![A-Z])"   # CSV de velas del GC/MGC
+    tradingview_decimales: 1         # ESC2 con un decimal (el oro cotiza en décimas de dólar)
+    cme_pdf:
+      lector: oro                    # fuentes.cme_pdf_oro (formato distinto al de las secciones 40/47/48)
+      secciones: [64]
+      archivos: ["Section64"]
+      paginas_cabecera: 1
+    # Parámetros del oro: escalados por r = GC/NQ ≈ 4.075/28.000 ≈ 0,146 y ajustados a la rejilla
+    # de 5 $ de las OG cerca del dinero (Fase ORO-0). Aprobados el 2026-11-07.
+    parametros:
+      distancia_agrupar_puntos: 5     # NQ 30 × r ≈ 4,4 → 5 (strikes contiguos de 5 $)
+      tramo_puntos: 5                 # NQ 25 × r ≈ 3,6 → 5
+      # Ventana: hasta la próxima mensual OG de un mes ACTIVO del futuro (feb, abr, jun, ago, dic:
+      # el equivalente a la trimestral del NQ) inclusive; con menos de 5 días hábiles, la siguiente.
+      ventana_vencimientos:
+        modo: producto
+        producto: MENSUAL_ACTIVO
+      # Las opciones del oro vencen a las 13:30 de Nueva York (12:30 de Chicago), que es también
+      # la hora de la liquidación de COMEX. La sesión de referencia empieza a las 8:20 (apertura
+      # del horario principal de COMEX).
+      horas_et:
+        apertura: 8.333
+        liquidacion: 13.5
+        vencimiento: 13.5
+        vencimiento_trimestral: 13.5
+      vanna_charm:
+        charm_fuerte_contratos: 2000  # PROVISIONAL (sin calibrar: no hay escaleras del oro pasadas)
+      niveles:
+        rejilla_umbral_oi: 5          # NQ 25 × r ≈ 3,6 → 5 (paso de strike del OG)
+        numero_redondo_cada: 50       # redondos de 50 y 100 $
+        iman_distancia_puntos: 25     # NQ 150 × r ≈ 22 → 25
+      jerarquia:
+        ancho_minimo: 2.5             # NQ 10 (medio paso de strike)
+        ancho_maximo: 5               # NQ 30 × r ≈ 4,4 → 5
+      gamma_0dte:
+        ancho_puntos: 2.5             # NQ 5 × r ≈ 0,7 → 2,5 (medio paso de strike)
+      estado:
+        umbral_rotura_puntos: 1.5     # NQ 10 × r ≈ 1,46 → 1,5 $
+
+# Días de trading por año (para el movimiento esperado diario).
+dias_trading_ano: 252
+
+# Horas de Nueva York (ET, en decimal: 9.5 = 9:30) para medir el tiempo.
+horas_et:
+  apertura: 9.5                  # la gamma se calcula en la apertura de la sesión
+  vencimiento: 16                # semanales, diarias, mensuales y fin de mes
+  vencimiento_trimestral: 9.5    # las trimestrales vencen a la apertura
+  tiempo_minimo: 1               # horas mínimas hasta vencimiento (evita gamma infinita)
+  liquidacion: 16                # hora de la liquidación (la IV se calcula desde ella; el oro: 13:30)
+
+# Rango de strikes: solo los que caen dentro de N desviaciones (2 = 95 %).
+desviaciones_rango: 2
+# Escalera extendida: de desviaciones_rango a este número de desviaciones por cada lado (4σ),
+# con los MISMOS umbrales de OI y categoría que dentro (calculos/extendidos.py). Solo muros,
+# imán, aceleraciones y OI relevante principales/secundarios. Igual o menor que
+# desviaciones_rango = sin escalera extendida.
+desviaciones_extendido: 4
+
+# Agrupar strikes a menos de estos puntos en una sola zona.
+distancia_agrupar_puntos: 30
+
+# Tramos (en puntos) para el mapa de gamma de la 0DTE y el gráfico de OI.
+tramo_puntos: 25
+
+# Qué vencimientos entran en la escalera (desde la 0DTE de la sesión).
+ventana_vencimientos:
+  # "trimestral": hasta el próximo vencimiento trimestral (3.er viernes de
+  # mar/jun/sep/dic) inclusive. Si faltan menos de `dias_habiles_minimos`
+  # días hábiles para él, se incluye también el siguiente.
+  # "dias": un número fijo de días naturales (max_dias).
+  modo: trimestral
+  dias_habiles_minimos: 5
+  max_dias: 45
+
+# Estado del día ("Estado hoy"), lo rellena el proceso de la noche.
+estado:
+  # Con velas de 1 minuto: el nivel está "roto" si, después del toque, algún
+  # cierre de 1 minuto queda más allá del nivel (lado contrario al que llegó
+  # el precio) por al menos estos puntos. Si no, "respetado".
+  umbral_rotura_puntos: 10
+  # Ventana de las velas: "globex" (sesión completa, igual que el máximo y
+  # mínimo del boletín) o "rth" (solo 9:30-16:00 de Nueva York).
+  ventana_velas: globex
+  # Zona horaria para mostrar la hora del toque y para las velas sin zona.
+  zona_horaria: Europe/Madrid
+  # Sin PDF del boletín ni CSV de velas: velas de 1 minuto de Databento del contrato de
+  # la escalera (≈ 0,005 $ por sesión e índice, con los topes de databento_diario).
+  databento: true
+
+# Seguimiento de cada nivel con velas de 1 minuto (Fase 3c, APARCADA: no
+# hay velas). El JSON ya guarda el hueco vacío ("seguimiento") con estas
+# ventanas para las excursiones a favor/en contra tras el toque.
+seguimiento:
+  ventanas_minutos: [15, 30, 60]
+
+# Clasificación de niveles
+niveles:
+  num_resistencias: 3          # cuántas resistencias (mayor GEX positiva por encima)
+  num_aceleraciones: 3         # cuántos niveles de aceleración en gamma negativa
+  # OI "relevante" = strikes en este percentil o por encima (75 = el 25 % con
+  # más open interest dentro del rango del 95 %). Se exige para Resistencia,
+  # Aceleración, Muro de calls y Muro de puts. La gamma de la 0DTE no crea
+  # niveles: va aparte, en zonas grises (sección gamma_0dte).
+  oi_relevante_percentil: 75
+  # El percentil se calcula solo con los strikes múltiplos de este número
+  # (las diarias añaden muchos strikes de 10 en 10 con poco OI que bajarían
+  # el umbral). 0 = usar todos los strikes.
+  rejilla_umbral_oi: 25
+  # Entran siempre en la escalera (tipo "OI relevante"): los strikes con OI
+  # relevante dentro del rango del 68 % y los números redondos (múltiplos de
+  # este valor) con OI relevante dentro del rango del 95 %. 0 = desactivado.
+  numero_redondo_cada: 500
+  # Muro de calls / Muro de puts = strike con más calls / puts abiertas
+  # (por open interest, no por GEX).
+  iman_distancia_puntos: 150   # el imán se busca a esta distancia del precio
+
+# Jerarquía visual y limpieza de la escalera (página e indicador)
+jerarquia:
+  # Categoría por percentil de la GEX BRUTA ESTRUCTURAL (|calls| + |puts|,
+  # sin la 0DTE) entre los niveles del día:
+  #   principal  >= percentil_principal (o uno de tipos_siempre_principales)
+  #   secundario entre percentil_secundario y percentil_principal
+  #   menor      <  percentil_secundario
+  # La Frontera (gamma flip) es siempre principal.
+  percentil_principal: 80
+  percentil_secundario: 40
+  tipos_siempre_principales: ["Muro de calls", "Muro de puts", "Imán"]
+  # Fusión de niveles cercanos: distancia = este factor × ancho de zona (w),
+  # de centro a centro y distancia incluida (w=25 -> se funden a <= 50 puntos).
+  # De mayor a menor GEX bruta estructural, cada nivel absorbe a sus vecinos
+  # (suma su OI y su GEX); un nivel absorbido no absorbe a nadie.
+  fusion_factor_ancho: 2
+  # Estos tipos nunca son absorbidos (si dos coinciden, se quedan los dos).
+  # La Frontera tampoco: no entra en la fusión.
+  tipos_nunca_absorbidos: ["Muro de calls", "Muro de puts", "Imán"]
+  # Zonas: ± (proporción × movimiento esperado de 1σ), entre mínimo y máximo.
+  ancho_proporcion_sigma: 0.05
+  ancho_minimo: 10
+  ancho_maximo: 30
+
+# Zonas grises de gamma 0DTE (aparte de los niveles: sin categoría ni
+# etiqueta en la escala). Un strike entra si la 0DTE domina su gamma
+# (|GEX 0DTE| > dominio × (|GEX calls| + |GEX puts|)) y su |GEX 0DTE| está
+# en este percentil o más entre los strikes del rango del 95 %. Los strikes a
+# menos de distancia_agrupar_puntos se unen; la zona se dibuja ± ancho_puntos.
+gamma_0dte:
+  dominio: 0.5
+  percentil: 95
+  ancho_puntos: 5
+
+# Vista corta (página e indicador): frontera, muros y régimen con solo los
+# vencimientos de los próximos N días naturales (de la sesión a la sesión + N-1).
+# No cambia la escalera. La usa también tareas/diagnostico_frontera.py.
+vista_corta:
+  dias: 7
+
+# Gamma flip: rango de precios hipotéticos alrededor del precio actual (en %)
+gamma_flip:
+  rango_pct: 5
+  pasos: 401
+
+# Carpetas
+rutas:
+  entrada: datos/entrada
+  historico: datos/historico
+
+# TradingView (indicador tradingview/escalera_nq.pine)
+tradingview:
+  # Avisar en la página cuando falten estos días hábiles o menos para el
+  # cambio de contrato (roll), y mientras dure hasta el vencimiento.
+  dias_aviso_roll: 5
+  # Bloque "gv=" del ESC2 para recalcular en vivo frontera, régimen y fuerza de los niveles
+  # (salida/gamma_vivo.py). TradingView admite 40.960 caracteres en el campo de texto; el
+  # bloque ocupa unos 12.000-19.000. Si no cabe, entran primero los strikes con más gamma.
+  gamma_vivo: true
+  gamma_vivo_max_caracteres: 24000
+
+# Vanna y charm (exposición de los creadores de mercado, con el mismo signo que
+# la GEX: signo_gex). Solo informan: no cambian niveles, categorías ni zonas.
+#   charm: contratos del futuro que tendrían que comprar o vender por cada día
+#          hábil que pasa (precio e IV quietos), calculado en la apertura.
+#   vanna: contratos que comprarían o venderían si la IV baja 1 punto.
+# charm_fuerte_contratos: |charm total| a partir del cual se dice «fuerte»
+# (por debajo, «débil»). Calibrado con las escaleras reconstruidas del ES (ver
+# tareas/validar_charm.py); el del ES va en indices -> ES -> parametros.
+vanna_charm:
+  # NQ: el del ES × 0,10 (charm del NQ / charm del ES en los boletines del 23 al 30-oct-2026,
+  # entre 0,06 y 0,12). PROVISIONAL: no hay escaleras del NQ reconstruidas para calibrarlo.
+  charm_fuerte_contratos: 1700
+
+# Escalera diaria automática con Databento (tareas/escalera_databento.py, sin PDF).
+# Antes de cada descarga calcula el coste exacto (gratis); si con él se pasa de un tope,
+# NO descarga y avisa. Lo gastado se apunta en datos/oi/gasto_databento.json.
+databento_diario:
+  indices: [NQ, ES]
+  tope_dia: 0.50        # dólares por día (los dos índices juntos)
+  tope_mes: 12.00       # dólares por mes natural (8 → 12 el 2026-11-12, para incluir el GC diario)
+  esperar_hasta: "15:15" # hora máxima esperando a que Databento tenga el open interest...
+  esperar_zona: America/New_York   # ...en esta zona (15:15 NY = 21:15 Madrid casi todo el año)
+  cada_minutos: 5        # cada cuánto lo vuelve a mirar mientras espera (consulta gratis)
+
+# Vigilancia del rango del 68 % (tareas/vigilar_rango.py, cada 5 min con launchd). Si el precio
+# sale del rango de todas las escaleras del día, genera la recentrada y avisa.
+vigilar_rango:
+  indices: [NQ, ES]
+  desde: "08:00"         # hora de Nueva York (días hábiles)
+  hasta: "16:00"
+  simbolos: {NQ: "NQ=F", ES: "ES=F"}   # gráfico público de Yahoo (≈ 10 min de retraso)
+  max_sigmas: 4          # más lejos que esto de la escalera = dato raro, no recentra
+  redondeo: 1            # el precio de la recentrada, redondeado a puntos enteros
+  abrir: true            # abre la página al recentrar
+
+# Confluencia con las opciones de QQQ y NDX (calculos/confluencia.py). NO cambia la escalera del
+# NQ: sus niveles se calculan aparte, trasladados a precio NQ, y solo marcan con ★ los niveles del
+# NQ que tienen uno de ellos a menos de `distancia_puntos`. Sin datos de QQQ/NDX, todo igual.
+confluencia:
+  # Distancia máxima (puntos NQ) entre el centro del nivel del NQ y el de QQQ/NDX para la ★.
+  # null = mitad del ancho de zona + error típico del traslado (error_ratio_pct del precio).
+  distancia_puntos: 12
+  # Solo cuentan estos niveles de QQQ/NDX (los principales: muros e imán)
+  tipos_externos: ["Muro de calls", "Muro de puts", "Imán"]
+  # Error típico (%) del ratio NQ/QQQ. Provisional (≈ 9 puntos NQ); se recalcula con el histórico
+  # (calculos.confluencia.error_ratio_pct) cuando estén los datos de QQQ.
+  error_ratio_pct: 0.03
+
+# Fiabilidad de los niveles (Fase F-2, 2026-11-12; calculos/fiabilidad.py). Los números salen del
+# estudio de cada índice (tareas/estudio_fiabilidad.py → salida/fiabilidad_<INDICE>.json). No cambia
+# cómo se calculan los niveles: solo cómo se clasifican, se muestran y se etiquetan.
+fiabilidad:
+  n_minimo: 20                    # con menos casos: «pocos datos»
+  diferencia_regimen_minima: 10   # muros por encima − por debajo de la frontera (puntos) para etiquetar
+                                  # «Muro fiable / Muro / Muro débil · ruptura» (NQ: 76 − 54 = 22; ES: 0)
+  ventaja_minima: 5               # |ventaja| de un tipo de contexto para decir que la tiene
+  objetivo_sigmas: 0.25           # OI máximo (antiguo imán) «objetivo» si está a ≤ 0,25σ del precio
+  # Mantenimiento mensual (tareas/fiabilidad_mensual.py, launchd com.marc.fiabilidad-mensual: día 1, 22:00)
+  mensual:
+    indices: [NQ, ES]
+    tope_velas: 0.50              # dólares por índice y mes (además del tope mensual de databento_diario)
+    umbral_cambio: 10             # avisa si una casilla cambia más de estos puntos (con n ≥ n_minimo)

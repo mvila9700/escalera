@@ -1,0 +1,4423 @@
+{
+  "version": 3,
+  "generado": "2026-11-11T15:24:01",
+  "indice": "ES",
+  "fecha_sesion": "2026-11-11",
+  "fecha_datos": "2026-11-10",
+  "preliminar": false,
+  "boletin": {
+    "tipo": "FINAL",
+    "comprobaciones": null
+  },
+  "fuente": "Databento GLBX.MDP3 (open interest y liquidaciones de CME, sin PDF)",
+  "precio_ref": 7544.25,
+  "origen_precio": "liquidación del futuro (cierre anterior)",
+  "futuro_liquidacion": 7544.25,
+  "contrato_ref": "DEC26",
+  "vencimiento_limite": "2026-12-18",
+  "vencimientos_incluidos": [
+    "2026-11-11",
+    "2026-11-12",
+    "2026-11-13",
+    "2026-11-16",
+    "2026-11-17",
+    "2026-11-18",
+    "2026-11-19",
+    "2026-11-20",
+    "2026-11-23",
+    "2026-11-24",
+    "2026-11-25",
+    "2026-11-27",
+    "2026-11-30",
+    "2026-12-01",
+    "2026-12-02",
+    "2026-12-03",
+    "2026-12-04",
+    "2026-12-07",
+    "2026-12-08",
+    "2026-12-09",
+    "2026-12-10",
+    "2026-12-11",
+    "2026-12-14",
+    "2026-12-15",
+    "2026-12-17",
+    "2026-12-18"
+  ],
+  "regimen": "negativa",
+  "gex_total": -9755373758.7532,
+  "gamma_flip": 7605.1605,
+  "iv_atm": 0.1342,
+  "vencimiento_iv": "2026-11-11",
+  "movimiento": {
+    "desviacion": 63.7791,
+    "rango_68": [
+      7480.4709,
+      7608.0291
+    ],
+    "rango_95": [
+      7416.6918,
+      7671.8082
+    ]
+  },
+  "straddle": 50.75,
+  "strike_straddle": 7545.0,
+  "jerarquia": {
+    "umbrales_gex_bruta": {
+      "p_secundario": 1452431295.6401,
+      "p_principal": 2016042743.5265
+    },
+    "niveles_antes_de_fusionar": 7,
+    "ancho_zona": 3.189,
+    "distancia_fusion": 6.3779
+  },
+  "zonas_0dte": [],
+  "niveles": [
+    {
+      "desde": 7650.0,
+      "hasta": 7650.0,
+      "texto": "7.650",
+      "tipos": [
+        "Muro de calls",
+        "Resistencia"
+      ],
+      "notas": [],
+      "oi_calls": 23246.0,
+      "oi_puts": 12870.0,
+      "gex_neto": 582526372.894,
+      "gex_abs": 582526372.894,
+      "gex_calls": 1157633712.9906,
+      "gex_puts": -575107340.0966,
+      "gex_0dte": 289074.6024,
+      "por_vencimiento": [
+        {
+          "vencimiento": "2026-11-11",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": 289074.6024,
+          "oi_calls": 801.0,
+          "oi_puts": 80.0
+        },
+        {
+          "vencimiento": "2026-11-12",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": 59633903.3688,
+          "oi_calls": 1444.0,
+          "oi_puts": 96.0
+        },
+        {
+          "vencimiento": "2026-11-13",
+          "productos": [
+            "W2"
+          ],
+          "gex": 350359549.0312,
+          "oi_calls": 8059.0,
+          "oi_puts": 2496.0
+        },
+        {
+          "vencimiento": "2026-11-16",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": 18533626.4351,
+          "oi_calls": 389.0,
+          "oi_puts": 108.0
+        },
+        {
+          "vencimiento": "2026-11-17",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 10372328.7585,
+          "oi_calls": 208.0,
+          "oi_puts": 47.0
+        },
+        {
+          "vencimiento": "2026-11-18",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": 17259801.418,
+          "oi_calls": 455.0,
+          "oi_puts": 171.0
+        },
+        {
+          "vencimiento": "2026-11-19",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": 7766437.9488,
+          "oi_calls": 178.0,
+          "oi_puts": 44.0
+        },
+        {
+          "vencimiento": "2026-11-20",
+          "productos": [
+            "W3"
+          ],
+          "gex": 114052485.3438,
+          "oi_calls": 4965.0,
+          "oi_puts": 2911.0
+        },
+        {
+          "vencimiento": "2026-11-23",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": 955692.1226,
+          "oi_calls": 30.0,
+          "oi_puts": 12.0
+        },
+        {
+          "vencimiento": "2026-11-24",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 821378.3146,
+          "oi_calls": 20.0,
+          "oi_puts": 4.0
+        },
+        {
+          "vencimiento": "2026-11-25",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": 1833635.2514,
+          "oi_calls": 56.0,
+          "oi_puts": 19.0
+        },
+        {
+          "vencimiento": "2026-11-27",
+          "productos": [
+            "W4"
+          ],
+          "gex": 96713.2576,
+          "oi_calls": 185.0,
+          "oi_puts": 183.0
+        },
+        {
+          "vencimiento": "2026-11-30",
+          "productos": [
+            "FIN_DE_MES"
+          ],
+          "gex": 15545519.7951,
+          "oi_calls": 1117.0,
+          "oi_puts": 779.0
+        },
+        {
+          "vencimiento": "2026-12-01",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 267218.9601,
+          "oi_calls": 11.0,
+          "oi_puts": 5.0
+        },
+        {
+          "vencimiento": "2026-12-02",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -823855.1529,
+          "oi_calls": 0.0,
+          "oi_puts": 19.0
+        },
+        {
+          "vencimiento": "2026-12-03",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -1051475.1469,
+          "oi_calls": 0.0,
+          "oi_puts": 25.0
+        },
+        {
+          "vencimiento": "2026-12-04",
+          "productos": [
+            "W1"
+          ],
+          "gex": 4797435.5041,
+          "oi_calls": 221.0,
+          "oi_puts": 103.0
+        },
+        {
+          "vencimiento": "2026-12-07",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": 2159255.1944,
+          "oi_calls": 77.0,
+          "oi_puts": 22.0
+        },
+        {
+          "vencimiento": "2026-12-08",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -191686.5548,
+          "oi_calls": 32.0,
+          "oi_puts": 37.0
+        },
+        {
+          "vencimiento": "2026-12-09",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": 5229453.7516,
+          "oi_calls": 193.0,
+          "oi_puts": 52.0
+        },
+        {
+          "vencimiento": "2026-12-10",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": 1831713.9573,
+          "oi_calls": 64.0,
+          "oi_puts": 13.0
+        },
+        {
+          "vencimiento": "2026-12-11",
+          "productos": [
+            "W2"
+          ],
+          "gex": 1858957.671,
+          "oi_calls": 177.0,
+          "oi_puts": 124.0
+        },
+        {
+          "vencimiento": "2026-12-14",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": -1813059.6718,
+          "oi_calls": 22.0,
+          "oi_puts": 75.0
+        },
+        {
+          "vencimiento": "2026-12-15",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 0.0,
+          "oi_calls": 0.0,
+          "oi_puts": 0.0
+        },
+        {
+          "vencimiento": "2026-12-17",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": 484332.3139,
+          "oi_calls": 19.0,
+          "oi_puts": 4.0
+        },
+        {
+          "vencimiento": "2026-12-18",
+          "productos": [
+            "TRIMESTRAL"
+          ],
+          "gex": -27742063.5799,
+          "oi_calls": 4523.0,
+          "oi_puts": 5441.0
+        }
+      ],
+      "gex_bruta_estructural": 1732387828.7811,
+      "categoria": "principal",
+      "zona_desde": 7646.811,
+      "zona_hasta": 7653.189,
+      "fusionados": [],
+      "venc_principal": "2026-11-13",
+      "prob_toque": 0.0997,
+      "cex": -427.8385,
+      "vex": 177.1347,
+      "efecto_charm": "debilita",
+      "confluencia": null,
+      "estado": "Tocado",
+      "hora_toque": null,
+      "nota": "",
+      "seguimiento": {
+        "toques": null,
+        "hora_primer_toque": null,
+        "roto": null,
+        "aceptado": null,
+        "excursiones": {
+          "15": {
+            "favor": null,
+            "contra": null
+          },
+          "30": {
+            "favor": null,
+            "contra": null
+          },
+          "60": {
+            "favor": null,
+            "contra": null
+          }
+        }
+      },
+      "muro_corto": []
+    },
+    {
+      "desde": 7605.1605,
+      "hasta": 7605.1605,
+      "texto": "7.605",
+      "tipos": [
+        "Frontera"
+      ],
+      "notas": [],
+      "oi_calls": null,
+      "oi_puts": null,
+      "gex_neto": null,
+      "gex_abs": null,
+      "gex_calls": null,
+      "gex_puts": null,
+      "gex_0dte": null,
+      "por_vencimiento": null,
+      "venc_principal": null,
+      "gex_bruta_estructural": null,
+      "categoria": "principal",
+      "zona_desde": 7601.9715,
+      "zona_hasta": 7608.3495,
+      "fusionados": [],
+      "prob_toque": 0.3415,
+      "estado": "Tocado",
+      "hora_toque": null,
+      "nota": "",
+      "seguimiento": {
+        "toques": null,
+        "hora_primer_toque": null,
+        "roto": null,
+        "aceptado": null,
+        "excursiones": {
+          "15": {
+            "favor": null,
+            "contra": null
+          },
+          "30": {
+            "favor": null,
+            "contra": null
+          },
+          "60": {
+            "favor": null,
+            "contra": null
+          }
+        }
+      },
+      "muro_corto": []
+    },
+    {
+      "desde": 7600.0,
+      "hasta": 7600.0,
+      "texto": "7.600",
+      "tipos": [
+        "Aceleración"
+      ],
+      "notas": [],
+      "oi_calls": 16462.0,
+      "oi_puts": 21172.0,
+      "gex_neto": -330176484.8493,
+      "gex_abs": 330176484.8493,
+      "gex_calls": 922553078.4958,
+      "gex_puts": -1252729563.3451,
+      "gex_0dte": 47056962.1665,
+      "por_vencimiento": [
+        {
+          "vencimiento": "2026-11-11",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": 47056962.1665,
+          "oi_calls": 1076.0,
+          "oi_puts": 328.0
+        },
+        {
+          "vencimiento": "2026-11-12",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -4098487.6374,
+          "oi_calls": 797.0,
+          "oi_puts": 831.0
+        },
+        {
+          "vencimiento": "2026-11-13",
+          "productos": [
+            "W2"
+          ],
+          "gex": -184974146.4861,
+          "oi_calls": 1448.0,
+          "oi_puts": 3251.0
+        },
+        {
+          "vencimiento": "2026-11-16",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": 20293911.4507,
+          "oi_calls": 391.0,
+          "oi_puts": 160.0
+        },
+        {
+          "vencimiento": "2026-11-17",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 13486677.8982,
+          "oi_calls": 334.0,
+          "oi_puts": 164.0
+        },
+        {
+          "vencimiento": "2026-11-18",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": 36186460.8564,
+          "oi_calls": 619.0,
+          "oi_puts": 101.0
+        },
+        {
+          "vencimiento": "2026-11-19",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": 4396851.917,
+          "oi_calls": 155.0,
+          "oi_puts": 87.0
+        },
+        {
+          "vencimiento": "2026-11-20",
+          "productos": [
+            "W3"
+          ],
+          "gex": -206594681.4897,
+          "oi_calls": 2820.0,
+          "oi_puts": 6240.0
+        },
+        {
+          "vencimiento": "2026-11-23",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": -12928842.1125,
+          "oi_calls": 99.0,
+          "oi_puts": 327.0
+        },
+        {
+          "vencimiento": "2026-11-24",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -19783789.5863,
+          "oi_calls": 7.0,
+          "oi_puts": 373.0
+        },
+        {
+          "vencimiento": "2026-11-25",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": 13518899.6569,
+          "oi_calls": 289.0,
+          "oi_puts": 28.0
+        },
+        {
+          "vencimiento": "2026-11-27",
+          "productos": [
+            "W4"
+          ],
+          "gex": 2814699.4089,
+          "oi_calls": 624.0,
+          "oi_puts": 568.0
+        },
+        {
+          "vencimiento": "2026-11-30",
+          "productos": [
+            "FIN_DE_MES"
+          ],
+          "gex": -24651627.3683,
+          "oi_calls": 1259.0,
+          "oi_puts": 1777.0
+        },
+        {
+          "vencimiento": "2026-12-01",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 2098952.5431,
+          "oi_calls": 50.0,
+          "oi_puts": 4.0
+        },
+        {
+          "vencimiento": "2026-12-02",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": 441377.5484,
+          "oi_calls": 12.0,
+          "oi_puts": 2.0
+        },
+        {
+          "vencimiento": "2026-12-03",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -470182.2266,
+          "oi_calls": 8.0,
+          "oi_puts": 19.0
+        },
+        {
+          "vencimiento": "2026-12-04",
+          "productos": [
+            "W1"
+          ],
+          "gex": -10719595.3714,
+          "oi_calls": 255.0,
+          "oi_puts": 516.0
+        },
+        {
+          "vencimiento": "2026-12-07",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": 2099304.3163,
+          "oi_calls": 79.0,
+          "oi_puts": 26.0
+        },
+        {
+          "vencimiento": "2026-12-08",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 115943.8922,
+          "oi_calls": 7.0,
+          "oi_puts": 4.0
+        },
+        {
+          "vencimiento": "2026-12-09",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -2418121.195,
+          "oi_calls": 81.0,
+          "oi_puts": 146.0
+        },
+        {
+          "vencimiento": "2026-12-10",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -395995.8151,
+          "oi_calls": 62.0,
+          "oi_puts": 73.0
+        },
+        {
+          "vencimiento": "2026-12-11",
+          "productos": [
+            "W2"
+          ],
+          "gex": -7961263.9701,
+          "oi_calls": 142.0,
+          "oi_puts": 369.0
+        },
+        {
+          "vencimiento": "2026-12-14",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": 854766.4247,
+          "oi_calls": 44.0,
+          "oi_puts": 19.0
+        },
+        {
+          "vencimiento": "2026-12-15",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 0.0,
+          "oi_calls": 0.0,
+          "oi_puts": 0.0
+        },
+        {
+          "vencimiento": "2026-12-17",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": 2092076.1394,
+          "oi_calls": 67.0,
+          "oi_puts": 2.0
+        },
+        {
+          "vencimiento": "2026-12-18",
+          "productos": [
+            "TRIMESTRAL"
+          ],
+          "gex": -636635.8095,
+          "oi_calls": 5737.0,
+          "oi_puts": 5757.0
+        }
+      ],
+      "gex_bruta_estructural": 2086956472.2129,
+      "categoria": "principal",
+      "zona_desde": 7596.811,
+      "zona_hasta": 7603.189,
+      "fusionados": [],
+      "venc_principal": "2026-12-18",
+      "prob_toque": 0.3838,
+      "cex": -66.1948,
+      "vex": -48.248,
+      "efecto_charm": null,
+      "confluencia": null,
+      "estado": "Tocado",
+      "hora_toque": null,
+      "nota": "",
+      "seguimiento": {
+        "toques": null,
+        "hora_primer_toque": null,
+        "roto": null,
+        "aceptado": null,
+        "excursiones": {
+          "15": {
+            "favor": null,
+            "contra": null
+          },
+          "30": {
+            "favor": null,
+            "contra": null
+          },
+          "60": {
+            "favor": null,
+            "contra": null
+          }
+        }
+      },
+      "muro_corto": []
+    },
+    {
+      "desde": 7575.0,
+      "hasta": 7580.0,
+      "texto": "7.575-7.580",
+      "tipos": [
+        "Resistencia"
+      ],
+      "notas": [],
+      "oi_calls": 9686.0,
+      "oi_puts": 14313.0,
+      "gex_neto": -163690044.1963,
+      "gex_abs": 163690044.1963,
+      "gex_calls": 798658198.5042,
+      "gex_puts": -962348242.7005,
+      "gex_0dte": 114288388.7612,
+      "por_vencimiento": [
+        {
+          "vencimiento": "2026-11-11",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": 114288388.7612,
+          "oi_calls": 1057.0,
+          "oi_puts": 497.0
+        },
+        {
+          "vencimiento": "2026-11-12",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": 62103652.5003,
+          "oi_calls": 570.0,
+          "oi_puts": 150.0
+        },
+        {
+          "vencimiento": "2026-11-13",
+          "productos": [
+            "W2"
+          ],
+          "gex": -164818498.6758,
+          "oi_calls": 1335.0,
+          "oi_puts": 2801.0
+        },
+        {
+          "vencimiento": "2026-11-16",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": 10489242.1296,
+          "oi_calls": 267.0,
+          "oi_puts": 153.0
+        },
+        {
+          "vencimiento": "2026-11-17",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 26074169.1228,
+          "oi_calls": 430.0,
+          "oi_puts": 111.0
+        },
+        {
+          "vencimiento": "2026-11-18",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": 5884208.0479,
+          "oi_calls": 252.0,
+          "oi_puts": 169.0
+        },
+        {
+          "vencimiento": "2026-11-19",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": 6066996.8104,
+          "oi_calls": 154.0,
+          "oi_puts": 61.0
+        },
+        {
+          "vencimiento": "2026-11-20",
+          "productos": [
+            "W3"
+          ],
+          "gex": -115107350.0097,
+          "oi_calls": 1317.0,
+          "oi_puts": 3215.0
+        },
+        {
+          "vencimiento": "2026-11-23",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": -16396777.4099,
+          "oi_calls": 5.0,
+          "oi_puts": 294.0
+        },
+        {
+          "vencimiento": "2026-11-24",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -9991403.8012,
+          "oi_calls": 12.0,
+          "oi_puts": 197.0
+        },
+        {
+          "vencimiento": "2026-11-25",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": 4178602.6132,
+          "oi_calls": 441.0,
+          "oi_puts": 360.0
+        },
+        {
+          "vencimiento": "2026-11-27",
+          "productos": [
+            "W4"
+          ],
+          "gex": -62560148.63,
+          "oi_calls": 530.0,
+          "oi_puts": 1787.0
+        },
+        {
+          "vencimiento": "2026-11-30",
+          "productos": [
+            "FIN_DE_MES"
+          ],
+          "gex": 43326492.3595,
+          "oi_calls": 1691.0,
+          "oi_puts": 777.0
+        },
+        {
+          "vencimiento": "2026-12-01",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 635491.3493,
+          "oi_calls": 16.0,
+          "oi_puts": 2.0
+        },
+        {
+          "vencimiento": "2026-12-02",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -961447.0117,
+          "oi_calls": 5.0,
+          "oi_puts": 27.0
+        },
+        {
+          "vencimiento": "2026-12-03",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -2836749.8567,
+          "oi_calls": 3.0,
+          "oi_puts": 70.0
+        },
+        {
+          "vencimiento": "2026-12-04",
+          "productos": [
+            "W1"
+          ],
+          "gex": 5083949.8551,
+          "oi_calls": 220.0,
+          "oi_puts": 95.0
+        },
+        {
+          "vencimiento": "2026-12-07",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": 0.0,
+          "oi_calls": 3.0,
+          "oi_puts": 3.0
+        },
+        {
+          "vencimiento": "2026-12-08",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -687875.6109,
+          "oi_calls": 3.0,
+          "oi_puts": 21.0
+        },
+        {
+          "vencimiento": "2026-12-09",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": 73586.0342,
+          "oi_calls": 2.0,
+          "oi_puts": 0.0
+        },
+        {
+          "vencimiento": "2026-12-10",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": 0.0,
+          "oi_calls": 2.0,
+          "oi_puts": 2.0
+        },
+        {
+          "vencimiento": "2026-12-11",
+          "productos": [
+            "W2"
+          ],
+          "gex": -9611035.9825,
+          "oi_calls": 24.0,
+          "oi_puts": 301.0
+        },
+        {
+          "vencimiento": "2026-12-14",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": -945487.5538,
+          "oi_calls": 2.0,
+          "oi_puts": 30.0
+        },
+        {
+          "vencimiento": "2026-12-15",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 0.0,
+          "oi_calls": 0.0,
+          "oi_puts": 0.0
+        },
+        {
+          "vencimiento": "2026-12-17",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": 159000.0019,
+          "oi_calls": 7.0,
+          "oi_puts": 2.0
+        },
+        {
+          "vencimiento": "2026-12-18",
+          "productos": [
+            "TRIMESTRAL",
+            "W3"
+          ],
+          "gex": -58137049.2397,
+          "oi_calls": 1338.0,
+          "oi_puts": 3188.0
+        }
+      ],
+      "gex_bruta_estructural": 1446832468.9645,
+      "categoria": "menor",
+      "zona_desde": 7571.811,
+      "zona_hasta": 7583.189,
+      "fusionados": [],
+      "venc_principal": "2026-11-20",
+      "prob_toque": 0.6304,
+      "cex": -225.6805,
+      "vex": -12.0076,
+      "efecto_charm": null,
+      "confluencia": null,
+      "estado": "Tocado",
+      "hora_toque": null,
+      "nota": "",
+      "seguimiento": {
+        "toques": null,
+        "hora_primer_toque": null,
+        "roto": null,
+        "aceptado": null,
+        "excursiones": {
+          "15": {
+            "favor": null,
+            "contra": null
+          },
+          "30": {
+            "favor": null,
+            "contra": null
+          },
+          "60": {
+            "favor": null,
+            "contra": null
+          }
+        }
+      },
+      "muro_corto": []
+    },
+    {
+      "desde": 7550.0,
+      "hasta": 7550.0,
+      "texto": "7.550",
+      "tipos": [
+        "Imán"
+      ],
+      "notas": [],
+      "oi_calls": 8608.0,
+      "oi_puts": 15069.0,
+      "gex_neto": -352182519.4928,
+      "gex_abs": 352182519.4928,
+      "gex_calls": 844158736.9613,
+      "gex_puts": -1196341256.4541,
+      "gex_0dte": 171729070.0395,
+      "por_vencimiento": [
+        {
+          "vencimiento": "2026-11-11",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": 171729070.0395,
+          "oi_calls": 1107.0,
+          "oi_puts": 601.0
+        },
+        {
+          "vencimiento": "2026-11-12",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -22475032.46,
+          "oi_calls": 345.0,
+          "oi_puts": 490.0
+        },
+        {
+          "vencimiento": "2026-11-13",
+          "productos": [
+            "W2"
+          ],
+          "gex": -284314894.5931,
+          "oi_calls": 1209.0,
+          "oi_puts": 3702.0
+        },
+        {
+          "vencimiento": "2026-11-16",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": -27559945.4553,
+          "oi_calls": 337.0,
+          "oi_puts": 635.0
+        },
+        {
+          "vencimiento": "2026-11-17",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 9449609.843,
+          "oi_calls": 231.0,
+          "oi_puts": 114.0
+        },
+        {
+          "vencimiento": "2026-11-18",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -37423230.0779,
+          "oi_calls": 89.0,
+          "oi_puts": 623.0
+        },
+        {
+          "vencimiento": "2026-11-19",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -3533574.6461,
+          "oi_calls": 102.0,
+          "oi_puts": 157.0
+        },
+        {
+          "vencimiento": "2026-11-20",
+          "productos": [
+            "W3"
+          ],
+          "gex": -86064954.0602,
+          "oi_calls": 1414.0,
+          "oi_puts": 2859.0
+        },
+        {
+          "vencimiento": "2026-11-23",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": -389997.4359,
+          "oi_calls": 82.0,
+          "oi_puts": 89.0
+        },
+        {
+          "vencimiento": "2026-11-24",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 52949.3419,
+          "oi_calls": 42.0,
+          "oi_puts": 41.0
+        },
+        {
+          "vencimiento": "2026-11-25",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -657837.169,
+          "oi_calls": 59.0,
+          "oi_puts": 72.0
+        },
+        {
+          "vencimiento": "2026-11-27",
+          "productos": [
+            "W4"
+          ],
+          "gex": -7649563.6508,
+          "oi_calls": 83.0,
+          "oi_puts": 240.0
+        },
+        {
+          "vencimiento": "2026-11-30",
+          "productos": [
+            "FIN_DE_MES"
+          ],
+          "gex": -11386674.0014,
+          "oi_calls": 424.0,
+          "oi_puts": 670.0
+        },
+        {
+          "vencimiento": "2026-12-01",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -177618.6453,
+          "oi_calls": 4.0,
+          "oi_puts": 8.0
+        },
+        {
+          "vencimiento": "2026-12-02",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -342971.5697,
+          "oi_calls": 0.0,
+          "oi_puts": 8.0
+        },
+        {
+          "vencimiento": "2026-12-03",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -124613.1941,
+          "oi_calls": 3.0,
+          "oi_puts": 6.0
+        },
+        {
+          "vencimiento": "2026-12-04",
+          "productos": [
+            "W1"
+          ],
+          "gex": -1155704.7504,
+          "oi_calls": 64.0,
+          "oi_puts": 93.0
+        },
+        {
+          "vencimiento": "2026-12-07",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": 1961393.0385,
+          "oi_calls": 54.0,
+          "oi_puts": 3.0
+        },
+        {
+          "vencimiento": "2026-12-08",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -75080.9398,
+          "oi_calls": 0.0,
+          "oi_puts": 2.0
+        },
+        {
+          "vencimiento": "2026-12-09",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": 180803.7623,
+          "oi_calls": 11.0,
+          "oi_puts": 6.0
+        },
+        {
+          "vencimiento": "2026-12-10",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": 280098.3765,
+          "oi_calls": 13.0,
+          "oi_puts": 5.0
+        },
+        {
+          "vencimiento": "2026-12-11",
+          "productos": [
+            "W2"
+          ],
+          "gex": 2491103.4363,
+          "oi_calls": 108.0,
+          "oi_puts": 35.0
+        },
+        {
+          "vencimiento": "2026-12-14",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": 431873.4649,
+          "oi_calls": 44.0,
+          "oi_puts": 31.0
+        },
+        {
+          "vencimiento": "2026-12-15",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 0.0,
+          "oi_calls": 0.0,
+          "oi_puts": 0.0
+        },
+        {
+          "vencimiento": "2026-12-17",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": 62504.4355,
+          "oi_calls": 9.0,
+          "oi_puts": 7.0
+        },
+        {
+          "vencimiento": "2026-12-18",
+          "productos": [
+            "TRIMESTRAL"
+          ],
+          "gex": -55490232.5822,
+          "oi_calls": 2774.0,
+          "oi_puts": 4572.0
+        }
+      ],
+      "gex_bruta_estructural": 1460829535.6537,
+      "categoria": "principal",
+      "zona_desde": 7546.811,
+      "zona_hasta": 7553.189,
+      "fusionados": [],
+      "venc_principal": "2026-12-18",
+      "prob_toque": 0.9282,
+      "cex": -42.7472,
+      "vex": -7.2465,
+      "efecto_charm": "refuerza",
+      "confluencia": null,
+      "estado": "Tocado",
+      "hora_toque": null,
+      "nota": "",
+      "seguimiento": {
+        "toques": null,
+        "hora_primer_toque": null,
+        "roto": null,
+        "aceptado": null,
+        "excursiones": {
+          "15": {
+            "favor": null,
+            "contra": null
+          },
+          "30": {
+            "favor": null,
+            "contra": null
+          },
+          "60": {
+            "favor": null,
+            "contra": null
+          }
+        }
+      },
+      "muro_corto": [
+        "calls"
+      ]
+    },
+    {
+      "desde": 7525.0,
+      "hasta": 7525.0,
+      "texto": "7.525",
+      "tipos": [
+        "OI relevante"
+      ],
+      "notas": [],
+      "oi_calls": 2850.0,
+      "oi_puts": 8595.0,
+      "gex_neto": -419940322.5033,
+      "gex_abs": 419940322.5033,
+      "gex_calls": 226207288.9118,
+      "gex_puts": -646147611.4151,
+      "gex_0dte": -93154194.1309,
+      "por_vencimiento": [
+        {
+          "vencimiento": "2026-11-11",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -93154194.1309,
+          "oi_calls": 236.0,
+          "oi_puts": 571.0
+        },
+        {
+          "vencimiento": "2026-11-12",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -3697421.1168,
+          "oi_calls": 116.0,
+          "oi_puts": 142.0
+        },
+        {
+          "vencimiento": "2026-11-13",
+          "productos": [
+            "W2"
+          ],
+          "gex": -120364241.7719,
+          "oi_calls": 439.0,
+          "oi_puts": 1566.0
+        },
+        {
+          "vencimiento": "2026-11-16",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": 5716252.6239,
+          "oi_calls": 246.0,
+          "oi_puts": 181.0
+        },
+        {
+          "vencimiento": "2026-11-17",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -3333809.4457,
+          "oi_calls": 47.0,
+          "oi_puts": 90.0
+        },
+        {
+          "vencimiento": "2026-11-18",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -30176008.4545,
+          "oi_calls": 10.0,
+          "oi_puts": 458.0
+        },
+        {
+          "vencimiento": "2026-11-19",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": 2547137.3562,
+          "oi_calls": 60.0,
+          "oi_puts": 19.0
+        },
+        {
+          "vencimiento": "2026-11-20",
+          "productos": [
+            "W3"
+          ],
+          "gex": -72900701.7297,
+          "oi_calls": 403.0,
+          "oi_puts": 1670.0
+        },
+        {
+          "vencimiento": "2026-11-23",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": 2857984.2645,
+          "oi_calls": 73.0,
+          "oi_puts": 20.0
+        },
+        {
+          "vencimiento": "2026-11-24",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -10776842.1901,
+          "oi_calls": 1.0,
+          "oi_puts": 211.0
+        },
+        {
+          "vencimiento": "2026-11-25",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -5044136.0975,
+          "oi_calls": 32.0,
+          "oi_puts": 135.0
+        },
+        {
+          "vencimiento": "2026-11-27",
+          "productos": [
+            "W4"
+          ],
+          "gex": -7760758.9313,
+          "oi_calls": 54.0,
+          "oi_puts": 218.0
+        },
+        {
+          "vencimiento": "2026-11-30",
+          "productos": [
+            "FIN_DE_MES"
+          ],
+          "gex": -41299889.0263,
+          "oi_calls": 79.0,
+          "oi_puts": 1001.0
+        },
+        {
+          "vencimiento": "2026-12-01",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -4398375.5378,
+          "oi_calls": 0.0,
+          "oi_puts": 102.0
+        },
+        {
+          "vencimiento": "2026-12-02",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -83336.0943,
+          "oi_calls": 1.0,
+          "oi_puts": 3.0
+        },
+        {
+          "vencimiento": "2026-12-03",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -9454041.6574,
+          "oi_calls": 0.0,
+          "oi_puts": 234.0
+        },
+        {
+          "vencimiento": "2026-12-04",
+          "productos": [
+            "W1"
+          ],
+          "gex": -737185.5448,
+          "oi_calls": 87.0,
+          "oi_puts": 106.0
+        },
+        {
+          "vencimiento": "2026-12-07",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": -1798678.1969,
+          "oi_calls": 1.0,
+          "oi_puts": 49.0
+        },
+        {
+          "vencimiento": "2026-12-08",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -36523.6979,
+          "oi_calls": 0.0,
+          "oi_puts": 1.0
+        },
+        {
+          "vencimiento": "2026-12-09",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -140846.3825,
+          "oi_calls": 2.0,
+          "oi_puts": 6.0
+        },
+        {
+          "vencimiento": "2026-12-10",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -511765.2504,
+          "oi_calls": 4.0,
+          "oi_puts": 19.0
+        },
+        {
+          "vencimiento": "2026-12-11",
+          "productos": [
+            "W2"
+          ],
+          "gex": -1763369.2969,
+          "oi_calls": 25.0,
+          "oi_puts": 78.0
+        },
+        {
+          "vencimiento": "2026-12-14",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": -1134291.54,
+          "oi_calls": 13.0,
+          "oi_puts": 48.0
+        },
+        {
+          "vencimiento": "2026-12-15",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 0.0,
+          "oi_calls": 0.0,
+          "oi_puts": 0.0
+        },
+        {
+          "vencimiento": "2026-12-17",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -183150.7897,
+          "oi_calls": 2.0,
+          "oi_puts": 8.0
+        },
+        {
+          "vencimiento": "2026-12-18",
+          "productos": [
+            "TRIMESTRAL"
+          ],
+          "gex": -22312129.8647,
+          "oi_calls": 919.0,
+          "oi_puts": 1659.0
+        }
+      ],
+      "gex_bruta_estructural": 647950617.749,
+      "categoria": "menor",
+      "zona_desde": 7521.811,
+      "zona_hasta": 7528.189,
+      "fusionados": [],
+      "venc_principal": "2026-12-18",
+      "prob_toque": 0.7625,
+      "cex": -139.5475,
+      "vex": 17.1535,
+      "efecto_charm": null,
+      "confluencia": null,
+      "estado": "No alcanzado",
+      "hora_toque": null,
+      "nota": "",
+      "seguimiento": {
+        "toques": null,
+        "hora_primer_toque": null,
+        "roto": null,
+        "aceptado": null,
+        "excursiones": {
+          "15": {
+            "favor": null,
+            "contra": null
+          },
+          "30": {
+            "favor": null,
+            "contra": null
+          },
+          "60": {
+            "favor": null,
+            "contra": null
+          }
+        }
+      },
+      "muro_corto": []
+    },
+    {
+      "desde": 7500.0,
+      "hasta": 7500.0,
+      "texto": "7.500",
+      "tipos": [
+        "Aceleración",
+        "Muro de puts"
+      ],
+      "notas": [],
+      "oi_calls": 12373.0,
+      "oi_puts": 59707.0,
+      "gex_neto": -2900722811.2997,
+      "gex_abs": 2900722811.2997,
+      "gex_calls": 786520911.6352,
+      "gex_puts": -3687243722.9349,
+      "gex_0dte": -94666409.6873,
+      "por_vencimiento": [
+        {
+          "vencimiento": "2026-11-11",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -94666409.6873,
+          "oi_calls": 584.0,
+          "oi_puts": 1223.0
+        },
+        {
+          "vencimiento": "2026-11-12",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -83012454.8841,
+          "oi_calls": 525.0,
+          "oi_puts": 1211.0
+        },
+        {
+          "vencimiento": "2026-11-13",
+          "productos": [
+            "W2"
+          ],
+          "gex": -1517123412.0724,
+          "oi_calls": 3050.0,
+          "oi_puts": 18775.0
+        },
+        {
+          "vencimiento": "2026-11-16",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": -35907837.1229,
+          "oi_calls": 226.0,
+          "oi_puts": 667.0
+        },
+        {
+          "vencimiento": "2026-11-17",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -23923285.6892,
+          "oi_calls": 128.0,
+          "oi_puts": 458.0
+        },
+        {
+          "vencimiento": "2026-11-18",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -17088267.9338,
+          "oi_calls": 84.0,
+          "oi_puts": 352.0
+        },
+        {
+          "vencimiento": "2026-11-19",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -4651292.6821,
+          "oi_calls": 26.0,
+          "oi_puts": 105.0
+        },
+        {
+          "vencimiento": "2026-11-20",
+          "productos": [
+            "W3"
+          ],
+          "gex": -264606561.4005,
+          "oi_calls": 2469.0,
+          "oi_puts": 7303.0
+        },
+        {
+          "vencimiento": "2026-11-23",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": -63647672.9621,
+          "oi_calls": 16.0,
+          "oi_puts": 1253.0
+        },
+        {
+          "vencimiento": "2026-11-24",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 3533081.2638,
+          "oi_calls": 151.0,
+          "oi_puts": 79.0
+        },
+        {
+          "vencimiento": "2026-11-25",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -6380609.6037,
+          "oi_calls": 179.0,
+          "oi_puts": 315.0
+        },
+        {
+          "vencimiento": "2026-11-27",
+          "productos": [
+            "W4"
+          ],
+          "gex": -42275683.1223,
+          "oi_calls": 352.0,
+          "oi_puts": 1281.0
+        },
+        {
+          "vencimiento": "2026-11-30",
+          "productos": [
+            "FIN_DE_MES"
+          ],
+          "gex": -355745953.5515,
+          "oi_calls": 680.0,
+          "oi_puts": 8942.0
+        },
+        {
+          "vencimiento": "2026-12-01",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -3369586.8798,
+          "oi_calls": 3.0,
+          "oi_puts": 84.0
+        },
+        {
+          "vencimiento": "2026-12-02",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": 80308.0837,
+          "oi_calls": 18.0,
+          "oi_puts": 16.0
+        },
+        {
+          "vencimiento": "2026-12-03",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -10623329.3358,
+          "oi_calls": 1.0,
+          "oi_puts": 273.0
+        },
+        {
+          "vencimiento": "2026-12-04",
+          "productos": [
+            "W1"
+          ],
+          "gex": -34285421.9884,
+          "oi_calls": 80.0,
+          "oi_puts": 993.0
+        },
+        {
+          "vencimiento": "2026-12-07",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": 1924145.1363,
+          "oi_calls": 71.0,
+          "oi_puts": 18.0
+        },
+        {
+          "vencimiento": "2026-12-08",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -35410.6759,
+          "oi_calls": 1.0,
+          "oi_puts": 2.0
+        },
+        {
+          "vencimiento": "2026-12-09",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -136689.319,
+          "oi_calls": 7.0,
+          "oi_puts": 11.0
+        },
+        {
+          "vencimiento": "2026-12-10",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -231965.8867,
+          "oi_calls": 22.0,
+          "oi_puts": 29.0
+        },
+        {
+          "vencimiento": "2026-12-11",
+          "productos": [
+            "W2"
+          ],
+          "gex": -3524657.8292,
+          "oi_calls": 175.0,
+          "oi_puts": 284.0
+        },
+        {
+          "vencimiento": "2026-12-14",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": 189109.3184,
+          "oi_calls": 42.0,
+          "oi_puts": 36.0
+        },
+        {
+          "vencimiento": "2026-12-15",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -153964.7056,
+          "oi_calls": 0.0,
+          "oi_puts": 5.0
+        },
+        {
+          "vencimiento": "2026-12-17",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": 0.0,
+          "oi_calls": 16.0,
+          "oi_puts": 16.0
+        },
+        {
+          "vencimiento": "2026-12-18",
+          "productos": [
+            "TRIMESTRAL"
+          ],
+          "gex": -345058987.7698,
+          "oi_calls": 3467.0,
+          "oi_puts": 15976.0
+        }
+      ],
+      "gex_bruta_estructural": 4206061657.5669,
+      "categoria": "principal",
+      "zona_desde": 7496.811,
+      "zona_hasta": 7503.189,
+      "fusionados": [],
+      "venc_principal": "2026-11-13",
+      "prob_toque": 0.4865,
+      "cex": -910.3411,
+      "vex": 276.521,
+      "efecto_charm": "refuerza",
+      "confluencia": null,
+      "estado": "No alcanzado",
+      "hora_toque": null,
+      "nota": "",
+      "seguimiento": {
+        "toques": null,
+        "hora_primer_toque": null,
+        "roto": null,
+        "aceptado": null,
+        "excursiones": {
+          "15": {
+            "favor": null,
+            "contra": null
+          },
+          "30": {
+            "favor": null,
+            "contra": null
+          },
+          "60": {
+            "favor": null,
+            "contra": null
+          }
+        }
+      },
+      "muro_corto": [
+        "puts"
+      ]
+    },
+    {
+      "desde": 7450.0,
+      "hasta": 7450.0,
+      "texto": "7.450",
+      "tipos": [
+        "Aceleración"
+      ],
+      "notas": [],
+      "oi_calls": 5106.0,
+      "oi_puts": 22897.0,
+      "gex_neto": -785881083.0283,
+      "gex_abs": 785881083.0283,
+      "gex_calls": 232405293.2529,
+      "gex_puts": -1018286376.2812,
+      "gex_0dte": -20212049.3952,
+      "por_vencimiento": [
+        {
+          "vencimiento": "2026-11-11",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -20212049.3952,
+          "oi_calls": 122.0,
+          "oi_puts": 1440.0
+        },
+        {
+          "vencimiento": "2026-11-12",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": 21229054.9985,
+          "oi_calls": 796.0,
+          "oi_puts": 498.0
+        },
+        {
+          "vencimiento": "2026-11-13",
+          "productos": [
+            "W2"
+          ],
+          "gex": -213051217.656,
+          "oi_calls": 762.0,
+          "oi_puts": 3812.0
+        },
+        {
+          "vencimiento": "2026-11-16",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": -59578138.0841,
+          "oi_calls": 39.0,
+          "oi_puts": 968.0
+        },
+        {
+          "vencimiento": "2026-11-17",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -9512609.0951,
+          "oi_calls": 2.0,
+          "oi_puts": 162.0
+        },
+        {
+          "vencimiento": "2026-11-18",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -32466403.4709,
+          "oi_calls": 25.0,
+          "oi_puts": 625.0
+        },
+        {
+          "vencimiento": "2026-11-19",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -19667649.8256,
+          "oi_calls": 6.0,
+          "oi_puts": 392.0
+        },
+        {
+          "vencimiento": "2026-11-20",
+          "productos": [
+            "W3"
+          ],
+          "gex": -198166909.0893,
+          "oi_calls": 788.0,
+          "oi_puts": 4904.0
+        },
+        {
+          "vencimiento": "2026-11-23",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": -19211907.713,
+          "oi_calls": 8.0,
+          "oi_puts": 429.0
+        },
+        {
+          "vencimiento": "2026-11-24",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -14227004.2296,
+          "oi_calls": 0.0,
+          "oi_puts": 325.0
+        },
+        {
+          "vencimiento": "2026-11-25",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -24358097.2703,
+          "oi_calls": 4.0,
+          "oi_puts": 583.0
+        },
+        {
+          "vencimiento": "2026-11-27",
+          "productos": [
+            "W4"
+          ],
+          "gex": -51360077.8028,
+          "oi_calls": 38.0,
+          "oi_puts": 1287.0
+        },
+        {
+          "vencimiento": "2026-11-30",
+          "productos": [
+            "FIN_DE_MES"
+          ],
+          "gex": -38808097.6688,
+          "oi_calls": 660.0,
+          "oi_puts": 1652.0
+        },
+        {
+          "vencimiento": "2026-12-01",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -2081169.7966,
+          "oi_calls": 1.0,
+          "oi_puts": 56.0
+        },
+        {
+          "vencimiento": "2026-12-02",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -1909136.5636,
+          "oi_calls": 0.0,
+          "oi_puts": 52.0
+        },
+        {
+          "vencimiento": "2026-12-03",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -2143504.1271,
+          "oi_calls": 5.0,
+          "oi_puts": 65.0
+        },
+        {
+          "vencimiento": "2026-12-04",
+          "productos": [
+            "W1"
+          ],
+          "gex": -3182479.3027,
+          "oi_calls": 175.0,
+          "oi_puts": 267.0
+        },
+        {
+          "vencimiento": "2026-12-07",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": -3386446.0441,
+          "oi_calls": 2.0,
+          "oi_puts": 103.0
+        },
+        {
+          "vencimiento": "2026-12-08",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -65409.8484,
+          "oi_calls": 0.0,
+          "oi_puts": 2.0
+        },
+        {
+          "vencimiento": "2026-12-09",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -221887.5963,
+          "oi_calls": 4.0,
+          "oi_puts": 11.0
+        },
+        {
+          "vencimiento": "2026-12-10",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -30803.581,
+          "oi_calls": 7.0,
+          "oi_puts": 8.0
+        },
+        {
+          "vencimiento": "2026-12-11",
+          "productos": [
+            "W2"
+          ],
+          "gex": 1447555.7283,
+          "oi_calls": 126.0,
+          "oi_puts": 78.0
+        },
+        {
+          "vencimiento": "2026-12-14",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": -618282.4276,
+          "oi_calls": 1.0,
+          "oi_puts": 22.0
+        },
+        {
+          "vencimiento": "2026-12-15",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 0.0,
+          "oi_calls": 0.0,
+          "oi_puts": 0.0
+        },
+        {
+          "vencimiento": "2026-12-17",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -891790.1265,
+          "oi_calls": 5.0,
+          "oi_puts": 37.0
+        },
+        {
+          "vencimiento": "2026-12-18",
+          "productos": [
+            "TRIMESTRAL"
+          ],
+          "gex": -93406623.0405,
+          "oi_calls": 1530.0,
+          "oi_puts": 5119.0
+        }
+      ],
+      "gex_bruta_estructural": 1226737783.9838,
+      "categoria": "menor",
+      "zona_desde": 7446.811,
+      "zona_hasta": 7453.189,
+      "fusionados": [],
+      "venc_principal": "2026-12-18",
+      "prob_toque": 0.137,
+      "cex": -371.2456,
+      "vex": 153.8932,
+      "efecto_charm": null,
+      "confluencia": null,
+      "estado": "No alcanzado",
+      "hora_toque": null,
+      "nota": "",
+      "seguimiento": {
+        "toques": null,
+        "hora_primer_toque": null,
+        "roto": null,
+        "aceptado": null,
+        "excursiones": {
+          "15": {
+            "favor": null,
+            "contra": null
+          },
+          "30": {
+            "favor": null,
+            "contra": null
+          },
+          "60": {
+            "favor": null,
+            "contra": null
+          }
+        }
+      },
+      "muro_corto": []
+    }
+  ],
+  "niveles_extendidos": [
+    {
+      "desde": 7700.0,
+      "hasta": 7700.0,
+      "texto": "7.700",
+      "tipos": [
+        "Muro de calls"
+      ],
+      "notas": [],
+      "oi_calls": 24290.0,
+      "oi_puts": 24352.0,
+      "gex_neto": -64362247.2618,
+      "gex_abs": 64362247.2618,
+      "gex_calls": 747223027.2089,
+      "gex_puts": -811585274.4707,
+      "gex_0dte": 33860.713,
+      "por_vencimiento": [
+        {
+          "vencimiento": "2026-11-11",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": 33860.713,
+          "oi_calls": 3127.0,
+          "oi_puts": 110.0
+        },
+        {
+          "vencimiento": "2026-11-12",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": 4719777.5018,
+          "oi_calls": 798.0,
+          "oi_puts": 201.0
+        },
+        {
+          "vencimiento": "2026-11-13",
+          "productos": [
+            "W2"
+          ],
+          "gex": 15038365.6048,
+          "oi_calls": 3084.0,
+          "oi_puts": 2449.0
+        },
+        {
+          "vencimiento": "2026-11-16",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": 20663060.5462,
+          "oi_calls": 777.0,
+          "oi_puts": 197.0
+        },
+        {
+          "vencimiento": "2026-11-17",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 43530152.4851,
+          "oi_calls": 1110.0,
+          "oi_puts": 51.0
+        },
+        {
+          "vencimiento": "2026-11-18",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": 26786948.1093,
+          "oi_calls": 667.0,
+          "oi_puts": 64.0
+        },
+        {
+          "vencimiento": "2026-11-19",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": 12208000.8934,
+          "oi_calls": 303.0,
+          "oi_puts": 32.0
+        },
+        {
+          "vencimiento": "2026-11-20",
+          "productos": [
+            "W3"
+          ],
+          "gex": 63512901.6874,
+          "oi_calls": 4446.0,
+          "oi_puts": 3034.0
+        },
+        {
+          "vencimiento": "2026-11-23",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": 1736410.6609,
+          "oi_calls": 46.0,
+          "oi_puts": 7.0
+        },
+        {
+          "vencimiento": "2026-11-24",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 1846517.862,
+          "oi_calls": 44.0,
+          "oi_puts": 2.0
+        },
+        {
+          "vencimiento": "2026-11-25",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": 6148617.1995,
+          "oi_calls": 145.0,
+          "oi_puts": 3.0
+        },
+        {
+          "vencimiento": "2026-11-27",
+          "productos": [
+            "W4"
+          ],
+          "gex": 2007635.8523,
+          "oi_calls": 277.0,
+          "oi_puts": 230.0
+        },
+        {
+          "vencimiento": "2026-11-30",
+          "productos": [
+            "FIN_DE_MES"
+          ],
+          "gex": 30285100.9637,
+          "oi_calls": 2828.0,
+          "oi_puts": 2099.0
+        },
+        {
+          "vencimiento": "2026-12-01",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -814075.5724,
+          "oi_calls": 6.0,
+          "oi_puts": 26.0
+        },
+        {
+          "vencimiento": "2026-12-02",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": 239199.2045,
+          "oi_calls": 6.0,
+          "oi_puts": 0.0
+        },
+        {
+          "vencimiento": "2026-12-03",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -3747836.5238,
+          "oi_calls": 5.0,
+          "oi_puts": 101.0
+        },
+        {
+          "vencimiento": "2026-12-04",
+          "productos": [
+            "W1"
+          ],
+          "gex": -23197446.827,
+          "oi_calls": 351.0,
+          "oi_puts": 960.0
+        },
+        {
+          "vencimiento": "2026-12-07",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": 3042341.7578,
+          "oi_calls": 125.0,
+          "oi_puts": 43.0
+        },
+        {
+          "vencimiento": "2026-12-08",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 254844.0317,
+          "oi_calls": 14.0,
+          "oi_puts": 7.0
+        },
+        {
+          "vencimiento": "2026-12-09",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -1272673.0682,
+          "oi_calls": 64.0,
+          "oi_puts": 100.0
+        },
+        {
+          "vencimiento": "2026-12-10",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": 2274642.2703,
+          "oi_calls": 67.0,
+          "oi_puts": 1.0
+        },
+        {
+          "vencimiento": "2026-12-11",
+          "productos": [
+            "W2"
+          ],
+          "gex": -7838423.273,
+          "oi_calls": 271.0,
+          "oi_puts": 503.0
+        },
+        {
+          "vencimiento": "2026-12-14",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": 2249076.073,
+          "oi_calls": 68.0,
+          "oi_puts": 0.0
+        },
+        {
+          "vencimiento": "2026-12-15",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 97492.0795,
+          "oi_calls": 3.0,
+          "oi_puts": 0.0
+        },
+        {
+          "vencimiento": "2026-12-17",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": 2393885.2085,
+          "oi_calls": 76.0,
+          "oi_puts": 0.0
+        },
+        {
+          "vencimiento": "2026-12-18",
+          "productos": [
+            "TRIMESTRAL"
+          ],
+          "gex": -266560622.702,
+          "oi_calls": 5582.0,
+          "oi_puts": 14132.0
+        }
+      ],
+      "gex_bruta_estructural": 1558771971.8393,
+      "categoria": "principal",
+      "zona_desde": 7696.811,
+      "zona_hasta": 7703.189,
+      "fusionados": [],
+      "venc_principal": "2026-12-18",
+      "prob_toque": 0.0156,
+      "cex": -89.4259,
+      "vex": -21.2081,
+      "efecto_charm": "debilita",
+      "confluencia": null,
+      "estado": null,
+      "hora_toque": null,
+      "nota": "",
+      "seguimiento": {
+        "toques": null,
+        "hora_primer_toque": null,
+        "roto": null,
+        "aceptado": null,
+        "excursiones": {
+          "15": {
+            "favor": null,
+            "contra": null
+          },
+          "30": {
+            "favor": null,
+            "contra": null
+          },
+          "60": {
+            "favor": null,
+            "contra": null
+          }
+        }
+      },
+      "extendido": true
+    },
+    {
+      "desde": 7400.0,
+      "hasta": 7400.0,
+      "texto": "7.400",
+      "tipos": [
+        "Aceleración",
+        "Muro de puts"
+      ],
+      "notas": [],
+      "oi_calls": 7534.0,
+      "oi_puts": 38440.0,
+      "gex_neto": -1003854234.0035,
+      "gex_abs": 1003854234.0035,
+      "gex_calls": 215582646.6681,
+      "gex_puts": -1219436880.6716,
+      "gex_0dte": -2386303.6037,
+      "por_vencimiento": [
+        {
+          "vencimiento": "2026-11-11",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -2386303.6037,
+          "oi_calls": 587.0,
+          "oi_puts": 4089.0
+        },
+        {
+          "vencimiento": "2026-11-12",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -6649410.4463,
+          "oi_calls": 529.0,
+          "oi_puts": 723.0
+        },
+        {
+          "vencimiento": "2026-11-13",
+          "productos": [
+            "W2"
+          ],
+          "gex": -356272603.417,
+          "oi_calls": 384.0,
+          "oi_puts": 8285.0
+        },
+        {
+          "vencimiento": "2026-11-16",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": -8468665.839,
+          "oi_calls": 186.0,
+          "oi_puts": 367.0
+        },
+        {
+          "vencimiento": "2026-11-17",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -31518313.8757,
+          "oi_calls": 61.0,
+          "oi_puts": 747.0
+        },
+        {
+          "vencimiento": "2026-11-18",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -18626857.2725,
+          "oi_calls": 73.0,
+          "oi_puts": 497.0
+        },
+        {
+          "vencimiento": "2026-11-19",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -6946508.5635,
+          "oi_calls": 34.0,
+          "oi_puts": 198.0
+        },
+        {
+          "vencimiento": "2026-11-20",
+          "productos": [
+            "W3"
+          ],
+          "gex": -194917007.6261,
+          "oi_calls": 1260.0,
+          "oi_puts": 6047.0
+        },
+        {
+          "vencimiento": "2026-11-23",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": -13933895.4187,
+          "oi_calls": 32.0,
+          "oi_puts": 388.0
+        },
+        {
+          "vencimiento": "2026-11-24",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -532003.4879,
+          "oi_calls": 15.0,
+          "oi_puts": 29.0
+        },
+        {
+          "vencimiento": "2026-11-25",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -3604201.1749,
+          "oi_calls": 12.0,
+          "oi_puts": 110.0
+        },
+        {
+          "vencimiento": "2026-11-27",
+          "productos": [
+            "W4"
+          ],
+          "gex": -39331514.6398,
+          "oi_calls": 54.0,
+          "oi_puts": 1144.0
+        },
+        {
+          "vencimiento": "2026-11-30",
+          "productos": [
+            "FIN_DE_MES"
+          ],
+          "gex": -113065582.1642,
+          "oi_calls": 127.0,
+          "oi_puts": 3390.0
+        },
+        {
+          "vencimiento": "2026-12-01",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -607128.6672,
+          "oi_calls": 6.0,
+          "oi_puts": 24.0
+        },
+        {
+          "vencimiento": "2026-12-02",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -1053135.9549,
+          "oi_calls": 4.0,
+          "oi_puts": 36.0
+        },
+        {
+          "vencimiento": "2026-12-03",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -4176768.6712,
+          "oi_calls": 4.0,
+          "oi_puts": 134.0
+        },
+        {
+          "vencimiento": "2026-12-04",
+          "productos": [
+            "W1"
+          ],
+          "gex": -17483706.5546,
+          "oi_calls": 77.0,
+          "oi_puts": 636.0
+        },
+        {
+          "vencimiento": "2026-12-07",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": -1216652.0591,
+          "oi_calls": 67.0,
+          "oi_puts": 107.0
+        },
+        {
+          "vencimiento": "2026-12-08",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": -119166.725,
+          "oi_calls": 4.0,
+          "oi_puts": 8.0
+        },
+        {
+          "vencimiento": "2026-12-09",
+          "productos": [
+            "MIERCOLES"
+          ],
+          "gex": -289610.5157,
+          "oi_calls": 151.0,
+          "oi_puts": 161.0
+        },
+        {
+          "vencimiento": "2026-12-10",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -452174.6416,
+          "oi_calls": 2.0,
+          "oi_puts": 18.0
+        },
+        {
+          "vencimiento": "2026-12-11",
+          "productos": [
+            "W2"
+          ],
+          "gex": -7317790.5482,
+          "oi_calls": 73.0,
+          "oi_puts": 337.0
+        },
+        {
+          "vencimiento": "2026-12-14",
+          "productos": [
+            "LUNES"
+          ],
+          "gex": -5287575.1223,
+          "oi_calls": 0.0,
+          "oi_puts": 195.0
+        },
+        {
+          "vencimiento": "2026-12-15",
+          "productos": [
+            "MARTES"
+          ],
+          "gex": 0.0,
+          "oi_calls": 0.0,
+          "oi_puts": 0.0
+        },
+        {
+          "vencimiento": "2026-12-17",
+          "productos": [
+            "JUEVES"
+          ],
+          "gex": -180705.6052,
+          "oi_calls": 18.0,
+          "oi_puts": 25.0
+        },
+        {
+          "vencimiento": "2026-12-18",
+          "productos": [
+            "TRIMESTRAL"
+          ],
+          "gex": -169416951.4091,
+          "oi_calls": 3774.0,
+          "oi_puts": 10745.0
+        }
+      ],
+      "gex_bruta_estructural": 1431833246.4571,
+      "categoria": "principal",
+      "zona_desde": 7396.811,
+      "zona_hasta": 7403.189,
+      "fusionados": [],
+      "venc_principal": "2026-12-18",
+      "prob_toque": 0.0224,
+      "cex": -593.3893,
+      "vex": 289.1958,
+      "efecto_charm": "refuerza",
+      "confluencia": null,
+      "estado": null,
+      "hora_toque": null,
+      "nota": "",
+      "seguimiento": {
+        "toques": null,
+        "hora_primer_toque": null,
+        "roto": null,
+        "aceptado": null,
+        "excursiones": {
+          "15": {
+            "favor": null,
+            "contra": null
+          },
+          "30": {
+            "favor": null,
+            "contra": null
+          },
+          "60": {
+            "favor": null,
+            "contra": null
+          }
+        }
+      },
+      "extendido": true
+    }
+  ],
+  "graficos": {
+    "mapa_0dte": [
+      {
+        "tramo": 7395.0,
+        "call": 9284.4133,
+        "put": -66847.776,
+        "neto": -57563.3627
+      },
+      {
+        "tramo": 7400.0,
+        "call": 399988.6395,
+        "put": -2786292.2431,
+        "neto": -2386303.6037
+      },
+      {
+        "tramo": 7405.0,
+        "call": 19611.907,
+        "put": -404718.4444,
+        "neto": -385106.5374
+      },
+      {
+        "tramo": 7410.0,
+        "call": 86326.9916,
+        "put": -705414.8455,
+        "neto": -619087.8539
+      },
+      {
+        "tramo": 7415.0,
+        "call": 100531.5724,
+        "put": -350978.6476,
+        "neto": -250447.0752
+      },
+      {
+        "tramo": 7420.0,
+        "call": 107231.2973,
+        "put": -1106432.0219,
+        "neto": -999200.7246
+      },
+      {
+        "tramo": 7425.0,
+        "call": 598793.8008,
+        "put": -3839123.6826,
+        "neto": -3240329.8818
+      },
+      {
+        "tramo": 7430.0,
+        "call": 335140.1546,
+        "put": -3151248.3981,
+        "neto": -2816108.2435
+      },
+      {
+        "tramo": 7435.0,
+        "call": 407849.0388,
+        "put": -9960438.2457,
+        "neto": -9552589.2068
+      },
+      {
+        "tramo": 7440.0,
+        "call": 374602.4313,
+        "put": -17440792.2672,
+        "neto": -17066189.8359
+      },
+      {
+        "tramo": 7445.0,
+        "call": 798890.4224,
+        "put": -2049327.6054,
+        "neto": -1250437.1829
+      },
+      {
+        "tramo": 7450.0,
+        "call": 1870918.0776,
+        "put": -22082967.4728,
+        "neto": -20212049.3952
+      },
+      {
+        "tramo": 7455.0,
+        "call": 859951.0166,
+        "put": -3439804.0665,
+        "neto": -2579853.0499
+      },
+      {
+        "tramo": 7460.0,
+        "call": 3380150.3413,
+        "put": -7745068.8923,
+        "neto": -4364918.551
+      },
+      {
+        "tramo": 7465.0,
+        "call": 4565405.4803,
+        "put": -10687199.1926,
+        "neto": -6121793.7123
+      },
+      {
+        "tramo": 7470.0,
+        "call": 20643868.9621,
+        "put": -27320184.0307,
+        "neto": -6676315.0686
+      },
+      {
+        "tramo": 7475.0,
+        "call": 4885430.8935,
+        "put": -33420788.6121,
+        "neto": -28535357.7187
+      },
+      {
+        "tramo": 7480.0,
+        "call": 6883893.4218,
+        "put": -15645212.3224,
+        "neto": -8761318.9005
+      },
+      {
+        "tramo": 7485.0,
+        "call": 11871767.8013,
+        "put": -21352100.3621,
+        "neto": -9480332.5608
+      },
+      {
+        "tramo": 7490.0,
+        "call": 13089899.8972,
+        "put": -51009054.3614,
+        "neto": -37919154.4642
+      },
+      {
+        "tramo": 7495.0,
+        "call": 13861909.4023,
+        "put": -21729479.6036,
+        "neto": -7867570.2013
+      },
+      {
+        "tramo": 7500.0,
+        "call": 86518283.6579,
+        "put": -181184693.3452,
+        "neto": -94666409.6873
+      },
+      {
+        "tramo": 7505.0,
+        "call": 15075411.421,
+        "put": -62554293.3676,
+        "neto": -47478881.9466
+      },
+      {
+        "tramo": 7510.0,
+        "call": 33751312.1679,
+        "put": -70498302.9305,
+        "neto": -36746990.7626
+      },
+      {
+        "tramo": 7515.0,
+        "call": 40355238.7375,
+        "put": -85698203.611,
+        "neto": -45342964.8735
+      },
+      {
+        "tramo": 7520.0,
+        "call": 36999043.1328,
+        "put": -95031788.8685,
+        "neto": -58032745.7357
+      },
+      {
+        "tramo": 7525.0,
+        "call": 65625044.2235,
+        "put": -158779238.3544,
+        "neto": -93154194.1309
+      },
+      {
+        "tramo": 7530.0,
+        "call": 218741271.1083,
+        "put": -226564205.1507,
+        "neto": -7822934.0424
+      },
+      {
+        "tramo": 7535.0,
+        "call": 63262750.2496,
+        "put": -47049683.6027,
+        "neto": 16213066.6469
+      },
+      {
+        "tramo": 7540.0,
+        "call": 61817558.4862,
+        "put": -63154154.3454,
+        "neto": -1336595.8592
+      },
+      {
+        "tramo": 7545.0,
+        "call": 70632629.401,
+        "put": -50402895.7376,
+        "neto": 20229733.6634
+      },
+      {
+        "tramo": 7550.0,
+        "call": 375699763.9007,
+        "put": -203970693.8612,
+        "neto": 171729070.0395
+      },
+      {
+        "tramo": 7555.0,
+        "call": 105994093.3994,
+        "put": -82145422.3845,
+        "neto": 23848671.0149
+      },
+      {
+        "tramo": 7560.0,
+        "call": 186521293.0046,
+        "put": -41692994.9069,
+        "neto": 144828298.0977
+      },
+      {
+        "tramo": 7565.0,
+        "call": 84469194.4409,
+        "put": -29506362.4417,
+        "neto": 54962831.9992
+      },
+      {
+        "tramo": 7570.0,
+        "call": 187777167.5262,
+        "put": -96349112.1652,
+        "neto": 91428055.361
+      },
+      {
+        "tramo": 7575.0,
+        "call": 93075188.06,
+        "put": -38893738.0057,
+        "neto": 54181450.0542
+      },
+      {
+        "tramo": 7580.0,
+        "call": 121155992.4407,
+        "put": -61049053.7337,
+        "neto": 60106938.707
+      },
+      {
+        "tramo": 7585.0,
+        "call": 81664289.7706,
+        "put": -19044843.6965,
+        "neto": 62619446.0741
+      },
+      {
+        "tramo": 7590.0,
+        "call": 62776345.0186,
+        "put": -12154066.7987,
+        "neto": 50622278.2199
+      },
+      {
+        "tramo": 7595.0,
+        "call": 22373048.1313,
+        "put": -3684972.6334,
+        "neto": 18688075.4979
+      },
+      {
+        "tramo": 7600.0,
+        "call": 67691565.8973,
+        "put": -20634603.7308,
+        "neto": 47056962.1665
+      },
+      {
+        "tramo": 7605.0,
+        "call": 27644267.9561,
+        "put": -650963.9236,
+        "neto": 26993304.0325
+      },
+      {
+        "tramo": 7610.0,
+        "call": 23973017.4798,
+        "put": -2246581.7093,
+        "neto": 21726435.7706
+      },
+      {
+        "tramo": 7615.0,
+        "call": 6784821.9323,
+        "put": -506600.0376,
+        "neto": 6278221.8947
+      },
+      {
+        "tramo": 7620.0,
+        "call": 5817890.34,
+        "put": -409243.2368,
+        "neto": 5408647.1032
+      },
+      {
+        "tramo": 7625.0,
+        "call": 7275721.6473,
+        "put": -1079835.611,
+        "neto": 6195886.0363
+      },
+      {
+        "tramo": 7630.0,
+        "call": 3333554.0282,
+        "put": -422201.226,
+        "neto": 2911352.8021
+      },
+      {
+        "tramo": 7635.0,
+        "call": 781935.0855,
+        "put": -33362.5636,
+        "neto": 748572.5219
+      },
+      {
+        "tramo": 7640.0,
+        "call": 510371.4354,
+        "put": -95331.3387,
+        "neto": 415040.0967
+      },
+      {
+        "tramo": 7645.0,
+        "call": 465958.7611,
+        "put": -11846.4092,
+        "neto": 454112.3519
+      },
+      {
+        "tramo": 7650.0,
+        "call": 321149.4542,
+        "put": -32074.8519,
+        "neto": 289074.6024
+      },
+      {
+        "tramo": 7655.0,
+        "call": 55740.7698,
+        "put": -2708.0536,
+        "neto": 53032.7162
+      },
+      {
+        "tramo": 7660.0,
+        "call": 35719.3834,
+        "put": -3935.1863,
+        "neto": 31784.1971
+      },
+      {
+        "tramo": 7665.0,
+        "call": 10475.9784,
+        "put": -1860.2205,
+        "neto": 8615.7579
+      },
+      {
+        "tramo": 7670.0,
+        "call": 12117.3283,
+        "put": -6571.0885,
+        "neto": 5546.2398
+      }
+    ],
+    "oi_tramos": [
+      {
+        "tramo": 7420.0,
+        "call": 452.0,
+        "put": 2258.0,
+        "neto": 2710.0
+      },
+      {
+        "tramo": 7425.0,
+        "call": 2411.0,
+        "put": 12105.0,
+        "neto": 14516.0
+      },
+      {
+        "tramo": 7430.0,
+        "call": 609.0,
+        "put": 2872.0,
+        "neto": 3481.0
+      },
+      {
+        "tramo": 7435.0,
+        "call": 180.0,
+        "put": 1899.0,
+        "neto": 2079.0
+      },
+      {
+        "tramo": 7440.0,
+        "call": 980.0,
+        "put": 4700.0,
+        "neto": 5680.0
+      },
+      {
+        "tramo": 7445.0,
+        "call": 158.0,
+        "put": 520.0,
+        "neto": 678.0
+      },
+      {
+        "tramo": 7450.0,
+        "call": 5316.0,
+        "put": 23211.0,
+        "neto": 28527.0
+      },
+      {
+        "tramo": 7455.0,
+        "call": 182.0,
+        "put": 384.0,
+        "neto": 566.0
+      },
+      {
+        "tramo": 7460.0,
+        "call": 596.0,
+        "put": 2791.0,
+        "neto": 3387.0
+      },
+      {
+        "tramo": 7465.0,
+        "call": 283.0,
+        "put": 900.0,
+        "neto": 1183.0
+      },
+      {
+        "tramo": 7470.0,
+        "call": 1431.0,
+        "put": 3388.0,
+        "neto": 4819.0
+      },
+      {
+        "tramo": 7475.0,
+        "call": 2353.0,
+        "put": 9244.0,
+        "neto": 11597.0
+      },
+      {
+        "tramo": 7480.0,
+        "call": 906.0,
+        "put": 3050.0,
+        "neto": 3956.0
+      },
+      {
+        "tramo": 7485.0,
+        "call": 255.0,
+        "put": 823.0,
+        "neto": 1078.0
+      },
+      {
+        "tramo": 7490.0,
+        "call": 1209.0,
+        "put": 2527.0,
+        "neto": 3736.0
+      },
+      {
+        "tramo": 7495.0,
+        "call": 251.0,
+        "put": 364.0,
+        "neto": 615.0
+      },
+      {
+        "tramo": 7500.0,
+        "call": 12493.0,
+        "put": 60057.0,
+        "neto": 72550.0
+      },
+      {
+        "tramo": 7505.0,
+        "call": 363.0,
+        "put": 915.0,
+        "neto": 1278.0
+      },
+      {
+        "tramo": 7510.0,
+        "call": 1127.0,
+        "put": 2474.0,
+        "neto": 3601.0
+      },
+      {
+        "tramo": 7515.0,
+        "call": 649.0,
+        "put": 961.0,
+        "neto": 1610.0
+      },
+      {
+        "tramo": 7520.0,
+        "call": 1386.0,
+        "put": 2995.0,
+        "neto": 4381.0
+      },
+      {
+        "tramo": 7525.0,
+        "call": 4101.0,
+        "put": 9731.0,
+        "neto": 13832.0
+      },
+      {
+        "tramo": 7530.0,
+        "call": 1350.0,
+        "put": 2939.0,
+        "neto": 4289.0
+      },
+      {
+        "tramo": 7535.0,
+        "call": 594.0,
+        "put": 338.0,
+        "neto": 932.0
+      },
+      {
+        "tramo": 7540.0,
+        "call": 1633.0,
+        "put": 2306.0,
+        "neto": 3939.0
+      },
+      {
+        "tramo": 7545.0,
+        "call": 1081.0,
+        "put": 772.0,
+        "neto": 1853.0
+      },
+      {
+        "tramo": 7550.0,
+        "call": 8738.0,
+        "put": 15183.0,
+        "neto": 23921.0
+      },
+      {
+        "tramo": 7555.0,
+        "call": 786.0,
+        "put": 623.0,
+        "neto": 1409.0
+      },
+      {
+        "tramo": 7560.0,
+        "call": 2779.0,
+        "put": 1846.0,
+        "neto": 4625.0
+      },
+      {
+        "tramo": 7565.0,
+        "call": 766.0,
+        "put": 286.0,
+        "neto": 1052.0
+      },
+      {
+        "tramo": 7570.0,
+        "call": 2336.0,
+        "put": 2279.0,
+        "neto": 4615.0
+      },
+      {
+        "tramo": 7575.0,
+        "call": 6228.0,
+        "put": 11881.0,
+        "neto": 18109.0
+      },
+      {
+        "tramo": 7580.0,
+        "call": 3458.0,
+        "put": 2432.0,
+        "neto": 5890.0
+      },
+      {
+        "tramo": 7585.0,
+        "call": 946.0,
+        "put": 306.0,
+        "neto": 1252.0
+      },
+      {
+        "tramo": 7590.0,
+        "call": 2405.0,
+        "put": 1310.0,
+        "neto": 3715.0
+      },
+      {
+        "tramo": 7595.0,
+        "call": 681.0,
+        "put": 143.0,
+        "neto": 824.0
+      },
+      {
+        "tramo": 7600.0,
+        "call": 16751.0,
+        "put": 21831.0,
+        "neto": 38582.0
+      },
+      {
+        "tramo": 7605.0,
+        "call": 1208.0,
+        "put": 131.0,
+        "neto": 1339.0
+      },
+      {
+        "tramo": 7610.0,
+        "call": 2418.0,
+        "put": 1228.0,
+        "neto": 3646.0
+      },
+      {
+        "tramo": 7615.0,
+        "call": 920.0,
+        "put": 141.0,
+        "neto": 1061.0
+      },
+      {
+        "tramo": 7620.0,
+        "call": 2100.0,
+        "put": 1771.0,
+        "neto": 3871.0
+      },
+      {
+        "tramo": 7625.0,
+        "call": 8361.0,
+        "put": 8646.0,
+        "neto": 17007.0
+      },
+      {
+        "tramo": 7630.0,
+        "call": 2901.0,
+        "put": 1655.0,
+        "neto": 4556.0
+      },
+      {
+        "tramo": 7635.0,
+        "call": 797.0,
+        "put": 107.0,
+        "neto": 904.0
+      },
+      {
+        "tramo": 7640.0,
+        "call": 2123.0,
+        "put": 895.0,
+        "neto": 3018.0
+      },
+      {
+        "tramo": 7645.0,
+        "call": 1028.0,
+        "put": 53.0,
+        "neto": 1081.0
+      },
+      {
+        "tramo": 7650.0,
+        "call": 23443.0,
+        "put": 13161.0,
+        "neto": 36604.0
+      },
+      {
+        "tramo": 7655.0,
+        "call": 736.0,
+        "put": 195.0,
+        "neto": 931.0
+      },
+      {
+        "tramo": 7660.0,
+        "call": 2297.0,
+        "put": 879.0,
+        "neto": 3176.0
+      },
+      {
+        "tramo": 7665.0,
+        "call": 443.0,
+        "put": 60.0,
+        "neto": 503.0
+      },
+      {
+        "tramo": 7670.0,
+        "call": 2752.0,
+        "put": 932.0,
+        "neto": 3684.0
+      }
+    ],
+    "perfil": [
+      {
+        "precio": 7417.8838,
+        "gex_total": -23164427705.5385
+      },
+      {
+        "precio": 7419.7699,
+        "gex_total": -23065209603.7056
+      },
+      {
+        "precio": 7421.6559,
+        "gex_total": -22961769105.6141
+      },
+      {
+        "precio": 7423.542,
+        "gex_total": -22854094608.1232
+      },
+      {
+        "precio": 7425.4281,
+        "gex_total": -22742186146.9072
+      },
+      {
+        "precio": 7427.3141,
+        "gex_total": -22626055562.9516
+      },
+      {
+        "precio": 7429.2002,
+        "gex_total": -22505726549.5143
+      },
+      {
+        "precio": 7431.0863,
+        "gex_total": -22381234571.9642
+      },
+      {
+        "precio": 7432.9723,
+        "gex_total": -22252626654.6409
+      },
+      {
+        "precio": 7434.8584,
+        "gex_total": -22119961030.8432
+      },
+      {
+        "precio": 7436.7444,
+        "gex_total": -21983306654.2146
+      },
+      {
+        "precio": 7438.6305,
+        "gex_total": -21842742572.1127
+      },
+      {
+        "precio": 7440.5166,
+        "gex_total": -21698357163.9882
+      },
+      {
+        "precio": 7442.4026,
+        "gex_total": -21550247250.2977
+      },
+      {
+        "precio": 7444.2887,
+        "gex_total": -21398517079.9965
+      },
+      {
+        "precio": 7446.1748,
+        "gex_total": -21243277207.138
+      },
+      {
+        "precio": 7448.0608,
+        "gex_total": -21084643269.4867
+      },
+      {
+        "precio": 7449.9469,
+        "gex_total": -20922734684.2894
+      },
+      {
+        "precio": 7451.8329,
+        "gex_total": -20757673278.3839
+      },
+      {
+        "precio": 7453.719,
+        "gex_total": -20589581871.5915
+      },
+      {
+        "precio": 7455.6051,
+        "gex_total": -20418582833.8251
+      },
+      {
+        "precio": 7457.4911,
+        "gex_total": -20244796637.4685
+      },
+      {
+        "precio": 7459.3772,
+        "gex_total": -20068340427.3404
+      },
+      {
+        "precio": 7461.2632,
+        "gex_total": -19889326630.9028
+      },
+      {
+        "precio": 7463.1493,
+        "gex_total": -19707861631.2957
+      },
+      {
+        "precio": 7465.0354,
+        "gex_total": -19524044525.2666
+      },
+      {
+        "precio": 7466.9214,
+        "gex_total": -19337965987.1096
+      },
+      {
+        "precio": 7468.8075,
+        "gex_total": -19149707258.346
+      },
+      {
+        "precio": 7470.6936,
+        "gex_total": -18959339281.0785
+      },
+      {
+        "precio": 7472.5796,
+        "gex_total": -18766921990.7648
+      },
+      {
+        "precio": 7474.4657,
+        "gex_total": -18572503781.616
+      },
+      {
+        "precio": 7476.3517,
+        "gex_total": -18376121154.9656
+      },
+      {
+        "precio": 7478.2378,
+        "gex_total": -18177798557.8469
+      },
+      {
+        "precio": 7480.1239,
+        "gex_total": -17977548415.684
+      },
+      {
+        "precio": 7482.0099,
+        "gex_total": -17775371359.5476
+      },
+      {
+        "precio": 7483.896,
+        "gex_total": -17571256644.8689
+      },
+      {
+        "precio": 7485.7821,
+        "gex_total": -17365182754.9671
+      },
+      {
+        "precio": 7487.6681,
+        "gex_total": -17157118179.251
+      },
+      {
+        "precio": 7489.5542,
+        "gex_total": -16947022352.6059
+      },
+      {
+        "precio": 7491.4402,
+        "gex_total": -16734846739.3395
+      },
+      {
+        "precio": 7493.3263,
+        "gex_total": -16520536042.1952
+      },
+      {
+        "precio": 7495.2124,
+        "gex_total": -16304029514.4271
+      },
+      {
+        "precio": 7497.0984,
+        "gex_total": -16085262350.8176
+      },
+      {
+        "precio": 7498.9845,
+        "gex_total": -15864167131.8774
+      },
+      {
+        "precio": 7500.8706,
+        "gex_total": -15640675294.3283
+      },
+      {
+        "precio": 7502.7566,
+        "gex_total": -15414718600.3821
+      },
+      {
+        "precio": 7504.6427,
+        "gex_total": -15186230578.3225
+      },
+      {
+        "precio": 7506.5287,
+        "gex_total": -14955147907.4819
+      },
+      {
+        "precio": 7508.4148,
+        "gex_total": -14721411721.8931
+      },
+      {
+        "precio": 7510.3009,
+        "gex_total": -14484968808.6763
+      },
+      {
+        "precio": 7512.1869,
+        "gex_total": -14245772679.5659
+      },
+      {
+        "precio": 7514.073,
+        "gex_total": -14003784496.8732
+      },
+      {
+        "precio": 7515.9591,
+        "gex_total": -13758973838.5402
+      },
+      {
+        "precio": 7517.8451,
+        "gex_total": -13511319290.7314
+      },
+      {
+        "precio": 7519.7312,
+        "gex_total": -13260808860.5346
+      },
+      {
+        "precio": 7521.6173,
+        "gex_total": -13007440205.7249
+      },
+      {
+        "precio": 7523.5033,
+        "gex_total": -12751220683.0784
+      },
+      {
+        "precio": 7525.3894,
+        "gex_total": -12492167221.2908
+      },
+      {
+        "precio": 7527.2754,
+        "gex_total": -12230306029.069
+      },
+      {
+        "precio": 7529.1615,
+        "gex_total": -11965672153.2629
+      },
+      {
+        "precio": 7531.0476,
+        "gex_total": -11698308905.9075
+      },
+      {
+        "precio": 7532.9336,
+        "gex_total": -11428267182.6155
+      },
+      {
+        "precio": 7534.8197,
+        "gex_total": -11155604697.7857
+      },
+      {
+        "precio": 7536.7058,
+        "gex_total": -10880385164.4832
+      },
+      {
+        "precio": 7538.5918,
+        "gex_total": -10602677448.5052
+      },
+      {
+        "precio": 7540.4779,
+        "gex_total": -10322554727.0074
+      },
+      {
+        "precio": 7542.3639,
+        "gex_total": -10040093682.0753
+      },
+      {
+        "precio": 7544.25,
+        "gex_total": -9755373758.7532
+      },
+      {
+        "precio": 7546.1361,
+        "gex_total": -9468476515.2916
+      },
+      {
+        "precio": 7548.0221,
+        "gex_total": -9179485090.7577
+      },
+      {
+        "precio": 7549.9082,
+        "gex_total": -8888483811.7204
+      },
+      {
+        "precio": 7551.7942,
+        "gex_total": -8595557955.5442
+      },
+      {
+        "precio": 7553.6803,
+        "gex_total": -8300793683.0092
+      },
+      {
+        "precio": 7555.5664,
+        "gex_total": -8004278147.617
+      },
+      {
+        "precio": 7557.4524,
+        "gex_total": -7706099783.206
+      },
+      {
+        "precio": 7559.3385,
+        "gex_total": -7406348765.5142
+      },
+      {
+        "precio": 7561.2246,
+        "gex_total": -7105117637.2765
+      },
+      {
+        "precio": 7563.1106,
+        "gex_total": -6802502080.4762
+      },
+      {
+        "precio": 7564.9967,
+        "gex_total": -6498601813.6733
+      },
+      {
+        "precio": 7566.8827,
+        "gex_total": -6193521587.0608
+      },
+      {
+        "precio": 7568.7688,
+        "gex_total": -5887372243.2182
+      },
+      {
+        "precio": 7570.6549,
+        "gex_total": -5580271807.5776
+      },
+      {
+        "precio": 7572.5409,
+        "gex_total": -5272346569.5142
+      },
+      {
+        "precio": 7574.427,
+        "gex_total": -4963732112.8522
+      },
+      {
+        "precio": 7576.3131,
+        "gex_total": -4654574253.4694
+      },
+      {
+        "precio": 7578.1991,
+        "gex_total": -4345029841.707
+      },
+      {
+        "precio": 7580.0852,
+        "gex_total": -4035267388.4312
+      },
+      {
+        "precio": 7581.9713,
+        "gex_total": -3725467475.8739
+      },
+      {
+        "precio": 7583.8573,
+        "gex_total": -3415822917.7849
+      },
+      {
+        "precio": 7585.7434,
+        "gex_total": -3106538637.888
+      },
+      {
+        "precio": 7587.6294,
+        "gex_total": -2797831241.1121
+      },
+      {
+        "precio": 7589.5155,
+        "gex_total": -2489928258.4352
+      },
+      {
+        "precio": 7591.4016,
+        "gex_total": -2183067053.3483
+      },
+      {
+        "precio": 7593.2876,
+        "gex_total": -1877493385.7681
+      },
+      {
+        "precio": 7595.1737,
+        "gex_total": -1573459637.5567
+      },
+      {
+        "precio": 7597.0598,
+        "gex_total": -1271222712.474
+      },
+      {
+        "precio": 7598.9458,
+        "gex_total": -971041632.2098
+      },
+      {
+        "precio": 7600.8319,
+        "gex_total": -673174858.9325
+      },
+      {
+        "precio": 7602.7179,
+        "gex_total": -377877383.3392
+      },
+      {
+        "precio": 7604.604,
+        "gex_total": -85397625.2847
+      },
+      {
+        "precio": 7606.4901,
+        "gex_total": 204025798.493
+      },
+      {
+        "precio": 7608.3761,
+        "gex_total": 490167378.4892
+      },
+      {
+        "precio": 7610.2622,
+        "gex_total": 772818021.8517
+      },
+      {
+        "precio": 7612.1483,
+        "gex_total": 1051788296.3977
+      },
+      {
+        "precio": 7614.0343,
+        "gex_total": 1326911535.8161
+      },
+      {
+        "precio": 7615.9204,
+        "gex_total": 1598046731.5697
+      },
+      {
+        "precio": 7617.8064,
+        "gex_total": 1865081137.7274
+      },
+      {
+        "precio": 7619.6925,
+        "gex_total": 2127932517.5057
+      },
+      {
+        "precio": 7621.5786,
+        "gex_total": 2386550964.8052
+      },
+      {
+        "precio": 7623.4646,
+        "gex_total": 2640920240.4255
+      },
+      {
+        "precio": 7625.3507,
+        "gex_total": 2891058570.943
+      },
+      {
+        "precio": 7627.2368,
+        "gex_total": 3137018868.2892
+      },
+      {
+        "precio": 7629.1228,
+        "gex_total": 3378888339.7262
+      },
+      {
+        "precio": 7631.0089,
+        "gex_total": 3616787470.9533
+      },
+      {
+        "precio": 7632.8949,
+        "gex_total": 3850868379.1961
+      },
+      {
+        "precio": 7634.781,
+        "gex_total": 4081312548.0074
+      },
+      {
+        "precio": 7636.6671,
+        "gex_total": 4308327970.747
+      },
+      {
+        "precio": 7638.5531,
+        "gex_total": 4532145744.9049
+      },
+      {
+        "precio": 7640.4392,
+        "gex_total": 4753016174.1375
+      },
+      {
+        "precio": 7642.3252,
+        "gex_total": 4971204448.6607
+      },
+      {
+        "precio": 7644.2113,
+        "gex_total": 5186985987.0377
+      },
+      {
+        "precio": 7646.0974,
+        "gex_total": 5400641532.999
+      },
+      {
+        "precio": 7647.9834,
+        "gex_total": 5612452109.371
+      },
+      {
+        "precio": 7649.8695,
+        "gex_total": 5822693937.114
+      },
+      {
+        "precio": 7651.7556,
+        "gex_total": 6031633430.6604
+      },
+      {
+        "precio": 7653.6416,
+        "gex_total": 6239522381.0022
+      },
+      {
+        "precio": 7655.5277,
+        "gex_total": 6446593435.2261
+      },
+      {
+        "precio": 7657.4137,
+        "gex_total": 6653055975.4468
+      },
+      {
+        "precio": 7659.2998,
+        "gex_total": 6859092491.4593
+      },
+      {
+        "precio": 7661.1859,
+        "gex_total": 7064855530.1113
+      },
+      {
+        "precio": 7663.0719,
+        "gex_total": 7270465290.7111
+      },
+      {
+        "precio": 7664.958,
+        "gex_total": 7476007920.084
+      },
+      {
+        "precio": 7666.8441,
+        "gex_total": 7681534543.657
+      },
+      {
+        "precio": 7668.7301,
+        "gex_total": 7887061050.6664
+      },
+      {
+        "precio": 7670.6162,
+        "gex_total": 8092568632.8031
+      }
+    ]
+  },
+  "avisos": [
+    "79 opciones con open interest sin definición en la foto semanal (4.351 contratos): descartadas.",
+    "790 opciones sin liquidación del 2026-11-10 (0 contratos de open interest): descartadas.",
+    "16 strikes sin IV calculable: IV interpolada entre strikes vecinos."
+  ],
+  "contrato": {
+    "codigo": "DEC26",
+    "tradingview": "ESZ2026",
+    "siguiente": "ESH2027",
+    "roll": "2026-12-10",
+    "vencimiento": "2026-12-18",
+    "base": 73.25,
+    "aviso": null
+  },
+  "estado_dia": {
+    "origen": "boletin_preliminar",
+    "maximo": 7671.5,
+    "minimo": 7547.5,
+    "contrato": "DEC26",
+    "fuente": "Daily Bulletin del 11/11/2026 (preliminar), futuro DEC26",
+    "alcance": "Sesión completa: según la nota del boletín, las cifras reflejan las sesiones de CME Globex y del horario regular (columnas «HIGH/LOW» de la tabla de futuros de la sección 47).",
+    "velas": null,
+    "ventana_velas": null,
+    "avisos": [],
+    "actualizado": "2026-11-12T23:00:42"
+  },
+  "vanna_charm": {
+    "cex_total": -15383.4483,
+    "cex_0dte": -3207.5716,
+    "cex_resto": -12175.8767,
+    "cex_usd": -5803521277.3642,
+    "vex_total": 9761.5022,
+    "vex_0dte": 128.4433,
+    "vex_resto": 9633.059,
+    "vex_usd": 3684255615.5774,
+    "charm": {
+      "flujo": 15383.4483,
+      "direccion": "compra",
+      "fuerte": false,
+      "umbral": 17000
+    },
+    "vanna": {
+      "flujo_si_baja_iv": 9761.5022,
+      "direccion": "compra"
+    },
+    "por_strike": [
+      {
+        "strike": 7420.0,
+        "vex": 16.8999,
+        "cex": -47.9994,
+        "vex_0dte": 0.2669,
+        "cex_0dte": -8.1069
+      },
+      {
+        "strike": 7425.0,
+        "vex": 93.3234,
+        "cex": -231.6844,
+        "vex_0dte": 0.8344,
+        "cex_0dte": -25.217
+      },
+      {
+        "strike": 7426.75,
+        "vex": 3.0243,
+        "cex": -0.7981,
+        "vex_0dte": 0.0,
+        "cex_0dte": 0.0
+      },
+      {
+        "strike": 7430.0,
+        "vex": 21.0107,
+        "cex": -77.9182,
+        "vex_0dte": 0.7,
+        "cex_0dte": -21.0008
+      },
+      {
+        "strike": 7435.0,
+        "vex": 5.3476,
+        "cex": -80.361,
+        "vex_0dte": 2.2834,
+        "cex_0dte": -68.1216
+      },
+      {
+        "strike": 7440.0,
+        "vex": 25.0763,
+        "cex": -168.0829,
+        "vex_0dte": 3.9103,
+        "cex_0dte": -116.1
+      },
+      {
+        "strike": 7445.0,
+        "vex": 3.7665,
+        "cex": -21.416,
+        "vex_0dte": 0.2749,
+        "cex_0dte": -8.0852
+      },
+      {
+        "strike": 7450.0,
+        "vex": 153.8932,
+        "cex": -371.2456,
+        "vex_0dte": 4.25,
+        "cex_0dte": -124.2069
+      },
+      {
+        "strike": 7451.75,
+        "vex": 0.5689,
+        "cex": -0.1274,
+        "vex_0dte": 0.0,
+        "cex_0dte": 0.0
+      },
+      {
+        "strike": 7455.0,
+        "vex": 1.5262,
+        "cex": -19.0091,
+        "vex_0dte": 0.5154,
+        "cex_0dte": -15.0025
+      },
+      {
+        "strike": 7460.0,
+        "vex": 23.6727,
+        "cex": -92.1218,
+        "vex_0dte": 0.829,
+        "cex_0dte": -23.9423
+      },
+      {
+        "strike": 7465.0,
+        "vex": 6.09,
+        "cex": -46.879,
+        "vex_0dte": 1.0985,
+        "cex_0dte": -31.5793
+      },
+      {
+        "strike": 7470.0,
+        "vex": 17.1865,
+        "cex": -63.2875,
+        "vex_0dte": 1.1316,
+        "cex_0dte": -32.2009
+      },
+      {
+        "strike": 7475.0,
+        "vex": 52.6588,
+        "cex": -242.4841,
+        "vex_0dte": 4.5388,
+        "cex_0dte": -128.5928
+      },
+      {
+        "strike": 7476.75,
+        "vex": 2.6004,
+        "cex": -0.6566,
+        "vex_0dte": 0.0,
+        "cex_0dte": 0.0
+      },
+      {
+        "strike": 7480.0,
+        "vex": 20.1343,
+        "cex": -82.9457,
+        "vex_0dte": 1.2991,
+        "cex_0dte": -36.6042
+      },
+      {
+        "strike": 7485.0,
+        "vex": 5.6608,
+        "cex": -47.7023,
+        "vex_0dte": 1.3078,
+        "cex_0dte": -36.5037
+      },
+      {
+        "strike": 7490.0,
+        "vex": 12.7924,
+        "cex": -159.9571,
+        "vex_0dte": 4.8274,
+        "cex_0dte": -133.6853
+      },
+      {
+        "strike": 7495.0,
+        "vex": 1.3093,
+        "cex": -24.8618,
+        "vex_0dte": 0.916,
+        "cex_0dte": -25.155
+      },
+      {
+        "strike": 7500.0,
+        "vex": 276.521,
+        "cex": -910.3411,
+        "vex_0dte": 9.9738,
+        "cex_0dte": -271.9061
+      },
+      {
+        "strike": 7501.75,
+        "vex": 0.5691,
+        "cex": -0.1253,
+        "vex_0dte": 0.0,
+        "cex_0dte": 0.0
+      },
+      {
+        "strike": 7505.0,
+        "vex": 6.4098,
+        "cex": -125.5571,
+        "vex_0dte": 4.4693,
+        "cex_0dte": -120.9218
+      },
+      {
+        "strike": 7510.0,
+        "vex": 9.99,
+        "cex": -103.7037,
+        "vex_0dte": 3.0414,
+        "cex_0dte": -81.5983
+      },
+      {
+        "strike": 7515.0,
+        "vex": 4.9492,
+        "cex": -95.6748,
+        "vex_0dte": 3.2311,
+        "cex_0dte": -85.9251
+      },
+      {
+        "strike": 7520.0,
+        "vex": 11.7513,
+        "cex": -118.8369,
+        "vex_0dte": 3.459,
+        "cex_0dte": -91.0999
+      },
+      {
+        "strike": 7525.0,
+        "vex": 17.1535,
+        "cex": -139.5475,
+        "vex_0dte": 4.4329,
+        "cex_0dte": -115.9356
+      },
+      {
+        "strike": 7526.75,
+        "vex": -0.0803,
+        "cex": 0.2114,
+        "vex_0dte": 0.0,
+        "cex_0dte": 0.0
+      },
+      {
+        "strike": 7530.0,
+        "vex": 4.0849,
+        "cex": -16.3482,
+        "vex_0dte": 0.2785,
+        "cex_0dte": -7.0816
+      },
+      {
+        "strike": 7535.0,
+        "vex": -1.0989,
+        "cex": 13.906,
+        "vex_0dte": -0.3757,
+        "cex_0dte": 9.6809
+      },
+      {
+        "strike": 7540.0,
+        "vex": 0.1095,
+        "cex": 0.1964,
+        "vex_0dte": 0.0144,
+        "cex_0dte": -0.3324
+      },
+      {
+        "strike": 7545.0,
+        "vex": 0.1418,
+        "cex": -1.4116,
+        "vex_0dte": 0.0437,
+        "cex_0dte": -1.0516
+      },
+      {
+        "strike": 7550.0,
+        "vex": -7.2465,
+        "cex": -42.7472,
+        "vex_0dte": 2.6355,
+        "cex_0dte": -64.7062
+      },
+      {
+        "strike": 7551.75,
+        "vex": 0.0198,
+        "cex": 0.0139,
+        "vex_0dte": 0.0,
+        "cex_0dte": 0.0
+      },
+      {
+        "strike": 7555.0,
+        "vex": 0.7353,
+        "cex": -14.6611,
+        "vex_0dte": 0.6901,
+        "cex_0dte": -16.6844
+      },
+      {
+        "strike": 7560.0,
+        "vex": 8.2,
+        "cex": -156.4428,
+        "vex_0dte": 6.1839,
+        "cex_0dte": -148.4248
+      },
+      {
+        "strike": 7565.0,
+        "vex": 4.6857,
+        "cex": -78.4957,
+        "vex_0dte": 3.1259,
+        "cex_0dte": -74.0995
+      },
+      {
+        "strike": 7570.0,
+        "vex": 6.781,
+        "cex": -159.5558,
+        "vex_0dte": 6.5188,
+        "cex_0dte": -152.7865
+      },
+      {
+        "strike": 7575.0,
+        "vex": -19.7622,
+        "cex": -81.5131,
+        "vex_0dte": 4.6772,
+        "cex_0dte": -108.054
+      },
+      {
+        "strike": 7576.75,
+        "vex": -2.4051,
+        "cex": 0.8243,
+        "vex_0dte": 0.0,
+        "cex_0dte": 0.0
+      },
+      {
+        "strike": 7580.0,
+        "vex": 10.1597,
+        "cex": -144.9917,
+        "vex_0dte": 6.1098,
+        "cex_0dte": -139.2555
+      },
+      {
+        "strike": 7585.0,
+        "vex": 10.084,
+        "cex": -173.715,
+        "vex_0dte": 7.3376,
+        "cex_0dte": -165.314
+      },
+      {
+        "strike": 7590.0,
+        "vex": 13.7378,
+        "cex": -167.1203,
+        "vex_0dte": 6.7608,
+        "cex_0dte": -149.9624
+      },
+      {
+        "strike": 7595.0,
+        "vex": 7.4958,
+        "cex": -75.9456,
+        "vex_0dte": 2.8049,
+        "cex_0dte": -61.382
+      },
+      {
+        "strike": 7600.0,
+        "vex": -48.248,
+        "cex": -66.1948,
+        "vex_0dte": 7.8339,
+        "cex_0dte": -169.6795
+      },
+      {
+        "strike": 7601.75,
+        "vex": -2.022,
+        "cex": 0.6081,
+        "vex_0dte": 0.0,
+        "cex_0dte": 0.0
+      },
+      {
+        "strike": 7605.0,
+        "vex": 13.3593,
+        "cex": -142.8068,
+        "vex_0dte": 4.9382,
+        "cex_0dte": -106.0479
+      },
+      {
+        "strike": 7610.0,
+        "vex": 11.8337,
+        "cex": -118.9711,
+        "vex_0dte": 4.3467,
+        "cex_0dte": -92.3326
+      },
+      {
+        "strike": 7615.0,
+        "vex": 8.7655,
+        "cex": -51.6074,
+        "vex_0dte": 1.3607,
+        "cex_0dte": -28.6982
+      },
+      {
+        "strike": 7620.0,
+        "vex": -1.8959,
+        "cex": -21.3692,
+        "vex_0dte": 1.2629,
+        "cex_0dte": -26.4585
+      },
+      {
+        "strike": 7625.0,
+        "vex": -3.4071,
+        "cex": -72.9746,
+        "vex_0dte": 1.5481,
+        "cex_0dte": -32.2793
+      },
+      {
+        "strike": 7626.75,
+        "vex": 1.5899,
+        "cex": -0.3265,
+        "vex_0dte": 0.0,
+        "cex_0dte": 0.0
+      },
+      {
+        "strike": 7630.0,
+        "vex": 12.7732,
+        "cex": -59.7449,
+        "vex_0dte": 0.7778,
+        "cex_0dte": -16.0954
+      },
+      {
+        "strike": 7635.0,
+        "vex": 6.5662,
+        "cex": -22.2539,
+        "vex_0dte": 0.2116,
+        "cex_0dte": -4.3806
+      },
+      {
+        "strike": 7640.0,
+        "vex": 12.81,
+        "cex": -28.5743,
+        "vex_0dte": 0.1236,
+        "cex_0dte": -2.5502
+      },
+      {
+        "strike": 7645.0,
+        "vex": 5.4423,
+        "cex": -18.4188,
+        "vex_0dte": 0.1416,
+        "cex_0dte": -2.9471
+      },
+      {
+        "strike": 7650.0,
+        "vex": 177.1347,
+        "cex": -427.8385,
+        "vex_0dte": 0.0935,
+        "cex_0dte": -1.9577
+      },
+      {
+        "strike": 7651.75,
+        "vex": -0.8439,
+        "cex": 0.2662,
+        "vex_0dte": 0.0,
+        "cex_0dte": 0.0
+      },
+      {
+        "strike": 7655.0,
+        "vex": 5.2998,
+        "cex": -13.9871,
+        "vex_0dte": 0.0178,
+        "cex_0dte": -0.3765
+      },
+      {
+        "strike": 7660.0,
+        "vex": 18.4625,
+        "cex": -34.7044,
+        "vex_0dte": 0.011,
+        "cex_0dte": -0.2328
+      },
+      {
+        "strike": 7665.0,
+        "vex": 4.8491,
+        "cex": -12.9296,
+        "vex_0dte": 0.003,
+        "cex_0dte": -0.064
+      },
+      {
+        "strike": 7670.0,
+        "vex": 28.7532,
+        "cex": -61.9188,
+        "vex_0dte": 0.002,
+        "cex_0dte": -0.0276
+      }
+    ]
+  },
+  "gamma_vivo": "gv=1;7544.25;7544.25;0.25;0.00107474;0.00829735;0.0166028;0.0351428;0.0994388;0;50;-29753,,,,4,4,3055,,,,8036,8033,4390,37052,36689,12067;-26947,,,,,,,,,,,,,,4460,6071;-26564,,,,,,,,,,,,,,264,5749;-26245,,,,,,,,,,,,,,25,5534;-26181,,,,,,,,,,,,,,699,5505;-25799,,,,,,,,,,,,,,807,5245;-25416,,,,,,,,,,,,,,11,4994;-25352,,,,,,,,,,,,,,2570,4969;-25033,,,,,,,,,,,,,,182,4815;-24970,,,,,,,,,,,,,,2110,4753;-24651,,,,,,,,,,,,,,12,4613;-24587,,,,,,,,,,,411,4435,,168,4589;-24204,,,,,,,,,,,,,,5317,4381;-23822,,,,,,,,,,,,,,9,4218;-23758,,,,,,,,,,1,210,4099,,569,4196;-23439,,,,,,,,,,,,,,583,4055;-23375,,,,,,,,,,,,,,185,4034;-23056,,,,,,,,,,,,,1,406,3932;-22992,,,,,,,,,,,318,3823,,389,3912;-22673,,,,,,,,,,,,,1,1,3786;-22546,,,,,,,,,,,,,,929,3737;-22227,,,,,,,,,,,,,,81,3620;-22163,,,,,,,,,,381,1726,3546,,3594,3601;-21844,,,,,,,,,,,,,44020,43354,3489;-21781,,,,298,700,2896,,,,15110,15270,3381,,543,3484;-21462,,,,,,,,,,,,,,52,3391;-21398,,,,,,,,,,,1303,3270,,746,3374;-21079,,,,,,,,,,,,,,28,3272;-20951,,,,,,,,,,,,,,962,3230;-20696,,,,,,,,,,,,,,39,3306;-20569,,,,,,,,,,,822,3045,,436,3263;-20250,,,,,,,,,,,,,,247,3166;-20186,,,,,,,,,,,,,,4180,3175;-19867,,,,,,,,,,,,,,228,3146;-19803,,,,,,,,,,,768,2838,,4802,3155;-19485,,,,,,,,,,,,,,74,3062;-19357,,,,,,,,,,,,,,825,3023;-19102,,,,,,,,,,,,,,110,3021;-18974,,,,,,,,,,,2561,2646,,1258,2982;-18719,,,,,,,,,,,,,,46,2918;-18592,,,,,,,,,,,,,,1544,2903;-18273,,,,,,,,,,,,,,699,2845;-18145,,,,,2,2228,,,,1,1160,2468,,7100,2830;-17890,,,,,,,,,,,,,,65,2788;-17762,,,,,,,,,,,,,,3372,2773;-17507,,,,,,,,,,,,,1,219,2748;-17380,,,,,,,,,,,1824,2282,,3087,2733;-17125,,,,,,,,,,,,,,35,2683;-16997,,,,,,,,,,,,,,421,2669;-16678,,,,,,,,,,,,,,438,2596;-16551,,,,,,,,,,,1671,2144,,1013,2583;-16296,,,,,,,,,,,,,1,29,2529;-16168,,,,,,,,,,,,,,1628,2516;-15913,,,,,,,,,,,,,,151,2500;-15785,,,,,,,,,,,1916,2050,,1221,2487;-15594,,,,,,,,,,,,,,933,2443;-15530,,,,,,,,,,,,,,97,2430;-15403,,,,,,,,,,,,,,1231,2417;-15339,,,,,,,,,,,,,,666,2403;-15148,,,,,,,,,,,,,,2284,2378;-14956,,,,,,,,,,129,2054,1940,,1371,2341;-14765,,,,,,,,,,,,,,542,2302;-14701,,,,,,,,,,,,,,270,2286;-14574,,,,,,,,,,,355,1783,,558,2292;-14510,,,,,,,,,,,,,,9,2276;-14382,,,,,,,,,,,,,,608,2282;-14318,,,,,,,,,,,,,,625,2240;-14191,,,,,45,1568,,,,,3083,1800,,2836,2246;-14127,,,,,,,,,,,,,,464,2210;-14000,,,,,,,,,,,,,,840,2216;-13936,,,,,,,,,,,,,,201,2197;-13808,,,,,112,1509,,,,,650,1655,,838,2186;-13744,,,,,,,,,,,,,,10,2166;-13553,,,,,,,,,,,,,,725,2150;-13362,,,,,64,1441,,,,20,4019,1711,,1445,2116;-13170,,,,,,,,,,,,,,1823,2108;-12979,,,,,42,1397,,,,,988,1606,,1103,2078;-12915,,,,,,,,,,,,,,47,2048;-12788,,,,,,,,,,,,,,876,2054;-12724,,,,,,,,,,,,,,143,2023;-12596,,,,,243,1342,,,,,1847,1640,,830,2029;-12533,,,,,,,,,,,,,,141,2012;-12405,,,,,,,,,,,,,,1799,2017;-12341,,,,,,,,,,,,,,482,1965;-12150,,,,,54,1279,,,,,1990,1602,,4003,1959;-11959,,,,,,,,,,,1023,1441,,1793,1921;-11767,,1,734,,452,1225,,54,1280,17,2044,1545,,2417,1893;-11576,,,,,,,,,,,979,1436,,2132,1886;-11385,,118,709,,2378,1185,,1110,1306,,3026,1508,,3455,1842;-11193,,,,,,,,,,,1518,1408,1,2800,1833;-11002,,177,679,,2144,1125,,426,1274,,4126,1461,,2820,1789;-10938,,,,,,,,,,,,,,306,1782;-10747,,,,,,,,,,,871,1363,,2609,1780;-10555,,858,645,,907,1076,,205,1242,,2488,1409,,2478,1744;-10364,,,,,,,,,,,837,1304,9465,11186,1714;-10173,,447,621,,3572,1028,,1371,1195,438,5722,1346,5,3665,1676;-9981,,,,,,,,,,,1032,1275,,1532,1689;-9790,,230,593,,1528,990,,420,1137,1,1734,1334,,2604,1609;-9663,,,,,226,972;-9599,,,,,955,968,,,,,1018,1234,3,1013,1637;-9471,,,,,691,949;-9407,,381,565,,1337,944,,2175,1079,,3294,1291,30,2304,1583;-9280,,,,,406,933;-9152,,15,547,,1364,913,,2510,999,,5735,1205,,2724,1571;-9089,,,,,1720,910;-8961,,5745,533,,4894,890,,46,1076,,2048,1261,107,3417,1517;-8897,,,,,3303,888,,,,,62,1170;-8770,,42,520,,2927,876,,6,1011,4,1695,1173,29,3758,1518;-8706,,,,,1185,865,,,,,48,1141;-8578,,535,507,,3574,853,,95,1012,38,4712,1197,659,4981,1480;-8451,,,,,43,836,,,,,423,1114;-8387,,150,498,,718,824,,29,1027,,6466,1133,7,1778,1466;-8259,,,,,9,814,,,,,220,1095;-8196,,2193,484,,8014,809,,1671,980,,5571,1150,258,5695,1442;-8068,,,,,72,834,,,,,142,1075;-8004,,202,471,,837,821,,278,890,,2560,1089,346,2140,1415;-7877,,,,,815,818,,,,,284,1062;-7813,,,,,,,,,,,,,,853,1378;-7749,,12695,455,,1132,798,,622,908,,3790,1097,12,5803,1376;-7685,,,,,15045,795,,,,,171,1041;-7622,,,,,,,,,,,,,1,266,1351;-7558,,1500,442,,2157,698,,185,896,,1280,1059,39,1279,1360;-7494,,,,,42,773,,,,,76,1025;-7366,,468,429,,10436,712,,114,910,,5230,1055,54,7160,1304;-7303,,,,,111,750,,,,,84,1002;-7175,,1856,417,,1393,732,,242,918,,3140,1053,322,3047,1337;-7048,,,,,1765,723,,,,,167,977;-6984,,20837,407,,23635,690,,1271,879,1,6030,1030,373,7664,1271;-6856,,,,,972,701,,,,,340,958;-6792,,140,395,,2975,695,,143,765,,4286,973,227,2296,1258;-6665,,,,,879,679,,,,,684,934;-6601,,6830,383,,5419,667,,622,849,3,3743,977,229,4172,1202;-6537,,,,,,,,,,,,,,11,1236;-6474,,9,376,,333,656,,,,,240,921,,17,1217;-6410,,,,,,,,,,,,,2,916,1195;-6346,,251,367,,5000,586,,247,834,,2561,955,40,1338,1218;-6282,,2016,364,,882,635,,1,835,,1041,900,,28,1229;-6218,,,,,,,,,,,,,,917,1169;-6155,,352,355,,52246,572,,781,787,501,10256,924,1832,16927,1168;-6091,,1145,352,,1775,573,,129,759,,685,875,,42,1165;-6027,,,,,,,,,,,,,34,973,1144;-5963,,1733,343,,580,629,,1344,792,,3313,888,183,2235,1159;-5900,,10,340,,1984,618,,,,,456,878,,245,1152;-5836,,,,,,,,,,,,,,2268,1119;-5772,,2572,331,,9397,538,,574,720,,9331,869,386,7115,1106;-5708,,14,328,,344,596,,83,715,,2181,895,,415,1126;-5644,,,,,,,,,,,,,,839,1092;-5581,,140,322,,1349,579,,923,657,,4008,839,76,3063,1107;-5517,,,,,,,,,,,,,,35,1109;-5453,,159,313,,1237,569,,3,714,,1029,848,,284,1091;-5389,,3137,310,,15658,505,,1372,719,10,8147,825,904,12025,1064;-5326,,,,,,,,,,,,,,638,1057;-5262,,208,302,,116,553,,113,623,,1103,809,,151,1095;-5198,,1628,298,,1331,542,,1800,632,,4319,811,221,7280,1040;-5134,,,,,,,,,,,,,,58,1059;-5070,,28901,290,,685,531,,41,593,,1648,771,,550,1043;-5007,,740,286,,15786,503,,934,653,,7782,764,1038,6958,1034;-4943,,,,,,,,,,,,,,59,1005;-4879,,49,280,,634,503,,7978,683,,843,764,,628,1054;-4815,,,,,,,,,,,,,1,3719,985;-4752,,985,272,1,1081,508,,2707,574,,1970,765,196,2005,988;-4688,,24623,269,,798,498,,998,565,,971,733,,569,1000;-4624,,,,,,,,,,,,,,466,961;-4560,,5491,261,,6160,487,1,2161,602,1,10967,748,457,6422,972;-4496,,8325,257,,2496,443,,1,640,,780,724,,358,1004;-4433,,,,,,,,,,,,,,1123,943;-4369,,5995,251,,4337,461,,947,581,1,6944,687,152,4305,956;-4305,,18173,245,,2095,419,,,,,808,688,,410,967;-4241,,,,,,,,,,,,,,720,949;-4178,,1372,238,,12940,444,,3911,531,14,13557,694,2879,13118,930;-4114,,1169,235,,1741,434,,572,540,,1836,652,,45,930;-4050,,81,232,,668,433,,268,534,,1123,667,34,866,898;-3986,,1039,228,,1153,417,,808,555,,5523,693,75,4357,943;-3922,,953,223,,1565,393,,165,540,,585,662,,60,906;-3859,,208,220,,1708,400,,176,515,,1385,636,,1221,912;-3795,,1293,216,5,11494,410,3,2065,497,121,8554,648,103,14762,879;-3731,,76,213,,355,399,,57,540,,1175,609,1,44,853;-3667,,655,210,,1474,393,,410,506,,5773,615,,328,888;-3604,,1831,205,,1364,394,,288,506,1,11605,632,402,10640,847;-3540,,472,202,,754,384,,403,472,,228,618,,302,830;-3476,,3283,198,,757,385,,684,470,2,2130,606,,868,835;-3412,,1663,195,,666,377,,460,473,,283,606,,1428,848;-3348,,2154,193,4,12011,380,,5858,494,264,5986,587,1270,6488,812;-3285,1,414,189,6,4126,372,,707,453,4,2010,569,,1297,815;-3221,,37,185,,486,364,,263,431,,644,569,60,1554,797;-3157,,723,182,,3506,366,1,1255,432,19,18401,554,4116,13349,825;-3093,,89,177,,859,355,,118,425,1,1742,562,,1592,810;-3030,,235,174,2,390,350,,310,433,,478,560,10,685,800;-2966,,3737,170,6,7429,345,,1748,416,86,16287,536,854,15763,759;-2902,,188,177,,2244,333,,320,420,,2483,546,,679,772;-2838,,608,172,,555,330,,171,416,1,3297,515,118,1493,751;-2774,,502,169,4,11043,326,2,366,398,77,8971,505,210,5994,787;-2711,,205,165,,1212,320,,81,411,,1673,498,,89,624;-2647,,1130,161,1,10155,315,,609,409,,3298,496,686,2337,750;-2583,,772,158,3,5238,310,,5546,413,47,7257,496,2277,9335,730;-2519,,319,154,3,1564,300,,123,397,,1557,470,,330,693;-2455,,860,150,4,709,294,,252,405,18,5924,489,9655,12495,718;-2392,,769,147,2,5532,292,,476,362,41,4839,475,642,9599,730;-2328,,828,143,6,1113,281,,616,384,5,752,468,,213,684;-2264,,511,140,4,5050,280,,243,390,4,3387,469,312,1916,695;-2200,,3299,135,11,10994,270,,1301,349,1724,21128,465,6766,22760,707;-2137,2,265,131,5,537,262,,76,366,5,528,459,2,227,705;-2073,,1062,128,,3924,261,,877,337,22,7068,433,234,2870,686;-2009,,717,124,,988,253,,334,341,8,552,429,,8,561;-1945,1,946,121,30,4191,243,1,1090,328,1323,5913,423,217,7140,638;-1881,2,1410,117,13,3055,242,,767,332,46,7107,420,49,2251,685;-1818,,1344,113,10,532,232,,356,319,9,669,405,,21,548;-1754,,1610,110,60,8591,231,2,3996,324,225,11302,414,2655,9519,647;-1690,1,1086,106,38,6931,226,,574,315,31,4661,412,15,1744,622;-1626,6,690,102,27,1087,218,4,472,309,18,1889,388,166,2002,651;-1563,1,1258,99,67,11986,215,4,1509,287,692,9250,382,1024,4498,629;-1499,,588,98,76,3515,212,,788,294,68,3442,386,11,1708,636;-1435,3,1127,95,35,1218,204,4,338,280,38,1172,375,112,1304,602;-1371,8,2586,91,73,7784,201,6,2234,275,538,10241,382,4294,14377,631;-1307,27,2070,87,87,4310,193,,1223,264,294,3530,378,11,2684,566;-1244,3,1183,83,38,560,184,,203,268,29,1246,361,81,1678,614;-1180,32,1128,79,93,3717,187,40,1228,250,467,11545,365,623,6427,604;-1116,9,643,76,43,1302,176,10,926,268,52,1066,351,,40,478;-1052,34,1027,73,53,3156,167,1,757,247,59,4471,343,661,1915,600;-1017,,1697,71,5,446,168,12,119,255,23,632,347,,11,469;-997,6,636,70,8,118,158,,82,277;-977,15,1427,69,64,8469,176,3,980,242,393,11565,345,3891,12970,597;-961,,,,,,,,,,,,,43,248,561;-957,4,1603,67,32,88,163,,355,246;-937,2,537,68,17,325,164,2,117,245,26,945,329,,6,472;-917,12,149,67,22,310,144,2,74,218;-897,6,209,65,31,614,153,13,327,265,52,650,338,,11,472;-877,14,412,64,47,3166,165,,686,236,57,3187,337,38,1494,541;-862,,,,,,,,,,,,,542,685,582;-857,16,159,64,26,600,148,,260,224,47,660,333,,5,458;-837,17,131,63,29,441,149,,10,210;-817,16,548,63,39,802,153,14,164,235,18,733,333,,29,457;-797,17,354,61,12,404,137,,32,212;-777,466,1702,61,909,9627,164,186,1352,232,512,7941,330,1902,10564,584;-763,,,,,,,,,,,,,15,271,541;-757,6,1116,61,19,982,165,,9,220;-737,18,443,60,74,817,160,4,139,241,44,685,334,,17,455;-717,15,305,60,25,363,139,,39,212;-697,27,192,59,108,725,150,1,158,225,82,517,324,9,5,445;-677,55,2870,58,240,2730,159,5,1049,210,151,3549,319,65,3022,504;-664,,,,,,,,,,,,,220,1334,563;-657,18,304,57,138,986,151,1,126,221,285,880,311,,19,436;-637,30,127,57,66,172,146,,22,227;-617,56,419,57,224,1462,159,70,197,207,717,1035,326,6,19,433;-597,20,144,56,55,258,146,,137,208;-577,588,4094,56,991,8923,155,328,1593,221,1595,11230,319,4114,12307,556;-565,,,,,,,,,,,,,146,387,552;-557,22,454,55,127,448,131,,97,215;-537,70,574,55,270,736,148,55,268,214,203,1158,301,70,,428;-517,57,198,54,134,260,139,,23,220;-497,44,454,54,256,767,150,57,77,229,82,955,301,8,,424;-477,175,1125,54,261,2716,147,94,848,220,542,4538,304,466,1413,501;-465,,,,,,,,,,,,,856,1369,539;-457,72,675,53,251,917,143,51,371,219,218,901,303,7,1,417;-437,64,1563,53,114,268,139,,67,197;-417,43,2007,53,720,1491,141,54,120,207,169,1037,303,1,14,414;-397,69,176,52,85,203,137,,142,189;-377,122,1441,52,1629,4199,141,66,1740,203,1459,9591,301,1861,5649,535;-366,,,,,,,,,,,,,209,313,496;-357,42,168,52,109,162,136,30,52,204;-337,127,290,51,150,1040,135,75,132,200,218,1302,287,9,14,411;-317,132,309,51,130,279,134,19,308,223;-297,472,624,51,316,581,141,64,454,211,559,1464,280,4,252,390;-277,88,600,50,270,1804,138,119,825,186,1074,3145,294,448,1832,500;-267,,,,,,,,,,,,,311,948,486;-257,99,225,50,226,999,140,169,298,214,401,1506,281,1,15,404;-237,140,251,50,111,241,131,6,327,215;-217,126,490,49,215,619,127,271,142,185,562,1245,277,19,19,404;-197,111,174,49,131,167,127,12,16,192;-177,581,1218,48,3600,19869,139,436,1457,189,3996,18958,297,3810,17405,515;-168,,,,,,,,,,,,,120,349,476;-157,87,361,48,246,269,135,27,282,190;-137,170,354,48,337,858,128,241,191,182,362,1036,272,4,15,397;-117,178,377,47,133,531,126,331,46,196;-97,146,376,47,373,1596,129,186,383,202,667,570,272,6,48,396;-77,235,568,46,560,1693,133,319,697,190,721,3314,282,1022,2205,467;-69,,,,,,,,,,,,,1246,1132,467;-57,728,754,46,199,677,125,140,635,188,283,815,269,8,21,383;-37,200,149,46,364,113,112,35,68,175;-17,186,190,45,675,518,129,145,378,192,597,1202,260,16,2,380;3,206,147,44,836,343,122,25,287,196;23,1111,603,44,1563,4150,125,661,1336,179,2185,4114,264,3081,4725,478;30,,,,,,,,,,,,,130,114,459;43,320,248,43,400,361,111,42,29,184;63,598,134,43,588,371,116,273,196,173,1275,1134,268,5,3,369;83,292,102,42,140,98,111,335,78,174;103,728,374,42,715,462,121,309,187,175,572,1233,259,8,6,368;123,414,173,41,1157,2204,120,581,330,180,2463,5354,271,1130,2373,452;129,,,,,,,,,,,,,480,1286,483;143,639,322,40,786,685,122,362,99,175,1547,1356,263,3,21,364;163,536,125,40,336,140,116,70,41,170;183,529,102,39,576,445,114,447,133,160,833,597,249,10,13,363;203,255,42,39,360,89,108,54,16,174;223,1069,326,38,2262,4012,112,1321,429,175,5200,9392,254,6370,6886,448;228,,,,,,,,,,,,,290,661,446;243,636,15,38,536,107,98,34,,166;263,846,79,38,757,439,107,222,112,165,557,574,254,30,5,354;283,373,28,37,385,106,103,155,7,177;303,524,37,37,729,857,106,220,267,176,612,589,248,7,,351;323,1104,164,37,1726,1924,107,1274,129,156,2513,2845,238,1156,2940,439;327,,,,,,,,,,,,,650,442,439;343,911,115,37,1165,347,113,212,180,176,546,989,252,67,1,336;363,376,16,37,358,86,108,61,4,158;383,440,82,37,575,295,102,218,124,164,849,383,246,14,,344;403,708,18,37,283,24,105,34,12,159;423,796,80,37,9525,2544,109,1051,322,166,6526,3922,235,5323,5795,460;426,,,,,,,,,,,,,198,292,456;443,248,12,38,354,174,89,127,11,158;463,235,26,38,733,241,96,226,176,166,1012,411,232,80,2,340;483,107,19,39,292,40,104,43,,160;503,200,108,39,1485,305,106,247,71,155,806,442,230,3,,337;523,584,144,41,1829,1120,104,896,148,147,3816,3117,241,1936,2320,417;525,,,,,,,,,,,,,278,1129,425;543,247,36,41,2567,222,107,1271,194,155,999,831,231,4,,334;563,195,9,42,231,27,101,218,,137;583,587,62,44,923,173,98,359,253,148,853,355,226,70,,318;603,177,15,44,179,28,100,30,,146;623,3127,110,45,3905,2602,103,2526,319,152,8017,5341,233,6586,15703,419;624,,,,,,,,,,,,,335,62,419;643,56,3,46,169,19,100,19,,149;663,106,27,47,1292,209,104,835,28,145,1134,152,218,29,1,317;683,252,9,47,363,30,99,84,2,141;703,363,51,48,602,226,99,1174,78,145,1405,354,224,11,,329;723,343,152,49,1227,851,102,440,101,153,3021,2182,231,2247,2077,417;743,334,140,51,807,169,104,712,81,140,1316,319,215,11,,329;763,86,5,52,239,31,97,499,,171;783,93,109,53,520,214,104,530,38,151,7368,203,210,30,,319;803,116,,54,829,16,109,17,,153;822,,,,,,,,,,,,,171,201,409;823,539,85,53,6017,507,107,4104,446,149,6664,4007,220,5857,3368,405;843,116,8,54,365,6,107,77,,138;863,273,6,55,407,196,108,698,35,155,1990,670,215,482,2,311;883,294,,56,244,2,103,154,,131;903,517,13,58,1417,147,105,959,148,139,1375,90,213,37,,314;921,,,,,,,,,,,,,2948,760,422;923,716,33,59,1406,345,111,493,145,149,2530,1734,222,2147,1186,376;943,108,55,60,589,86,110,326,6,149,1521,310,218,7,,307;963,27,,61,219,,104;983,60,2,62,975,95,110,1086,13,144,1189,66,213,10,,300;1003,453,,63,488,6,114;1020,,,,,,,,,,,,,353,374,401;1052,532,269,66,5789,480,122,3088,559,153,13004,4699,228,10117,6835,394;1116,372,12,65,4274,168,124,1527,61,149,5905,737,217,4735,1971,394;1180,3758,,68,717,20,127,447,,151,1299,29,208,8,,298;1244,1307,20,72,13831,948,136,980,52,165,10110,1478,216,10723,1843,417;1307,1007,11,75,3570,210,142,501,77,160,4859,785,214,4447,1127,394;1371,1556,3,78,4454,60,146,409,6,160,2288,6,217,1,,299;1435,1290,18,81,9189,172,150,614,20,171,13834,1176,219,14976,2707,388;1499,675,4,84,3578,60,156,453,1,172,6348,120,224,4529,515,385;1563,58,,88,1073,19,159,301,,182,2250,9,218,1,,284;1626,338,11,91,1467,18,167,1851,1,188,9521,416,229,5295,1087,388;1690,615,,94,617,3,166,281,,196,3345,7,230,1048,36,372;1754,12971,,97,2153,14,167,944,3,194,4775,176,239,2991,217,381;1818,12686,3,100,4073,96,176,1238,1,199,15902,955,244,19136,6700,384;1881,423,,103,1612,19,182,44,,201,1735,11,241,2188,159,389;1945,39,,106,783,9,188,178,,207,3633,262,254,2309,407,381;2009,1368,,110,2921,7,193,1709,,219,9533,252,260,11735,1750,383;2073,249,,112,977,11,197,143,,218,2299,,258;2137,42,,116,1056,14,205,1500,,226,6101,171,265,3579,367,389;2200,728,,119,1800,18,209,342,,240,10528,292,276,12114,1191,380;2264,,,,227,8,203,,,,1082,1,271;2328,30,,125,3773,16,209,387,,243,5170,50,276,2308,430,392;2392,,,,845,13,213,441,,238,9268,88,293,4547,1015,386;2455,2,,131,179,2,218,,,,46,,282;2519,56,,133,1390,7,212,556,,247,2907,21,297,2210,483,393;2583,,,,331,,229,4,,254,164,,296,298,4,402;2647,50,,139,2481,10,232,43,4,262,6251,48,305,10529,394,390;2711,1,,143,345,18,238,274,,266,3288,3,319,1968,280,407;2774,235,,146,3,,223,,,,,,,323,1,430;2838,49,,148,372,28,248,47,,292,5339,33,330,4529,416,399;2902,,,,,,,,,,2367,1,333,2305,128,403;3030,9,,157,1766,24,263,270,,310,4609,93,334,8583,77,406;3093,,,,,,,,,,1290,,350,4585,37,430;3221,8,,165,159,32,278,32,,305,2625,3,353,3883,6,438;3285,,,,,,,,,,,,,318,1,462;3348,,,,,,,,,,1142,,368,1646,,424;3412,15,,174,699,,291,37,,335,3446,34,364,6352,6,443;3476,,,,,,,,,,,,,390,1,477;3540,,,,,,,,,,949,,369,1272,,456;3604,19,,183,105,1,306,15,,348,3050,3,385,2781,1,460;3667,,,,,,,,,,,,,273,,491;3731,,,,,,,,,,1085,,379,2056,,447;3795,3,,192,1298,,320,49,,342,3724,8,390,13496,55,474;3922,,,,,,,,,,1072,,400,1409,7,465;3986,,,,,,,,,,,,,45,,516;4050,14,,202,96,,338,18,,364,1814,,408,2953,,490;4114,,,,,,,,,,979,,411,719,,494;4178,,,,,,,,,,,,,65,,500;4241,,,,238,,352,17,,389,4978,16,414,7172,2,480;4305,,,,,,,,,,561,,413,788,1,508;4369,,,,,,,,,,,,,107,,511;4433,,,,,,,,,,1340,,430,1954,,524;4496,,,,,,,,,,,,,314,,550;4624,14,,226,57,,380,28,,394,2990,15,440,5765,5,500;4688,,,,,,,,,,,,,1414,,535;4815,,,,,,,,,,1114,,454,2393,,543;4879,,,,,,,,,,,,,141,,548;5007,2,,242,3,,405,2,,431,751,119,474,3045,,535;5070,,,,,,,,,,,,,250,1,560;5198,,,,,,,,,,1010,,490,1984,,545;5262,,,,,,,,,,,,,19,,571;5453,,,,,,,1,,470,419,,505,13200,2,562;5644,,,,,,,,,,560,,505,420,,573;5836,,,,10,,463,,,,934,,520,10779,,604;5900,,,,,,,,,,,,,623,,612;6027,,,,,,,,,,127,,521,54,,625;6218,,,,2,,486,,,,319,,564,1699,,604;6282,,,,,,,,,,,,,25,,656;6601,,,,,,,,,,589,,564,2740,,651;6665,,,,,,,,,,,,,436,,655;7048,,,,,,,,,,199,5,602,1602,2,656;7430,,,,,,,,,,264,,618,1454,,694;7813,,,,,,,,,,,,,3368,,724;7877,,,,,,,,,,,,,16,,731;8196,,,,,,,,,,410,,673,604,,722;8642,,,,,,,,,,,,,154,,756;9025,,,,,,,,,,273,,732,613,,762;9407,,,,,,,,,,,,,176,4,847;9854,,,,,,,,,,524,290,783,2942,132,850;10237,443,653,440,19,19,736,,,,702,700,802,3,,877;10619,,,,,,,,,,192,,827,370,,868;11002,,,,,,,,,,,,,2,,909;11448,,,,,,,,,,,,,186,,953;11831,,,,,,,,,,,,,17,,953;12214,,,,,,,,,,3,,922,4673,,969;12596,,,,,,,,,,,,,1,,977;13043,,,,,,,,,,1,,976;13426,,,,,,,,,,,,,293,2,1063;13808,,,,,,,,,,,,,963,,1049;14191,,,,,,,,,,,,,61,,1078;15403,,,,,,,,,,,,,1011,3,1146;15849,,,,,,,,,,,,,341,,1140;17380,,,,,,,,,,,,,537,9,1287;17826,,,,,,,,,,,,,569,,1280",
+  "vista_corta": {
+    "dias": 7,
+    "hasta": "2026-11-17",
+    "vencimientos": [
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13",
+      "2026-11-16",
+      "2026-11-17"
+    ],
+    "frontera": 7574.1486,
+    "regimen": "negativa",
+    "gex_en_precio": -3281098798.8238,
+    "muro_calls": {
+      "strike": 7550.0,
+      "open_interest": 3229.0,
+      "gex": 616879296.208,
+      "distancia_puntos": 5.75,
+      "distancia_sigma": 0.0902
+    },
+    "muro_puts": {
+      "strike": 7500.0,
+      "open_interest": 22334.0,
+      "gex": -2226621937.8194,
+      "distancia_puntos": -44.25,
+      "distancia_sigma": -0.6938
+    },
+    "sin_muro": {},
+    "combinado": {
+      "tipo": "negativo",
+      "texto": "Negativo (corto y completo)",
+      "franja": null
+    }
+  },
+  "journal_dia": {
+    "regimen_observado": "",
+    "freno_en": ""
+  },
+  "tradingview": null,
+  "tradingview_esc2": "ESC2|sym=ES|fecha=2026-11-11|contrato=ESZ2026|roll=2026-12-10|ref=7544.25|flip=7605.16|68=7480.47-7608.03|95=7416.69-7671.81|w=3.19|fc=7574.15|mc=7550|mp=7500|rc=N|ch=C:D:15383:C3208:C12176|va=C:9762|L=I:7550-7550:P:8608/15069:261113_39,261111_24,261120_12:T:7546.81-7553.19:c:f|L=AP:7500-7500:P:12373/59707:261113_52,261130_12,261218_12:N:7496.81-7503.19:p:f|L=A:7600-7600:P:16462/21172:261120_33,261113_30,261111_8:T:7596.81-7603.19:-:-|L=CR:7650-7650:P:23246/12870:261113_54,261120_18,261112_9:T:7646.81-7653.19:-:d|L=O:7525-7525:M:2850/8595:261113_27,261111_21,261120_16:N:7521.81-7528.19:-:-|L=R:7575-7580:M:9686/14313:261113_23,261120_16,261111_16:T:7571.81-7583.19:-:-|L=A:7450-7450:M:5106/22897:261113_26,261120_24,261218_11:N:7446.81-7453.19:-:-|LX=AP:7400-7400:P:7534/38440:261113_35,261120_19,261218_17:-:7396.81-7403.19|LX=C:7700-7700:P:24290/24352:261218_49,261120_12,261117_8:-:7696.81-7703.19|gv=1;7544.25;7544.25;0.25;0.00107474;0.00829735;0.0166028;0.0351428;0.0994388;0;50;-29753,,,,4,4,3055,,,,8036,8033,4390,37052,36689,12067;-26947,,,,,,,,,,,,,,4460,6071;-26564,,,,,,,,,,,,,,264,5749;-26245,,,,,,,,,,,,,,25,5534;-26181,,,,,,,,,,,,,,699,5505;-25799,,,,,,,,,,,,,,807,5245;-25416,,,,,,,,,,,,,,11,4994;-25352,,,,,,,,,,,,,,2570,4969;-25033,,,,,,,,,,,,,,182,4815;-24970,,,,,,,,,,,,,,2110,4753;-24651,,,,,,,,,,,,,,12,4613;-24587,,,,,,,,,,,411,4435,,168,4589;-24204,,,,,,,,,,,,,,5317,4381;-23822,,,,,,,,,,,,,,9,4218;-23758,,,,,,,,,,1,210,4099,,569,4196;-23439,,,,,,,,,,,,,,583,4055;-23375,,,,,,,,,,,,,,185,4034;-23056,,,,,,,,,,,,,1,406,3932;-22992,,,,,,,,,,,318,3823,,389,3912;-22673,,,,,,,,,,,,,1,1,3786;-22546,,,,,,,,,,,,,,929,3737;-22227,,,,,,,,,,,,,,81,3620;-22163,,,,,,,,,,381,1726,3546,,3594,3601;-21844,,,,,,,,,,,,,44020,43354,3489;-21781,,,,298,700,2896,,,,15110,15270,3381,,543,3484;-21462,,,,,,,,,,,,,,52,3391;-21398,,,,,,,,,,,1303,3270,,746,3374;-21079,,,,,,,,,,,,,,28,3272;-20951,,,,,,,,,,,,,,962,3230;-20696,,,,,,,,,,,,,,39,3306;-20569,,,,,,,,,,,822,3045,,436,3263;-20250,,,,,,,,,,,,,,247,3166;-20186,,,,,,,,,,,,,,4180,3175;-19867,,,,,,,,,,,,,,228,3146;-19803,,,,,,,,,,,768,2838,,4802,3155;-19485,,,,,,,,,,,,,,74,3062;-19357,,,,,,,,,,,,,,825,3023;-19102,,,,,,,,,,,,,,110,3021;-18974,,,,,,,,,,,2561,2646,,1258,2982;-18719,,,,,,,,,,,,,,46,2918;-18592,,,,,,,,,,,,,,1544,2903;-18273,,,,,,,,,,,,,,699,2845;-18145,,,,,2,2228,,,,1,1160,2468,,7100,2830;-17890,,,,,,,,,,,,,,65,2788;-17762,,,,,,,,,,,,,,3372,2773;-17507,,,,,,,,,,,,,1,219,2748;-17380,,,,,,,,,,,1824,2282,,3087,2733;-17125,,,,,,,,,,,,,,35,2683;-16997,,,,,,,,,,,,,,421,2669;-16678,,,,,,,,,,,,,,438,2596;-16551,,,,,,,,,,,1671,2144,,1013,2583;-16296,,,,,,,,,,,,,1,29,2529;-16168,,,,,,,,,,,,,,1628,2516;-15913,,,,,,,,,,,,,,151,2500;-15785,,,,,,,,,,,1916,2050,,1221,2487;-15594,,,,,,,,,,,,,,933,2443;-15530,,,,,,,,,,,,,,97,2430;-15403,,,,,,,,,,,,,,1231,2417;-15339,,,,,,,,,,,,,,666,2403;-15148,,,,,,,,,,,,,,2284,2378;-14956,,,,,,,,,,129,2054,1940,,1371,2341;-14765,,,,,,,,,,,,,,542,2302;-14701,,,,,,,,,,,,,,270,2286;-14574,,,,,,,,,,,355,1783,,558,2292;-14510,,,,,,,,,,,,,,9,2276;-14382,,,,,,,,,,,,,,608,2282;-14318,,,,,,,,,,,,,,625,2240;-14191,,,,,45,1568,,,,,3083,1800,,2836,2246;-14127,,,,,,,,,,,,,,464,2210;-14000,,,,,,,,,,,,,,840,2216;-13936,,,,,,,,,,,,,,201,2197;-13808,,,,,112,1509,,,,,650,1655,,838,2186;-13744,,,,,,,,,,,,,,10,2166;-13553,,,,,,,,,,,,,,725,2150;-13362,,,,,64,1441,,,,20,4019,1711,,1445,2116;-13170,,,,,,,,,,,,,,1823,2108;-12979,,,,,42,1397,,,,,988,1606,,1103,2078;-12915,,,,,,,,,,,,,,47,2048;-12788,,,,,,,,,,,,,,876,2054;-12724,,,,,,,,,,,,,,143,2023;-12596,,,,,243,1342,,,,,1847,1640,,830,2029;-12533,,,,,,,,,,,,,,141,2012;-12405,,,,,,,,,,,,,,1799,2017;-12341,,,,,,,,,,,,,,482,1965;-12150,,,,,54,1279,,,,,1990,1602,,4003,1959;-11959,,,,,,,,,,,1023,1441,,1793,1921;-11767,,1,734,,452,1225,,54,1280,17,2044,1545,,2417,1893;-11576,,,,,,,,,,,979,1436,,2132,1886;-11385,,118,709,,2378,1185,,1110,1306,,3026,1508,,3455,1842;-11193,,,,,,,,,,,1518,1408,1,2800,1833;-11002,,177,679,,2144,1125,,426,1274,,4126,1461,,2820,1789;-10938,,,,,,,,,,,,,,306,1782;-10747,,,,,,,,,,,871,1363,,2609,1780;-10555,,858,645,,907,1076,,205,1242,,2488,1409,,2478,1744;-10364,,,,,,,,,,,837,1304,9465,11186,1714;-10173,,447,621,,3572,1028,,1371,1195,438,5722,1346,5,3665,1676;-9981,,,,,,,,,,,1032,1275,,1532,1689;-9790,,230,593,,1528,990,,420,1137,1,1734,1334,,2604,1609;-9663,,,,,226,972;-9599,,,,,955,968,,,,,1018,1234,3,1013,1637;-9471,,,,,691,949;-9407,,381,565,,1337,944,,2175,1079,,3294,1291,30,2304,1583;-9280,,,,,406,933;-9152,,15,547,,1364,913,,2510,999,,5735,1205,,2724,1571;-9089,,,,,1720,910;-8961,,5745,533,,4894,890,,46,1076,,2048,1261,107,3417,1517;-8897,,,,,3303,888,,,,,62,1170;-8770,,42,520,,2927,876,,6,1011,4,1695,1173,29,3758,1518;-8706,,,,,1185,865,,,,,48,1141;-8578,,535,507,,3574,853,,95,1012,38,4712,1197,659,4981,1480;-8451,,,,,43,836,,,,,423,1114;-8387,,150,498,,718,824,,29,1027,,6466,1133,7,1778,1466;-8259,,,,,9,814,,,,,220,1095;-8196,,2193,484,,8014,809,,1671,980,,5571,1150,258,5695,1442;-8068,,,,,72,834,,,,,142,1075;-8004,,202,471,,837,821,,278,890,,2560,1089,346,2140,1415;-7877,,,,,815,818,,,,,284,1062;-7813,,,,,,,,,,,,,,853,1378;-7749,,12695,455,,1132,798,,622,908,,3790,1097,12,5803,1376;-7685,,,,,15045,795,,,,,171,1041;-7622,,,,,,,,,,,,,1,266,1351;-7558,,1500,442,,2157,698,,185,896,,1280,1059,39,1279,1360;-7494,,,,,42,773,,,,,76,1025;-7366,,468,429,,10436,712,,114,910,,5230,1055,54,7160,1304;-7303,,,,,111,750,,,,,84,1002;-7175,,1856,417,,1393,732,,242,918,,3140,1053,322,3047,1337;-7048,,,,,1765,723,,,,,167,977;-6984,,20837,407,,23635,690,,1271,879,1,6030,1030,373,7664,1271;-6856,,,,,972,701,,,,,340,958;-6792,,140,395,,2975,695,,143,765,,4286,973,227,2296,1258;-6665,,,,,879,679,,,,,684,934;-6601,,6830,383,,5419,667,,622,849,3,3743,977,229,4172,1202;-6537,,,,,,,,,,,,,,11,1236;-6474,,9,376,,333,656,,,,,240,921,,17,1217;-6410,,,,,,,,,,,,,2,916,1195;-6346,,251,367,,5000,586,,247,834,,2561,955,40,1338,1218;-6282,,2016,364,,882,635,,1,835,,1041,900,,28,1229;-6218,,,,,,,,,,,,,,917,1169;-6155,,352,355,,52246,572,,781,787,501,10256,924,1832,16927,1168;-6091,,1145,352,,1775,573,,129,759,,685,875,,42,1165;-6027,,,,,,,,,,,,,34,973,1144;-5963,,1733,343,,580,629,,1344,792,,3313,888,183,2235,1159;-5900,,10,340,,1984,618,,,,,456,878,,245,1152;-5836,,,,,,,,,,,,,,2268,1119;-5772,,2572,331,,9397,538,,574,720,,9331,869,386,7115,1106;-5708,,14,328,,344,596,,83,715,,2181,895,,415,1126;-5644,,,,,,,,,,,,,,839,1092;-5581,,140,322,,1349,579,,923,657,,4008,839,76,3063,1107;-5517,,,,,,,,,,,,,,35,1109;-5453,,159,313,,1237,569,,3,714,,1029,848,,284,1091;-5389,,3137,310,,15658,505,,1372,719,10,8147,825,904,12025,1064;-5326,,,,,,,,,,,,,,638,1057;-5262,,208,302,,116,553,,113,623,,1103,809,,151,1095;-5198,,1628,298,,1331,542,,1800,632,,4319,811,221,7280,1040;-5134,,,,,,,,,,,,,,58,1059;-5070,,28901,290,,685,531,,41,593,,1648,771,,550,1043;-5007,,740,286,,15786,503,,934,653,,7782,764,1038,6958,1034;-4943,,,,,,,,,,,,,,59,1005;-4879,,49,280,,634,503,,7978,683,,843,764,,628,1054;-4815,,,,,,,,,,,,,1,3719,985;-4752,,985,272,1,1081,508,,2707,574,,1970,765,196,2005,988;-4688,,24623,269,,798,498,,998,565,,971,733,,569,1000;-4624,,,,,,,,,,,,,,466,961;-4560,,5491,261,,6160,487,1,2161,602,1,10967,748,457,6422,972;-4496,,8325,257,,2496,443,,1,640,,780,724,,358,1004;-4433,,,,,,,,,,,,,,1123,943;-4369,,5995,251,,4337,461,,947,581,1,6944,687,152,4305,956;-4305,,18173,245,,2095,419,,,,,808,688,,410,967;-4241,,,,,,,,,,,,,,720,949;-4178,,1372,238,,12940,444,,3911,531,14,13557,694,2879,13118,930;-4114,,1169,235,,1741,434,,572,540,,1836,652,,45,930;-4050,,81,232,,668,433,,268,534,,1123,667,34,866,898;-3986,,1039,228,,1153,417,,808,555,,5523,693,75,4357,943;-3922,,953,223,,1565,393,,165,540,,585,662,,60,906;-3859,,208,220,,1708,400,,176,515,,1385,636,,1221,912;-3795,,1293,216,5,11494,410,3,2065,497,121,8554,648,103,14762,879;-3731,,76,213,,355,399,,57,540,,1175,609,1,44,853;-3667,,655,210,,1474,393,,410,506,,5773,615,,328,888;-3604,,1831,205,,1364,394,,288,506,1,11605,632,402,10640,847;-3540,,472,202,,754,384,,403,472,,228,618,,302,830;-3476,,3283,198,,757,385,,684,470,2,2130,606,,868,835;-3412,,1663,195,,666,377,,460,473,,283,606,,1428,848;-3348,,2154,193,4,12011,380,,5858,494,264,5986,587,1270,6488,812;-3285,1,414,189,6,4126,372,,707,453,4,2010,569,,1297,815;-3221,,37,185,,486,364,,263,431,,644,569,60,1554,797;-3157,,723,182,,3506,366,1,1255,432,19,18401,554,4116,13349,825;-3093,,89,177,,859,355,,118,425,1,1742,562,,1592,810;-3030,,235,174,2,390,350,,310,433,,478,560,10,685,800;-2966,,3737,170,6,7429,345,,1748,416,86,16287,536,854,15763,759;-2902,,188,177,,2244,333,,320,420,,2483,546,,679,772;-2838,,608,172,,555,330,,171,416,1,3297,515,118,1493,751;-2774,,502,169,4,11043,326,2,366,398,77,8971,505,210,5994,787;-2711,,205,165,,1212,320,,81,411,,1673,498,,89,624;-2647,,1130,161,1,10155,315,,609,409,,3298,496,686,2337,750;-2583,,772,158,3,5238,310,,5546,413,47,7257,496,2277,9335,730;-2519,,319,154,3,1564,300,,123,397,,1557,470,,330,693;-2455,,860,150,4,709,294,,252,405,18,5924,489,9655,12495,718;-2392,,769,147,2,5532,292,,476,362,41,4839,475,642,9599,730;-2328,,828,143,6,1113,281,,616,384,5,752,468,,213,684;-2264,,511,140,4,5050,280,,243,390,4,3387,469,312,1916,695;-2200,,3299,135,11,10994,270,,1301,349,1724,21128,465,6766,22760,707;-2137,2,265,131,5,537,262,,76,366,5,528,459,2,227,705;-2073,,1062,128,,3924,261,,877,337,22,7068,433,234,2870,686;-2009,,717,124,,988,253,,334,341,8,552,429,,8,561;-1945,1,946,121,30,4191,243,1,1090,328,1323,5913,423,217,7140,638;-1881,2,1410,117,13,3055,242,,767,332,46,7107,420,49,2251,685;-1818,,1344,113,10,532,232,,356,319,9,669,405,,21,548;-1754,,1610,110,60,8591,231,2,3996,324,225,11302,414,2655,9519,647;-1690,1,1086,106,38,6931,226,,574,315,31,4661,412,15,1744,622;-1626,6,690,102,27,1087,218,4,472,309,18,1889,388,166,2002,651;-1563,1,1258,99,67,11986,215,4,1509,287,692,9250,382,1024,4498,629;-1499,,588,98,76,3515,212,,788,294,68,3442,386,11,1708,636;-1435,3,1127,95,35,1218,204,4,338,280,38,1172,375,112,1304,602;-1371,8,2586,91,73,7784,201,6,2234,275,538,10241,382,4294,14377,631;-1307,27,2070,87,87,4310,193,,1223,264,294,3530,378,11,2684,566;-1244,3,1183,83,38,560,184,,203,268,29,1246,361,81,1678,614;-1180,32,1128,79,93,3717,187,40,1228,250,467,11545,365,623,6427,604;-1116,9,643,76,43,1302,176,10,926,268,52,1066,351,,40,478;-1052,34,1027,73,53,3156,167,1,757,247,59,4471,343,661,1915,600;-1017,,1697,71,5,446,168,12,119,255,23,632,347,,11,469;-997,6,636,70,8,118,158,,82,277;-977,15,1427,69,64,8469,176,3,980,242,393,11565,345,3891,12970,597;-961,,,,,,,,,,,,,43,248,561;-957,4,1603,67,32,88,163,,355,246;-937,2,537,68,17,325,164,2,117,245,26,945,329,,6,472;-917,12,149,67,22,310,144,2,74,218;-897,6,209,65,31,614,153,13,327,265,52,650,338,,11,472;-877,14,412,64,47,3166,165,,686,236,57,3187,337,38,1494,541;-862,,,,,,,,,,,,,542,685,582;-857,16,159,64,26,600,148,,260,224,47,660,333,,5,458;-837,17,131,63,29,441,149,,10,210;-817,16,548,63,39,802,153,14,164,235,18,733,333,,29,457;-797,17,354,61,12,404,137,,32,212;-777,466,1702,61,909,9627,164,186,1352,232,512,7941,330,1902,10564,584;-763,,,,,,,,,,,,,15,271,541;-757,6,1116,61,19,982,165,,9,220;-737,18,443,60,74,817,160,4,139,241,44,685,334,,17,455;-717,15,305,60,25,363,139,,39,212;-697,27,192,59,108,725,150,1,158,225,82,517,324,9,5,445;-677,55,2870,58,240,2730,159,5,1049,210,151,3549,319,65,3022,504;-664,,,,,,,,,,,,,220,1334,563;-657,18,304,57,138,986,151,1,126,221,285,880,311,,19,436;-637,30,127,57,66,172,146,,22,227;-617,56,419,57,224,1462,159,70,197,207,717,1035,326,6,19,433;-597,20,144,56,55,258,146,,137,208;-577,588,4094,56,991,8923,155,328,1593,221,1595,11230,319,4114,12307,556;-565,,,,,,,,,,,,,146,387,552;-557,22,454,55,127,448,131,,97,215;-537,70,574,55,270,736,148,55,268,214,203,1158,301,70,,428;-517,57,198,54,134,260,139,,23,220;-497,44,454,54,256,767,150,57,77,229,82,955,301,8,,424;-477,175,1125,54,261,2716,147,94,848,220,542,4538,304,466,1413,501;-465,,,,,,,,,,,,,856,1369,539;-457,72,675,53,251,917,143,51,371,219,218,901,303,7,1,417;-437,64,1563,53,114,268,139,,67,197;-417,43,2007,53,720,1491,141,54,120,207,169,1037,303,1,14,414;-397,69,176,52,85,203,137,,142,189;-377,122,1441,52,1629,4199,141,66,1740,203,1459,9591,301,1861,5649,535;-366,,,,,,,,,,,,,209,313,496;-357,42,168,52,109,162,136,30,52,204;-337,127,290,51,150,1040,135,75,132,200,218,1302,287,9,14,411;-317,132,309,51,130,279,134,19,308,223;-297,472,624,51,316,581,141,64,454,211,559,1464,280,4,252,390;-277,88,600,50,270,1804,138,119,825,186,1074,3145,294,448,1832,500;-267,,,,,,,,,,,,,311,948,486;-257,99,225,50,226,999,140,169,298,214,401,1506,281,1,15,404;-237,140,251,50,111,241,131,6,327,215;-217,126,490,49,215,619,127,271,142,185,562,1245,277,19,19,404;-197,111,174,49,131,167,127,12,16,192;-177,581,1218,48,3600,19869,139,436,1457,189,3996,18958,297,3810,17405,515;-168,,,,,,,,,,,,,120,349,476;-157,87,361,48,246,269,135,27,282,190;-137,170,354,48,337,858,128,241,191,182,362,1036,272,4,15,397;-117,178,377,47,133,531,126,331,46,196;-97,146,376,47,373,1596,129,186,383,202,667,570,272,6,48,396;-77,235,568,46,560,1693,133,319,697,190,721,3314,282,1022,2205,467;-69,,,,,,,,,,,,,1246,1132,467;-57,728,754,46,199,677,125,140,635,188,283,815,269,8,21,383;-37,200,149,46,364,113,112,35,68,175;-17,186,190,45,675,518,129,145,378,192,597,1202,260,16,2,380;3,206,147,44,836,343,122,25,287,196;23,1111,603,44,1563,4150,125,661,1336,179,2185,4114,264,3081,4725,478;30,,,,,,,,,,,,,130,114,459;43,320,248,43,400,361,111,42,29,184;63,598,134,43,588,371,116,273,196,173,1275,1134,268,5,3,369;83,292,102,42,140,98,111,335,78,174;103,728,374,42,715,462,121,309,187,175,572,1233,259,8,6,368;123,414,173,41,1157,2204,120,581,330,180,2463,5354,271,1130,2373,452;129,,,,,,,,,,,,,480,1286,483;143,639,322,40,786,685,122,362,99,175,1547,1356,263,3,21,364;163,536,125,40,336,140,116,70,41,170;183,529,102,39,576,445,114,447,133,160,833,597,249,10,13,363;203,255,42,39,360,89,108,54,16,174;223,1069,326,38,2262,4012,112,1321,429,175,5200,9392,254,6370,6886,448;228,,,,,,,,,,,,,290,661,446;243,636,15,38,536,107,98,34,,166;263,846,79,38,757,439,107,222,112,165,557,574,254,30,5,354;283,373,28,37,385,106,103,155,7,177;303,524,37,37,729,857,106,220,267,176,612,589,248,7,,351;323,1104,164,37,1726,1924,107,1274,129,156,2513,2845,238,1156,2940,439;327,,,,,,,,,,,,,650,442,439;343,911,115,37,1165,347,113,212,180,176,546,989,252,67,1,336;363,376,16,37,358,86,108,61,4,158;383,440,82,37,575,295,102,218,124,164,849,383,246,14,,344;403,708,18,37,283,24,105,34,12,159;423,796,80,37,9525,2544,109,1051,322,166,6526,3922,235,5323,5795,460;426,,,,,,,,,,,,,198,292,456;443,248,12,38,354,174,89,127,11,158;463,235,26,38,733,241,96,226,176,166,1012,411,232,80,2,340;483,107,19,39,292,40,104,43,,160;503,200,108,39,1485,305,106,247,71,155,806,442,230,3,,337;523,584,144,41,1829,1120,104,896,148,147,3816,3117,241,1936,2320,417;525,,,,,,,,,,,,,278,1129,425;543,247,36,41,2567,222,107,1271,194,155,999,831,231,4,,334;563,195,9,42,231,27,101,218,,137;583,587,62,44,923,173,98,359,253,148,853,355,226,70,,318;603,177,15,44,179,28,100,30,,146;623,3127,110,45,3905,2602,103,2526,319,152,8017,5341,233,6586,15703,419;624,,,,,,,,,,,,,335,62,419;643,56,3,46,169,19,100,19,,149;663,106,27,47,1292,209,104,835,28,145,1134,152,218,29,1,317;683,252,9,47,363,30,99,84,2,141;703,363,51,48,602,226,99,1174,78,145,1405,354,224,11,,329;723,343,152,49,1227,851,102,440,101,153,3021,2182,231,2247,2077,417;743,334,140,51,807,169,104,712,81,140,1316,319,215,11,,329;763,86,5,52,239,31,97,499,,171;783,93,109,53,520,214,104,530,38,151,7368,203,210,30,,319;803,116,,54,829,16,109,17,,153;822,,,,,,,,,,,,,171,201,409;823,539,85,53,6017,507,107,4104,446,149,6664,4007,220,5857,3368,405;843,116,8,54,365,6,107,77,,138;863,273,6,55,407,196,108,698,35,155,1990,670,215,482,2,311;883,294,,56,244,2,103,154,,131;903,517,13,58,1417,147,105,959,148,139,1375,90,213,37,,314;921,,,,,,,,,,,,,2948,760,422;923,716,33,59,1406,345,111,493,145,149,2530,1734,222,2147,1186,376;943,108,55,60,589,86,110,326,6,149,1521,310,218,7,,307;963,27,,61,219,,104;983,60,2,62,975,95,110,1086,13,144,1189,66,213,10,,300;1003,453,,63,488,6,114;1020,,,,,,,,,,,,,353,374,401;1052,532,269,66,5789,480,122,3088,559,153,13004,4699,228,10117,6835,394;1116,372,12,65,4274,168,124,1527,61,149,5905,737,217,4735,1971,394;1180,3758,,68,717,20,127,447,,151,1299,29,208,8,,298;1244,1307,20,72,13831,948,136,980,52,165,10110,1478,216,10723,1843,417;1307,1007,11,75,3570,210,142,501,77,160,4859,785,214,4447,1127,394;1371,1556,3,78,4454,60,146,409,6,160,2288,6,217,1,,299;1435,1290,18,81,9189,172,150,614,20,171,13834,1176,219,14976,2707,388;1499,675,4,84,3578,60,156,453,1,172,6348,120,224,4529,515,385;1563,58,,88,1073,19,159,301,,182,2250,9,218,1,,284;1626,338,11,91,1467,18,167,1851,1,188,9521,416,229,5295,1087,388;1690,615,,94,617,3,166,281,,196,3345,7,230,1048,36,372;1754,12971,,97,2153,14,167,944,3,194,4775,176,239,2991,217,381;1818,12686,3,100,4073,96,176,1238,1,199,15902,955,244,19136,6700,384;1881,423,,103,1612,19,182,44,,201,1735,11,241,2188,159,389;1945,39,,106,783,9,188,178,,207,3633,262,254,2309,407,381;2009,1368,,110,2921,7,193,1709,,219,9533,252,260,11735,1750,383;2073,249,,112,977,11,197,143,,218,2299,,258;2137,42,,116,1056,14,205,1500,,226,6101,171,265,3579,367,389;2200,728,,119,1800,18,209,342,,240,10528,292,276,12114,1191,380;2264,,,,227,8,203,,,,1082,1,271;2328,30,,125,3773,16,209,387,,243,5170,50,276,2308,430,392;2392,,,,845,13,213,441,,238,9268,88,293,4547,1015,386;2455,2,,131,179,2,218,,,,46,,282;2519,56,,133,1390,7,212,556,,247,2907,21,297,2210,483,393;2583,,,,331,,229,4,,254,164,,296,298,4,402;2647,50,,139,2481,10,232,43,4,262,6251,48,305,10529,394,390;2711,1,,143,345,18,238,274,,266,3288,3,319,1968,280,407;2774,235,,146,3,,223,,,,,,,323,1,430;2838,49,,148,372,28,248,47,,292,5339,33,330,4529,416,399;2902,,,,,,,,,,2367,1,333,2305,128,403;3030,9,,157,1766,24,263,270,,310,4609,93,334,8583,77,406;3093,,,,,,,,,,1290,,350,4585,37,430;3221,8,,165,159,32,278,32,,305,2625,3,353,3883,6,438;3285,,,,,,,,,,,,,318,1,462;3348,,,,,,,,,,1142,,368,1646,,424;3412,15,,174,699,,291,37,,335,3446,34,364,6352,6,443;3476,,,,,,,,,,,,,390,1,477;3540,,,,,,,,,,949,,369,1272,,456;3604,19,,183,105,1,306,15,,348,3050,3,385,2781,1,460;3667,,,,,,,,,,,,,273,,491;3731,,,,,,,,,,1085,,379,2056,,447;3795,3,,192,1298,,320,49,,342,3724,8,390,13496,55,474;3922,,,,,,,,,,1072,,400,1409,7,465;3986,,,,,,,,,,,,,45,,516;4050,14,,202,96,,338,18,,364,1814,,408,2953,,490;4114,,,,,,,,,,979,,411,719,,494;4178,,,,,,,,,,,,,65,,500;4241,,,,238,,352,17,,389,4978,16,414,7172,2,480;4305,,,,,,,,,,561,,413,788,1,508;4369,,,,,,,,,,,,,107,,511;4433,,,,,,,,,,1340,,430,1954,,524;4496,,,,,,,,,,,,,314,,550;4624,14,,226,57,,380,28,,394,2990,15,440,5765,5,500;4688,,,,,,,,,,,,,1414,,535;4815,,,,,,,,,,1114,,454,2393,,543;4879,,,,,,,,,,,,,141,,548;5007,2,,242,3,,405,2,,431,751,119,474,3045,,535;5070,,,,,,,,,,,,,250,1,560;5198,,,,,,,,,,1010,,490,1984,,545;5262,,,,,,,,,,,,,19,,571;5453,,,,,,,1,,470,419,,505,13200,2,562;5644,,,,,,,,,,560,,505,420,,573;5836,,,,10,,463,,,,934,,520,10779,,604;5900,,,,,,,,,,,,,623,,612;6027,,,,,,,,,,127,,521,54,,625;6218,,,,2,,486,,,,319,,564,1699,,604;6282,,,,,,,,,,,,,25,,656;6601,,,,,,,,,,589,,564,2740,,651;6665,,,,,,,,,,,,,436,,655;7048,,,,,,,,,,199,5,602,1602,2,656;7430,,,,,,,,,,264,,618,1454,,694;7813,,,,,,,,,,,,,3368,,724;7877,,,,,,,,,,,,,16,,731;8196,,,,,,,,,,410,,673,604,,722;8642,,,,,,,,,,,,,154,,756;9025,,,,,,,,,,273,,732,613,,762;9407,,,,,,,,,,,,,176,4,847;9854,,,,,,,,,,524,290,783,2942,132,850;10237,443,653,440,19,19,736,,,,702,700,802,3,,877;10619,,,,,,,,,,192,,827,370,,868;11002,,,,,,,,,,,,,2,,909;11448,,,,,,,,,,,,,186,,953;11831,,,,,,,,,,,,,17,,953;12214,,,,,,,,,,3,,922,4673,,969;12596,,,,,,,,,,,,,1,,977;13043,,,,,,,,,,1,,976;13426,,,,,,,,,,,,,293,2,1063;13808,,,,,,,,,,,,,963,,1049;14191,,,,,,,,,,,,,61,,1078;15403,,,,,,,,,,,,,1011,3,1146;15849,,,,,,,,,,,,,341,,1140;17380,,,,,,,,,,,,,537,9,1287;17826,,,,,,,,,,,,,569,,1280"
+}
