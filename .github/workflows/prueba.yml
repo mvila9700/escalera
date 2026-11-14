@@ -1,0 +1,20 @@
+# Prueba gratis: instala todo y pregunta a Databento cuanto costaria la escalera del 13-nov (no descarga nada).
+name: Prueba (gratis)
+on: workflow_dispatch
+jobs:
+  prueba:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - env:
+          DATABENTO_API_KEY: ${{ secrets.DATABENTO_API_KEY }}
+          TZ: Europe/Madrid
+        run: |
+          python -m tareas.escalera_databento --coste --sesion 2026-11-13
+          python -c "import calculos.escalera, salida.pagina, salida.gamma_vivo, tareas.escalera; print('imports ok')"
