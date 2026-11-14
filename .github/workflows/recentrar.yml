@@ -1,0 +1,42 @@
+# Recentrar la escalera de hoy en el precio actual (desde la app de GitHub del iPhone:
+# Actions -> Recentrar -> Run workflow). Mismo open interest: no se compra nada a Databento.
+name: Recentrar
+on:
+  workflow_dispatch:
+    inputs:
+      precio:
+        description: "Precio actual (por ejemplo 29150)"
+        required: true
+      indice:
+        description: "NQ o ES"
+        default: "NQ"
+concurrency: escalera
+permissions:
+  contents: write
+jobs:
+  recentrar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - uses: actions/cache/restore@v4
+        with:
+          path: datos/oi/*.dbn.zst
+          key: oi-none
+          restore-keys: oi-
+      - name: Recentrar
+        env:
+          TZ: Europe/Madrid
+        run: |
+          python -m tareas.escalera --indice "${{ github.event.inputs.indice }}" --recentrar --precio "${{ github.event.inputs.precio }}" --forzar --no-abrir
+          python -m tareas.publicar_hoy
+      - name: Guardar
+        run: |
+          git config user.name "escalera-bot"; git config user.email "escalera-bot@users.noreply.github.com"
+          git add -A datos/historico HOY_*.txt
+          git diff --cached --quiet || (git commit -m "Recentrada ${{ github.event.inputs.indice }} en ${{ github.event.inputs.precio }}" && git push)
