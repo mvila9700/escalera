@@ -1,0 +1,6 @@
+.env
+.venv/
+__pycache__/
+datos/oi/*.dbn.zst
+datos/registro.log
+salida/html/
