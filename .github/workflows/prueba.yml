@@ -1,8 +1,11 @@
-# Prueba gratis: instala todo y pregunta a Databento cuanto costaria la escalera del 13-nov (no descarga nada).
-name: Prueba (gratis)
+# Rehace la pagina (https://mvila9700.github.io/escalera/) con la ultima escalera que haya. Gratis.
+name: Actualizar pagina
 on: workflow_dispatch
+concurrency: escalera
+permissions:
+  contents: write
 jobs:
-  prueba:
+  pagina:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -13,8 +16,9 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - env:
-          DATABENTO_API_KEY: ${{ secrets.DATABENTO_API_KEY }}
           TZ: Europe/Madrid
-        run: |
-          python -m tareas.escalera_databento --coste --sesion 2026-11-13
-          python -c "import calculos.escalera, salida.pagina, salida.gamma_vivo, tareas.escalera; print('imports ok')"
+        run: python -m tareas.publicar_hoy
+      - run: |
+          git config user.name "escalera-bot"; git config user.email "escalera-bot@users.noreply.github.com"
+          git add -A HOY_*.txt docs
+          git diff --cached --quiet || (git commit -m "Pagina actualizada" && git push)
