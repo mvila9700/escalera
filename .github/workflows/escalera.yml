@@ -1,7 +1,7 @@
 # Escalera diaria (NQ y ES) con Databento, sin el Mac.
 # De lunes a viernes, cada 20 minutos entre las 07:00 y las 15:40 de Madrid (06-14 UTC en invierno).
-# Si la escalera de hoy ya está, termina en segundos. Si Databento aún no tiene los datos, lo
-# intenta en la siguiente pasada. El resultado queda en HOY_NQ.txt y HOY_ES.txt (texto para TradingView).
+# Si la escalera de hoy ya esta, termina en segundos. Si Databento aun no tiene los datos, lo
+# intenta en la siguiente pasada. Resultado: la pagina https://mvila9700.github.io/escalera/
 name: Escalera diaria
 on:
   schedule:
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       forzar:
-        description: "Rehacerla aunque ya exista (sí/no)"
+        description: "Rehacerla aunque ya exista (si/no)"
         default: "no"
 concurrency: escalera
 permissions:
@@ -20,13 +20,13 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-      - name: ¿Ya está la de hoy?
+      - name: Ya esta la de hoy?
         id: hoy
         run: |
           H=$(TZ=Europe/Madrid date +%F)
           echo "fecha=$H" >> $GITHUB_OUTPUT
-          if [ -f datos/historico/$H.json ] && [ -f datos/historico/ES_$H.json ] && [ "${{ github.event.inputs.forzar }}" != "sí" ] && [ "${{ github.event.inputs.forzar }}" != "si" ]; then
-            echo "hecha=1" >> $GITHUB_OUTPUT; echo "Ya están las escaleras del $H."
+          if [ -f datos/historico/$H.json ] && [ -f datos/historico/ES_$H.json ] && [ "${{ github.event.inputs.forzar }}" != "si" ]; then
+            echo "hecha=1" >> $GITHUB_OUTPUT; echo "Ya estan las escaleras del $H."
           fi
       - uses: actions/setup-python@v5
         if: steps.hoy.outputs.hecha != '1'
@@ -36,7 +36,7 @@ jobs:
       - name: Instalar
         if: steps.hoy.outputs.hecha != '1'
         run: pip install -r requirements.txt
-      - name: Datos de Databento ya descargados (caché)
+      - name: Datos de Databento ya descargados (cache)
         if: steps.hoy.outputs.hecha != '1'
         uses: actions/cache@v4
         with:
@@ -49,15 +49,14 @@ jobs:
           DATABENTO_API_KEY: ${{ secrets.DATABENTO_API_KEY }}
           TZ: Europe/Madrid
         run: |
-          F=""; [ "${{ github.event.inputs.forzar }}" = "sí" -o "${{ github.event.inputs.forzar }}" = "si" ] && F="--forzar"
-          python -m tareas.escalera_databento --no-esperar --no-abrir $F || echo "Aún no (se reintenta en la siguiente pasada)"
+          F=""; [ "${{ github.event.inputs.forzar }}" = "si" ] && F="--forzar"
+          python -m tareas.escalera_databento --no-esperar --no-abrir $F || echo "Aun no (se reintenta en la siguiente pasada)"
           tail -n 15 datos/registro.log || true
           python -m tareas.publicar_hoy
-          # quitar los datos de más de 10 días de la caché
           find datos/oi -name "*.dbn.zst" -mtime +10 -delete || true
       - name: Guardar
         if: steps.hoy.outputs.hecha != '1'
         run: |
           git config user.name "escalera-bot"; git config user.email "escalera-bot@users.noreply.github.com"
-          git add -A datos/historico datos/oi/gasto_databento.json HOY_*.txt || true
+          git add -A datos/historico datos/oi/gasto_databento.json HOY_*.txt docs || true
           git diff --cached --quiet || (git commit -m "Escalera ${{ steps.hoy.outputs.fecha }}" && git push)
