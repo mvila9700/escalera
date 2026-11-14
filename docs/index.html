@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Escalera NQ · vie 13 nov</title>
+<style>
+:root {
+  color-scheme: dark;
+  --plano: #0d0d0d; --superficie: #1a1a19; --superficie-2: #232321;
+  --texto: #f0efec; --texto-2: #c3c2b7; --muted: #898781;
+  --linea: #2c2c2a; --eje: #383835; --borde: rgba(255,255,255,0.10);
+  --calls: #3987e5; --puts: #e66767;
+  --bien: #0ca30c; --serio: #ec835a; --aviso: #fab219; --critico: #d03b3b;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--plano); color: var(--texto);
+  font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 1180px; margin: 0 auto; padding: 24px 16px 48px; }
+h1 { font-size: 24px; margin: 0 0 2px; }
+h2 { font-size: 16px; margin: 0 0 12px; color: var(--texto-2); font-weight: 600; }
+.cabecera p { margin: 0; color: var(--texto-2); }
+.aviso-txt { color: var(--aviso); font-weight: 700; }
+.muted { color: var(--muted); }
+.sub { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tarjeta { background: var(--superficie); border: 1px solid var(--borde); border-radius: 12px; padding: 16px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 20px 0; }
+.tile .etq { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+.tile .valor { font-size: 22px; font-weight: 650; margin-top: 4px; }
+.avisos { border-color: rgba(250,178,25,0.45); margin-bottom: 20px; }
+.avisos h2 { color: var(--aviso); }
+.avisos ul { margin: 0; padding-left: 20px; color: var(--texto-2); font-size: 13.5px; }
+.oculto { display: none; }
+.tabla-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 760px; }
+th { text-align: left; color: var(--muted); font-weight: 600; font-size: 12px;
+  text-transform: uppercase; letter-spacing: .04em; padding: 8px 10px; border-bottom: 1px solid var(--eje); }
+td { padding: 10px; border-bottom: 1px solid var(--linea); vertical-align: top; }
+td.nivel { font-size: 17px; font-weight: 650; }
+tr.fila-precio td { background: var(--superficie-2); border-top: 1px solid var(--eje); border-bottom: 1px solid var(--eje); }
+tr.fila-gris td { color: var(--muted); }
+tr.fila-contexto td.nivel { color: var(--texto-2); }
+.t-fiable { background: #1a7f37; }
+.t-muro { background: #57606a; }
+.t-ruptura { background: transparent; color: #d1242f; border: 1px dashed #d1242f; }
+.t-oimax { background: transparent; color: var(--texto-2); border: 1px solid var(--eje); }
+.f-mas { color: #1a7f37; font-weight: 600; }
+.f-menos { color: #d1242f; font-weight: 600; }
+.nota-fiab { font-size: 13px; color: var(--texto-2); margin: 10px 2px 0; }
+tr.fila-gris td.nivel { font-weight: 500; font-size: 15px; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
+  margin: 0 4px 4px 0; color: #fff; cursor: help; }
+.t-calls { background: var(--calls); }
+.t-puts { background: var(--puts); }
+.t-resist { background: #9085e9; }
+.t-iman { background: #199e70; }
+.t-acel { background: #c98500; color: #0b0b0b; }
+.t-frontera { background: #d95926; }
+.t-oi { background: transparent; border: 1px solid var(--texto-2); color: var(--texto); padding: 1px 7px; }
+.t-precio { background: var(--eje); color: var(--texto); cursor: default; }
+.nota-gris { display: inline-block; margin-top: 4px; padding: 1px 7px; border: 1px solid var(--eje);
+  border-radius: 999px; color: var(--muted); font-size: 12px; cursor: help; }
+.estado { font-weight: 600; }
+.e-respetado { color: var(--bien); }
+.e-roto { color: var(--serio); }
+.e-no { color: var(--muted); }
+.e-tocado { color: var(--texto); }
+.estado-dia { margin-bottom: 20px; }
+.estado-dia p { margin: 4px 0; }
+.pie { color: var(--muted); font-size: 12px; margin: 8px 0 0; }
+.tv { margin-bottom: 20px; }
+.tv-fila { display: flex; gap: 8px; flex-wrap: wrap; }
+.tv-fila input { flex: 1 1 320px; min-width: 0; background: var(--plano); color: var(--texto-2); border: 1px solid var(--eje);
+  border-radius: 8px; padding: 8px 10px; font: 12.5px ui-monospace, Menlo, monospace; }
+.tv-fila button { background: var(--calls); color: #fff; border: 0; border-radius: 8px; padding: 8px 14px;
+  font: 600 14px system-ui, -apple-system, sans-serif; cursor: pointer; }
+.tv-fila button:hover { filter: brightness(1.1); }
+.tv-fila button.secundario { background: var(--eje); color: var(--texto); }
+.tv details { margin-top: 10px; }
+.tv summary { cursor: pointer; }
+.recentrada { margin-top: 12px; }
+.recentrada p { margin: 0 0 6px; }
+/* Jerarquía de los niveles: principal / secundario / menor */
+tr.cat-principal td.nivel { font-size: 19px; font-weight: 750; box-shadow: inset 4px 0 0 var(--texto); }
+tr.cat-secundario td.nivel { box-shadow: inset 2px 0 0 var(--eje); }
+tr.cat-menor td { opacity: .62; }
+tr.cat-menor td.nivel { font-size: 14.5px; font-weight: 500; }
+.cat { display: inline-block; padding: 0 6px; margin-right: 4px; border-radius: 4px; font-size: 11px;
+  font-weight: 700; text-transform: uppercase; letter-spacing: .04em; cursor: help; }
+.c-principal { background: var(--texto); color: var(--plano); }
+.c-secundario { border: 1px solid var(--texto-2); color: var(--texto); }
+.c-menor { border: 1px dashed var(--muted); color: var(--muted); }
+.c-0dte { border: 1px dotted var(--muted); color: var(--muted); }
+.indice { color: var(--calls); }
+.nombre-indice { font-size: 15px; font-weight: 500; color: var(--texto-2); margin-left: 6px; }
+.contrato { color: var(--aviso); }
+.desconocidos { margin-bottom: 20px; }
+.corta { margin-bottom: 20px; border-color: rgba(245,197,66,0.45); }
+.corta h2 { color: #f5c542; }
+.corta ul { margin: 6px 0; padding-left: 20px; color: var(--texto-2); font-size: 14px; }
+.corta p { margin: 4px 0; }
+.regimen-combinado { margin: 4px 0 0; }
+.t-corto { background: transparent; border: 1px dashed #f5c542; color: #f5c542; padding: 1px 7px; }
+.desconocidos ul { margin: 0; padding-left: 20px; color: var(--texto-2); font-size: 13.5px; }
+.gris-0dte { margin-top: 14px; padding: 12px 14px; border: 1px dashed var(--eje); border-radius: 10px;
+  background: rgba(93,92,88,0.12); }
+.gris-0dte h3 { margin: 0 0 4px; font-size: 14px; color: var(--texto-2); font-weight: 600; }
+.gris-0dte ul { margin: 8px 0 0; padding-left: 18px; color: var(--texto-2); font-size: 13.5px; }
+.graficos { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+@media (max-width: 820px) { .graficos { grid-template-columns: 1fr; } }
+.leyenda { display: flex; gap: 14px; font-size: 12.5px; color: var(--texto-2); margin: -4px 0 8px; }
+.leyenda i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+.grafico { position: relative; }
+.grafico svg { display: block; width: 100%; }
+.tooltip { position: absolute; pointer-events: none; background: var(--superficie-2); border: 1px solid var(--borde);
+  border-radius: 8px; padding: 6px 9px; font-size: 12.5px; white-space: nowrap; opacity: 0; transition: opacity .1s; }
+.metodo { margin-top: 20px; color: var(--muted); font-size: 12.5px; }
+.metodo p { margin: 4px 0; }
+</style></head>
+<body><main>
+  <div class="cabecera">
+    <h1>Escalera de niveles <span class="indice">NQ</span> <span class="nombre-indice">E-mini Nasdaq 100</span></h1>
+    <p>Sesión del <b>viernes 13 de noviembre de 2026</b> · contrato <b class="contrato">NQZ2026</b></p>
+    <p class="regimen-combinado">Régimen: <b class="aviso-txt">Transición (entre 28.271 y 28.433)</b> <span class="sub">(vista corta de 7 días y escalera completa)</span></p>
+    <p class="regimen-combinado" title="Lo que tendrían que comprar o vender los creadores de mercado para seguir cubiertos, con el mismo supuesto de posición que la GEX (largos de calls, cortos de puts). Charm: por el paso del tiempo, con precio e IV quietos (calculado en la apertura). Vanna: si la IV baja 1 punto.">Charm: compra hacia el cierre, fuerte (1.950 contratos/día; 0DTE compra 1.226 · resto compra 724)</p><p class="regimen-combinado" title="Lo que tendrían que comprar o vender los creadores de mercado para seguir cubiertos, con el mismo supuesto de posición que la GEX (largos de calls, cortos de puts). Charm: por el paso del tiempo, con precio e IV quietos (calculado en la apertura). Vanna: si la IV baja 1 punto.">Vanna: si baja la IV, flujo comprador (511 contratos por punto de IV)</p>
+    <p class="sub">Datos: liquidación del jueves 12 de noviembre de 2026 · <span class="aviso-txt">PRELIMINAR</span> · CME Daily Bulletin, sección 40 (PDF descargado a mano) · Vencimientos incluidos: hasta el vie 18 dic</p>
+  </div>
+
+  <div class="tiles">
+    <div class="tarjeta tile"><div class="etq">Precio ref.</div><div class="valor num">28.384</div><div class="sub">liquidación del futuro (cierre anterior)</div></div>
+    <div class="tarjeta tile"><div class="etq">Gamma</div><div class="valor"><span class="estado e-roto">▲▼ Negativa</span><div class="sub">Movimientos más amplios</div></div></div>
+    <div class="tarjeta tile"><div class="etq">Frontera (gamma flip)</div><div class="valor num">28.433</div></div>
+    <div class="tarjeta tile"><div class="etq">Rango 68 %</div><div class="valor num" style="font-size:18px">27.907 – 28.862</div><div class="sub">± 477 puntos (1 desviación)</div></div>
+    <div class="tarjeta tile"><div class="etq">Rango 95 %</div><div class="valor num" style="font-size:18px">27.430 – 29.339</div><div class="sub">± 2 desviaciones</div></div>
+    <div class="tarjeta tile"><div class="etq">IV at the money</div><div class="valor num">26,7 %</div><div class="sub">vencimiento vie 13 nov · straddle 28.380: 381,0 pts</div></div>
+  </div>
+
+  <div class="tarjeta corta"><h2>Vista corta (7 días: del vie 13 nov al jue 19 nov)</h2><p>Régimen combinado: <b class="aviso-txt">Transición (entre 28.271 y 28.433)</b></p><ul><li>Frontera corta: <b class="num">28.271</b> <span class="muted">(completa: 28.433)</span> · gamma corta positiva en el precio</li><li>Muro de calls corto (más GEX de calls por encima del precio): <b class="num">28.500</b> · 577 contratos · GEX 136 M$ · a +116 puntos (0,24 σ) del precio · coincide con el nivel <b>28.500</b></li><li>Muro de puts corto (más GEX de puts por debajo del precio): <b class="num">28.100</b> · 391 contratos · GEX -53 M$ · a -284 puntos (-0,60 σ) del precio · coincide con el nivel <b>28.100</b></li></ul><p class="sub">Solo los 5 vencimientos hasta el jue 19 nov, dentro del rango del 95 %. La escalera de abajo sigue usando todos los vencimientos de su ventana.</p></div>
+
+  <div class="tarjeta tv recentrar" data-lo="27907.2148" data-hi="28861.7852" data-orden=".venv/bin/python -m tareas.escalera --indice NQ --recentrar --precio "><h2>Precio actual y escalera recentrada</h2><div class="tv-fila"><input id="precio-actual" type="number" step="0.25" inputmode="decimal" placeholder="Precio actual del NQ" aria-label="Precio actual"><span class="sub" style="align-self:center">Rango del 68 %: <span class="num">27.907 – 28.862</span></span></div><p class="sub" id="estado-precio">Escribe el precio actual: si sale del rango del 68 %, la página te avisa y te da la orden para recentrar la escalera (mismo open interest, centrada en ese precio).</p><div class="tv-fila oculto" id="fila-orden"><input id="orden-rec" readonly aria-label="Orden para recentrar"><button type="button" class="secundario" data-campo="orden-rec">Copiar la orden</button></div></div>
+
+  <div class="tarjeta tv"><h2>TradingView</h2><div class="tv-fila"><input id="texto-tv" readonly value="ESC2|sym=NQ|fecha=2026-11-13|contrato=NQZ2026|roll=2026-12-10|ref=28384|flip=28433|68=27907-28862|95=27430-29339|w=24|fc=28271|mc=28500|mp=28100|rc=T|rf=28271-28433|ch=C:F:1950:C1226:C724|va=C:511|fb=R|L=RI:28500-28500:P:1480/1954:261113_66,261218_25,261120_5:-:28476-28524:c:F:-:O|L=AP:28000-28000:P:1394/5092:261218_55,261120_20,261113_12:-:27976-28024:-:F:-:B|L=C:29000-29000:P:2045/1474:261218_29,261130_23,261119_21:-:28976-29024:-:D:-:M|L=A:28300-28300:S:819/546:261204_61,261130_16,261113_9:-:28276-28324:-:-:-:c|L=O:28250-28250:S:446/619:261113_45,261118_15,261116_12:-:28226-28274:-:-:-:c|L=O:28750-28750:S:807/658:261113_35,261130_21,261127_19:-:28726-28774:-:-:-:c|L=O:28800-28800:S:538/518:261130_34,261120_31,261113_18:-:28776-28824:-:-:-:c|L=A:27500-27500:S:583/2702:261218_38,261130_30,261120_14:-:27476-27524:-:-:-:c|L=O:28400-28400:M:696/422:261218_46,261113_26,261130_13:-:28376-28424:-:-:-:c|L=O:28200-28200:M:309/689:261113_58,261120_27,261218_7:-:28176-28224:-:-:-:c|L=R:28600-28600:M:685/459:261113_45,261218_27,261130_19:-:28576-28624:-:-:-:c|L=O:28100-28100:M:268/670:261113_82,261120_11,261218_3:-:28076-28124:p:-:-:c|L=R:28700-28700:M:546/426:261113_64,261120_9,261118_6:-:28676-28724:-:-:-:c|LX=O:29500-29500:P:2594/1249:261218_54,261130_16,261127_13:-:29476-29524|LX=AP:27000-27000:P:667/4591:261218_44,261130_39,261120_11:-:26976-27024|LX=C:30000-30000:P:5811/1620:261204_44,261218_24,261120_17:-:29976-30024|LX=O:29400-29400:S:923/522:261120_56,261218_24,261130_10:-:29376-29424|LX=O:29700-29700:S:1422/327:261120_64,261218_26,261130_4:-:29676-29724|LX=O:29750-29750:S:1266/508:261130_32,261218_27,261119_14:-:29726-29774|LX=A:26500-26500:S:64/2716:261218_43,261127_19,261204_16:-:26476-26524|Z=28370-28380|Z=28505-28515|Z=28620-28630|Z=28720-28730|gv=1;28384.5;28384.5;0.25;0.00107474;0;0.0177556;0.0430934;0.0942559;0;20;-91400,,,,,,,,,,,,,,20,4099;-89491,,,,,,,,,,,1,2681,,40,4141;-87582,,,,,,,,,,,,,,113,4184;-85673,,,,,,,,2,1727,,1,2702,,56,4058;-83764,,,,,,,,,,,1,2702,,176,3930;-81377,,,,,,,,,,,2,2681,,184,3757;-79468,,,,,,,,1,1714,,,,,23,3617;-77559,,,,,,,,1,1727,,,,,46,3494;-75650,,,,,,,,,,,,,,85,3363;-73741,,,,,,,,4,1727,,1,2702,,228,3236;-71354,,,,,,,,6,1714,,,,,277,3088;-69445,,,,,,,,2,1714,,,,,93,2959;-67536,,,,,,,,,,,,,,142,2875;-65627,,,,,,,,,,,102,2407,,1085,2770;-63718,,,,,,,,1,1727,,12,2344,,138,2666;-61331,,,,,,,,4,1714,1,,2252,,164,2561;-59899,,,,,,,,,,,,,,1,2493;-59422,,,,,,,,3,1714,,2,2179,,193,2479;-57990,,,,,,,,,,,,,,1,2417;-57513,,,,,,,,2,1714,,3,2102,,651,2403;-55604,,,,,,,,23,1644,,22,2039,,280,2348;-53695,,,,,,,,26,1630,,2,1968,,257,2279;-51308,,,,,,,,54,1578,,,,,67,2197;-49399,,,,,,,,34,1527,,75,1812,,172,2134;-48444,,,,,,,,,,,,,,66,2098;-47490,,,,,,,,6,1471,,51,1741,,173,2070;-45581,,,,,,,,20,1423,,25,1687,,74,2016;-44626,,,,,,,,16,1400,,1,1654;-44149,,,,,,,,,,,,,,1,1949;-43672,,,,,,,,125,1375,,38,1621,,174,1953;-42717,,,,,,,,111,1349,,37,1590,,139,1917;-42240,,,,,,,,,,,,,,2,1881;-41762,,,,,,,,174,1321,,30,1562,,397,1885;-40331,,,,,,,,151,1292,,39,1525,,27,1837;-39376,,,,,,,,150,1270,,23,1496,,159,1807;-38421,,,,,,,,101,1252,,3,1470,,20,1776;-37467,,42,421,,,,,41,1234,,44,1487,,737,1745;-36512,,,,,,,,59,1208,,12,1417,,65,1711;-35558,,6,425,,,,,66,1195,,41,1432,,224,1685;-34603,,,,,,,,104,1173,,29,1373,,55,1648;-33649,,560,425,,,,,181,1127,,136,1365,1,606,1623;-32694,,,,,,,,42,1130,,24,1322,2,57,1595;-31739,,88,425,,,,,95,1069,,92,1346,60,432,1564;-30308,,,,,,,,90,1076,,39,1255,49,252,1523;-29353,,63,421,,,,,327,1045,,70,1233,6,863,1484;-28398,,,,,,,,20,1031,,32,1200,,45,1463;-27444,,82,390,,,,,221,973,,85,1179,23,442,1436;-26489,,,,,,,,135,983,,58,1146,175,190,1403;-25535,,1134,376,,,,,109,955,,147,1136,151,713,1374;-25057,,,,,,,,,,,1,1189;-24580,,,,,,,,82,943,,152,1099,,125,1345;-23626,,134,357,,,,,618,848,,2277,1073,3,636,1318;-22671,,88,341,,,,,97,815,,37,1050,,157,1288;-22194,,,,,,,,,,,,,,3,1211;-21716,,432,332,,,,,318,860,1,237,1020,8,2307,1271;-21239,,,,,,,,28,857,,2,1007,,18,1251;-20762,,27,324,,,,,180,800,,142,995,,145,1246;-20285,,,,,,,,14,830,,27,1051,,2,1226;-19807,,,,,,,,16,819,,5,967,,15,1211;-19330,1,450,301,,,,,316,797,,213,968,4,1171,1200;-18853,,,,,,,,13,794,,3,942,,8,1192;-18375,,21,291,,,,,184,779,,267,934,,124,1168;-17898,,,,,,,,13,764,,24,933,,17,1161;-17421,,312,279,,,,,2648,752,,2289,900,28,703,1149;-16944,,58,273,,,,,114,724,,77,890,,63,1144;-16466,,184,266,,,,,156,684,,65,889,,126,1119;-15989,,74,261,,,,,82,698,,17,868,,54,1086;-15512,,503,256,,,,4,257,697,,288,857,7,679,1104;-15034,,74,251,,,,,94,681,,69,839,,15,1084;-14557,,228,247,,,,,392,660,,217,830,,307,1060;-14080,,34,242,,,,,61,663,,38,818,1,38,1063;-13603,,706,235,,,,,410,585,2,1125,800,26,1010,1052;-13125,,35,229,,,,1,528,636,,27,788,,56,1044;-12648,,203,224,,,,1,228,590,,196,825,,188,1022;-12171,,323,217,,,,1,2463,614,,93,776,1,143,999;-11693,3,749,210,,,,1,565,606,1,592,804,62,711,1010;-11216,,551,203,,,,3,422,513,,31,757,3,57,993;-10739,1,595,196,,,,,668,520,2,303,768,2,759,981;-10262,1,306,190,,,,4,372,522,,88,750,,82,968;-9784,1,220,184,,,,3,124,505,,35,713,,928,950;-9307,1,1537,178,,,,7,740,525,11,955,701,190,3086,938;-8830,3,286,175,,,,4,269,469,,168,744,1,264,891;-8352,5,921,166,,,,4,463,453,1,249,702,7,362,916;-7875,1,482,161,,,,2,326,476,13,226,670,,98,904;-7618,,3,159,,,,,1,300;-7578,,1,158,,,,,1,298;-7538,3,268,158,,,,32,331,505,3,1014,668,26,1097,902;-7498,,1,157;-7458,,3,157,,,,,2,296;-7438,,79,156,,,,,27,441;-7418,,2,157,,,,,5,294;-7378,,5,156,,,,,1,295;-7338,5,33,156,,,,5,31,510,,22,651;-7298,,6,155,,,,,1,294;-7258,,1,154,,,,,14,293;-7238,1,4,155,,,,,6,479;-7218,,6,154,,,,,4,293;-7178,,10,153,,,,,3,292;-7138,9,275,153,,,,6,185,487,2,61,666,3,208,885;-7132,,,,,,,,,,,,,,3,876;-7098,,4,152,,,,,1,290;-7058,1,6,152,,,,,6,288;-7038,,8,152,,,,,19,421;-7018,,8,151,,,,,11,289;-6978,,2,150;-6938,,23,150,,,,5,91,477,,13,642;-6898,,10,149,,,,,3,288;-6858,,44,149,,,,,1,287;-6838,,3,149,,,,,16,343;-6818,,6,149,,,,,1,286;-6778,,3,149,,,,,1,285;-6738,17,209,149,,,,12,120,490,5,86,658,27,71,875;-6736,,,,,,,,,,,,,,19,867;-6698,,24,148,,,,,1,282;-6658,,16,146,,,,,1,283;-6638,2,7,147,,,,,9,439;-6618,,2,147,,,,,4,280;-6578,,11,147;-6538,16,231,146,,,,22,128,482,6,189,634,6,642,878;-6498,,4,145,,,,,3,281;-6458,,80,145,,,,,3,281;-6438,,11,144,,,,,29,379;-6418,,6,144,,,,,3,278;-6378,,10,144;-6338,5,117,143,,,,9,148,459,4,109,636,9,184,866;-6298,,8,143,,,,,1,278;-6258,,5,142,,,,,7,275;-6238,3,3,142,,,,,6,406;-6218,,12,142,,,,,1,275;-6178,,10,142,,,,,2,274;-6138,7,57,141,,,,16,48,386,,8,604;-6098,,9,140,,,,,4,274;-6058,,10,140,,,,,3,274;-6038,,6,140,,,,,14,408;-6018,2,5,139,,,,,2,273;-5978,,3,139,,,,,4,273;-5945,,,,,,,,,,,,,,5,849;-5938,17,133,139,,,,75,78,457,6,130,634,9,48,857;-5898,,18,138;-5858,,7,138,,,,,3,271;-5838,9,35,138,,,,,22,417;-5818,,21,137,,,,,5,270;-5778,,14,136;-5748,,,,,,,,,,,,,,2,844;-5738,4,38,136,,,,108,71,446,,20,612;-5698,,6,136,,,,,4,268;-5658,,6,136,,,,,1,266;-5638,6,10,135,,,,,17,430;-5618,,5,135,,,,,3,267;-5578,1,35,135,,,,,3,267;-5550,,,,,,,,,,,,,,9,840;-5538,21,446,134,,,,76,425,465,32,1457,614,540,2245,855;-5498,,18,134,,,,,2,265;-5458,,6,133,,,,,1,263;-5438,19,26,133,,,,,33,336;-5418,,13,133,,,,,1,264;-5378,,5,133,,,,,6,262;-5338,10,127,132,,,,6,69,444,,27,608,,23,851;-5298,,8,132,,,,,3,262;-5258,1,17,131,,,,,1,260;-5238,13,22,131,,,,3,13,348;-5218,4,27,131,,,,,4,261;-5178,7,5,131,,,,,4,259;-5154,,,,,,,,,,,,,,3,831;-5138,53,124,130,,,,22,182,423,18,120,612,38,61,846;-5098,1,5,129;-5058,3,4,129,,,,,3,257;-5038,1,10,129,,,,,23,378;-5018,1,6,129;-4978,2,24,128;-4938,309,322,128,,,,50,122,394,1,5,602;-4898,,17,128,,,,,1,256;-4858,3,9,127,,,,,2,254;-4838,17,333,127,,,,,39,342;-4818,3,4,127,,,,,4,255;-4778,,8,127;-4759,,,,,,,,,,,,,,19,816;-4738,48,112,127,,,,27,194,454,31,123,609,8,159,837;-4698,1,50,126,,,,,14,264;-4658,,11,125,,,,,2,251;-4638,10,25,125,,,,,34,355;-4618,4,7,125,,,,,4,252;-4578,,13,124,,,,,7,250;-4538,13,169,124,,,,33,282,434,45,249,593,57,368,832;-4498,,10,124,,,,,5,249;-4458,1,12,123,,,,,10,248;-4438,9,14,123,,,,,13,335;-4418,1,9,123,,,,,1,249;-4378,,8,123;-4363,,,,,,,,,,,,,,3,813;-4338,63,171,122,,,,27,52,454,25,63,608,15,54,820;-4298,,14,122;-4258,,9,121;-4238,11,12,121,,,,,20,371;-4218,6,14,121,,,,,5,296;-4178,2,56,121,,,,,1,246;-4138,10,22,120,,,,12,47,399,,17,583;-4098,1,11,120,,,,,1,245;-4058,,3,120;-4038,16,13,119,,,,5,18,329;-4018,1,11,119,,,,,1,244;-3978,,9,119;-3967,,,,,,,,,,,,,,4,805;-3938,15,117,118,,,,26,119,372,3,118,605,65,46,819;-3898,1,18,118,,,,,16,298;-3858,,13,118;-3838,27,17,117,,,,,36,342;-3818,,10,117;-3778,,7,117;-3770,,,,,,,,,,,,,,3,800;-3738,8,33,117,,,,43,32,417,,13,556;-3698,,8,116,,,,,5,240;-3658,2,8,116,,,,,10,239;-3638,12,5,116,,,,,14,318;-3618,,13,116,,,,,2,239;-3578,3,10,115,,,,,4,238;-3572,,,,,,,,,,,,,,1,796;-3538,112,579,115,,,,169,450,421,90,670,574,208,997,810;-3498,,10,115,,,,,5,237;-3458,5,6,114,,,,,2,237;-3438,10,27,114,,,,1,20,301;-3418,1,14,114,,,,,37,236;-3378,,4,113,,,,,1,236;-3338,21,54,113,,,,23,41,418,2,13,557;-3298,7,11,113,,,,,11,265;-3258,1,31,112,,,,,4,245;-3238,18,17,112,,,,9,50,308;-3218,,13,112,,,,,10,267;-3178,2,15,112;-3176,,,,,,,,,,,,,,3,788;-3138,32,100,111,,,,122,104,395,19,92,577,18,81,787;-3098,,7,111,,,,,14,251;-3058,5,15,111,,,,,4,232;-3038,29,16,111,,,,2,35,264;-3018,7,3,111,,,,,41,245;-2978,2,4,110,,,,,1,231;-2938,25,46,110,,,,32,168,366,3,14,559;-2898,3,22,110,,,,,12,230;-2858,7,6,109,,,,,12,238;-2838,12,18,109,,,,1,21,328;-2818,10,17,109,,,,,3,229;-2781,,,,,,,,,,,,,6,3,779;-2778,3,16,109;-2738,43,164,108,,,,63,129,353,19,111,564,32,130,799;-2698,8,15,108;-2658,5,6,108,,,,,15,230;-2638,10,22,107,,,,16,52,310;-2618,13,12,107,,,,,7,256;-2578,10,13,107;-2538,82,162,107,,,,36,136,356,36,197,555,90,181,795;-2498,16,18,106,,,,,18,244;-2458,5,26,106,,,,,23,238;-2438,32,22,106,,,,21,21,274;-2418,9,13,106,,,,,1,286;-2385,,,,,,,,,,,,,,3,771;-2378,5,27,106;-2338,72,240,105,,,,69,116,382,16,62,568,50,110,784;-2298,11,6,105,,,,,3,258;-2258,4,12,105,,,,,4,285;-2238,22,19,104,,,,7,31,346;-2218,5,38,104,,,,,14,283;-2178,4,29,104;-2138,17,107,104,,,,49,82,344,,16,534;-2098,9,29,103,,,,,10,252;-2058,5,32,103,,,,,2,246;-2038,17,26,103,,,,6,44,297;-2018,17,6,103,,,,,3,218;-1990,,,,,,,,,,,,,1,1,763;-1978,10,29,103,,,,,7,232;-1938,144,159,102,,,,27,140,384,28,231,549,23,39,782;-1898,6,18,102,,,,1,8,234;-1858,1,15,102,,,,,4,244;-1838,7,33,102,,,,6,18,299;-1818,5,29,101,,,,,12,260;-1792,,,,,,,,,,,,,,2,759;-1778,,8,101,,,,,5,248;-1738,21,36,101,,,,46,108,322,6,11,531;-1698,,12,101,,,,,1,214;-1658,5,8,100,,,,,9,266;-1638,21,16,100,,,,9,42,316;-1618,,17,100,,,,,4,225;-1594,,,,,,,,,,,,,1,1,755;-1578,4,10,100,,,,,5,213;-1538,124,315,99,,,,371,867,408,213,556,542,692,3357,774;-1498,4,17,99,,,,1,,212;-1458,4,6,99,,,,1,4,231;-1438,15,57,99,,,,7,17,293;-1418,4,7,98,,,,,6,220;-1378,2,26,98,,,,,10,230;-1338,26,64,98,,,,142,53,349,,37,507;-1298,1,15,98,,,,,2,209;-1258,2,3,97,,,,,4,221;-1238,49,54,97,,,,31,29,286;-1218,5,8,97,,,,,16,246;-1199,,,,,,,,,,,,,1,5,747;-1178,2,15,97,,,,,2,209;-1138,112,387,96,,,,50,129,402,48,56,546,57,97,765;-1098,3,12,96,,,,,1,208;-1058,7,9,96,,,,,6,216;-1038,33,17,96,,,,23,26,292;-1018,4,5,95,,,,1,3,207;-978,3,5,95,,,,1,3,232;-938,71,42,95,,,,47,311,342,8,5,517;-898,2,16,95,,,,,3,206;-858,10,10,94,,,,,1,205;-838,38,21,94,,,,33,23,271;-818,6,25,94,,,,,1,263;-803,,,,,,,,,,,,,7,6,739;-778,3,8,94,,,,10,1,208;-738,139,241,93,,,,74,246,391,60,84,522,36,116,757;-698,7,12,93,,,,3,1,203;-658,5,15,93,,,,,3,218;-638,30,24,93,,,,21,32,260;-618,7,14,92,,,,3,8,206;-578,7,25,92,,,,,4,227;-538,58,123,92,,,,212,161,325,154,184,519,21,134,753;-498,3,15,92,,,,6,2,242;-458,3,13,91,,,,7,4,228;-438,44,14,91,,,,26,21,266;-418,3,7,91,,,,3,5,200;-407,,,,,,,,,,,,,3,1,732;-378,7,10,91,,,,,2,257;-338,117,127,90,,,,73,79,354,482,192,565,131,158,742;-298,53,14,90,,,,12,1,250;-258,8,12,90,,,,10,5,252;-238,31,36,89,,,,20,16,286;-218,29,9,89,,,,3,6,206;-178,6,5,89,,,,2,3,205;-138,110,40,88,,,,28,59,332,4,38,494;-98,6,12,88,,,,5,,204;-58,14,27,88,,,,,4,195;-38,290,47,88,,,,19,27,273;-18,8,11,88,,,,,3,210;-12,,,,,,,,,,,,,5,1,724;22,5,12,87,,,,3,2,212;62,125,112,87,,,,155,129,376,157,118,514,260,61,741;102,10,11,87,,,,7,1,204;142,16,11,87,,,,1,13,193;162,18,9,87,,,,36,37,233;182,17,13,87,,,,13,4,194;186,,,,,,,,,,,,,,21,721;222,21,14,86,,,,14,8,192;262,47,32,86,,,,145,54,372,34,9,487;302,15,9,86,,,,10,8,191;342,17,14,85,,,,10,7,192;362,29,15,85,,,,53,23,296;382,7,5,85,,,,4,3,237;384,,,,,,,,,,,,,,1,717;422,5,7,85,,,,1,6,216;462,563,212,84,,,,455,329,381,236,167,507,225,1248,733;502,103,9,84,,,,4,2,195;542,10,1,84,,,,10,,188;562,21,11,84,,,,25,13,256;582,8,4,83,,,,1,2,187;622,13,4,83,,,,2,4,193;662,110,49,83,,,,44,36,368,7,3,493;702,13,3,83,,,,1,5,192;742,6,4,82,,,,2,,185;762,45,4,82,,,,21,25,280;779,,,,,,,,,,,,,30,2,705;782,11,2,82,,,,3,2,214;822,22,9,82,,,,3,2,226;862,182,140,81,,,,126,136,367,179,129,500,198,52,728;902,4,6,81;942,11,5,81,,,,11,,238;962,200,53,81,,,,29,11,292;982,8,15,81,,,,3,1,182;1022,13,1,80,,,,1,,181;1062,158,44,80,,,,137,29,321,43,1,486;1102,10,9,80,,,,6,1,200;1142,59,5,79,,,,5,3,185;1162,31,14,79,,,,38,4,200;1175,,,,,,,,,,,,,2,5,703;1182,15,5,79,,,,1,,180;1222,20,1,79,,,,3,,234;1262,219,81,79,,,,144,118,341,79,82,489,106,140,718;1302,10,1,78,,,,3,,234;1342,33,,78,,,,2,,232;1362,275,6,78,,,,37,1,233;1382,7,1,78,,,,,1,233;1422,9,15,78;1462,200,110,77,,,,201,183,355,118,129,475,289,234,714;1502,8,,77,,,,7,,221;1542,17,1,77,,,,2,,231;1562,50,3,77,,,,31,2,215;1582,25,9,76,,,,2,,230;1622,14,8,76,,,,2,,174;1662,167,100,76,,,,229,131,345,76,227,482,63,60,711;1702,26,7,76,,,,11,,176;1742,25,2,76,,,,1,,173;1762,29,2,75,,,,17,6,202;1782,36,10,75,,,,12,,227;1822,39,,75,,,,1,,172;1862,62,182,75,,,,130,28,298,7,,457;1902,12,,75,,,,1,,224;1942,1,,75,,,,1,,225;1962,39,10,74,,,,3,,329;1966,,,,,,,,,,,,,1,,685;1982,1,,74;2022,2,,74;2062,115,65,74,,,,130,267,343,81,81,476,79,25,704;2102,5,,74,,,,1,,221;2142,5,,73,,,,7,,180;2162,46,5,73,,,,4,,168;2164,,,,,,,,,,,,,,1,687;2182,6,,73,,,,6,,220;2222,5,,73,,,,3,,167;2262,88,10,73,,,,54,5,297,16,,470;2302,4,,73,,,,3,,165;2342,3,,73,,,,3,,218;2362,27,1,72,,,,1,,352,,,,,2,684;2382,5,,73,,,,8,,164;2422,3,,72,,,,1,,164;2462,409,87,72,,,,518,404,344,311,525,465,810,458,697;2502,4,,72,,,,8,,207;2542,8,,72;2562,32,,72,,,,8,,225;2582,1,,72,,,,1,,215;2622,4,1,72,,,,2,,214;2662,32,77,72,,,,92,3,271,35,4,476,4,,632;2702,6,,71,,,,4,,213;2742,4,,71,,,,1,,214;2757,,,,,,,,,,,,,,2,678;2762,22,7,72,,,,4,,212;2782,1,,72,,,,4,,213;2822,3,,71;2862,129,28,72,,,,164,91,298,118,36,484,70,151,690;2902,3,,71,,,,1,,212;2942,2,,71,,,,1,,211;2962,35,1,71,,,,14,,205;2982,3,,71;3022,3,,71,,,,1,,209;3062,45,9,71,,,,144,2,218,36,,512,4,,621;3102,2,,71,,,,8,,199;3142,21,,71,,,,1,,156;3153,,,,,,,,,,,,,9,5,672;3162,17,,71,,,,5,,278;3182,4,,71,,,,6,,195;3222,6,,71,,,,2,,207;3262,139,25,72,,,,222,93,331,152,100,454,45,87,683;3302,16,,71,,,,2,,175;3342,,,,,,,2,,174;3362,17,,72,,,,2,,174;3382,10,,72,,,,1,,153;3422,,,,,,,2,,175;3462,101,16,72,,,,178,196,321,315,114,455,135,392,668;3502,3,,72;3542,,,,,,,16,,202;3548,,,,,,,,,,,,,5,,661;3562,7,,72,,,,6,,287;3582,1,,72,,,,1,,201;3622,,,,,,,1,,151;3662,196,31,73,,,,215,86,291,75,61,448,145,53,680;3702,24,,73,,,,16,,193;3742,13,,73,,,,1,,200;3762,21,,73,,,,2,,329;3862,51,8,74,,,,91,,287,13,,434;3944,,,,,,,,,,,,,2,,660;3962,10,,74;4062,50,49,75,,,,597,312,318,101,118,452,175,38,671;4142,,,,,,,,,,,,,1,1,653;4162,18,,76;4262,70,6,76,,,,120,,197,10,,450,10,,604;4339,,,,,,,,,,,,,4,,650;4462,188,70,78,,,,450,312,316,499,132,438,1460,732,665;4662,48,7,80,,,,88,,283,18,,464;4735,,,,,,,,,,,,,10,,645;4862,129,80,82,,,,568,140,281,140,89,429,76,27,653;5062,56,8,84,,,,139,,279,30,,450;5130,,,,,,,,,,,,,43,2,645;5262,42,26,86,,,,973,171,303,110,115,433,300,14,654;5462,104,17,89,,,,370,183,281,438,115,431,362,184,654;5526,,,,,,,,,,,,,4,,636;5662,222,30,92,,,,236,131,285,105,95,424,93,20,631;5862,51,1,94,,,,96,1,234,16,1,418,8,,584;5922,,,,,,,,,,,,,10,,636;6062,56,23,96,,,,411,102,289,78,60,429,113,48,643;6119,,,,,,,,,,,,,5,3,634;6262,21,1,99,,,,70,,262,11,3,496,4,,584;6317,,,,,,,,,,,,,1,3,632;6462,851,60,102,,,,1227,294,297,1926,262,459,1792,1012,638;6662,573,,103,,,,2,,158,10,,492,6,,579;6862,35,16,105,,,,348,96,296,124,58,417,74,19,623;7062,69,,106,,,,1,,167,,,,6,,575;7108,,,,,,,,,,,,,4,,625;7262,117,71,108,,,,308,47,276,236,44,442,128,8,624;7462,66,18,109,,,,210,76,262,108,92,422,126,44,600;7504,,,,,,,,,,,,,6,,617;7875,179,17,114,,,,303,144,288,352,77,411,356,160,619;8352,326,89,118,,,,258,429,289,608,88,391,2132,344,580;8830,153,36,123,,,,313,145,291,172,63,411,73,24,617;9307,141,21,128,,,,449,103,290,363,57,418,351,142,606;9784,92,27,135,,,,255,100,298,112,21,418,114,1,617;10262,446,17,141,,,,765,148,305,849,90,401,2199,372,602;10739,70,9,146,,,,176,110,316,183,21,425,96,,604;11216,91,4,148,,,,174,23,325,81,41,405,129,,603;11693,141,5,153,,,,868,41,335,474,43,414,383,25,611;12171,72,1,151,,,,348,30,342,63,23,418,97,12,608;12648,199,3,176,,,,1456,31,348,1011,898,416,1627,72,607;13125,56,1,183,,,,226,6,364,103,3,414,51,,601;13603,156,,190,,,,692,9,371,197,,430,127,13,608;14080,49,,195,,,,185,3,381,44,,430,29,,608;14557,222,,200,,,,919,4,391,772,10,439,1455,80,610;15034,58,,206,,,,239,2,400,204,,441,152,,613;15512,67,,212,,,,508,,410,172,,450,146,6,611;15989,31,,218,,,,262,,418,59,,455,16,,615;16466,59,,223,,,,295,,430,175,,463,830,27,619;16944,29,,229,,,,59,,435,68,,468,24,,631;17421,77,,236,,,,170,,446,180,,479,171,,622;17898,135,,240,,,,179,,455,315,1,483,33,,629;18375,78,,247,,,,327,,462,673,60,491,1538,53,630;18853,,,,,,,90,,471,46,,497,1,,652;19330,43,,259,,,,238,,481,170,,504,710,,639;19807,,,,,,,75,,487,25,,511,4,,662;20285,63,,271,,,,171,,500,247,,518,1420,,648;20762,,,,,,,99,,503,42,,528,3,,671;21239,73,1,283,,,,194,,514,125,,535,80,,658;21716,,,,,,,,,,,,,6,,684;22671,21,,285,,,,145,,534,418,1,560,972,1,673;23148,,,,,,,,,,,,,5,,701;23626,28,,285,,,,100,,554,65,,573,300,,685;24580,43,,285,,,,94,,567,72,,591,333,1,697;25535,,,,,,,58,,586,75,,604,63,,710;26012,,,,,,,,,,,,,1,,739;26489,22,,285,,,,227,,597,482,,623,609,3,723;27444,,,,,,,56,,615,15,,634,127,,729;27921,,,,,,,,,,,,,1,,766;28398,10,,283,,,,85,,629,231,,652,1203,,745;28876,,,,,,,,,,,,,1,,779;29353,,,,,,,44,,636,37,,667,78,,756;30308,1,,283,,,,42,,654,337,,673,1203,,769;31262,,,,,,,,,,8,,692,87,,785;32694,,,,,,,80,,663,84,,716,158,,803;33649,,,,,,,10,,651,34,,734,31,,818;34603,,,,,,,37,,667,67,,752,255,,832;35558,,,,,,,,,,8,,769,7,,845;36512,,,,,,,44,,667,3,,787,210,,858;36990,,,,,,,,,,,,,1,,893;37467,,,,,,,,,,,,,1,,869;38421,,,,,,,17,,661,7,,815,476,,881;40331,,,,,,,3,,661,27,,848,77,,900;42240,,,,,,,7,,661,21,,881,283,,934;44626,,,,,,,9,,667,11,,903,227,,966;46535,,,,,,,19,,667,8,,935,539,,999;48444,,,,,,,34,,661,15,,966,56,,1012;50354,,,,,,,42,,661,,,,347,,1044;52263,,,,,,,,,,,,,90,,1075;54649,,,,,,,132,,667,145,,1031,229,,1115;56558,,,,,,,41,,667,,,,91,,1129;58467,,,,,,,103,,667,4,,1088,102,,1129;60377,,,,,,,,,,24,,1107,97,,1129;62286,,,,,,,12,,661,104,,1135,501,,1157" aria-label="Texto para TradingView"><button id="copiar-tv" type="button" data-campo="texto-tv">Copiar para TradingView</button></div><p class="sub">Pégalo en los ajustes del indicador «Escalera» añadido al gráfico del NQ (campo «Niveles del día»). Úsalo en el gráfico <b>NQZ2026</b> (o MNQZ2026): los niveles salen de las opciones sobre ese contrato y están en sus precios. En NQ1! también vale mientras TradingView tenga detrás ese mismo contrato; el indicador avisa si no.</p><details class="sub"><summary>¿Tu indicador es la versión anterior? Copia el formato antiguo (ESCNQ1)</summary><div class="tv-fila"><input id="texto-tv-1" readonly value="ESCNQ1|fecha=2026-11-13|contrato=NQZ2026|roll=2026-12-10|ref=28384|flip=28433|68=27907-28862|95=27430-29339|C=29000@2045/1474|O=28800@538/518|O=28750@807/658|R=28700@546/426|R=28600@685/459|RI=28500@1480/1954|O=28400@696/422|A=28300@819/546|O=28250@446/619|O=28200@309/689|O=28100@268/670|AP=28000@1394/5092|A=27500@583/2702|G=28375-28375|G=28510-28510|G=28625-28625|G=28725-28725" aria-label="Texto ESCNQ1"><button type="button" class="secundario" data-campo="texto-tv-1">Copiar ESCNQ1</button></div><p class="sub">El formato antiguo no lleva categorías ni zonas: el indicador antiguo dibuja líneas. Actualiza el indicador con el archivo tradingview/escalera_nq.pine para ver las zonas.</p></details></div>
+
+  <div class="tarjeta avisos "><h2>⚠ Avisos y aproximaciones</h2><ul><li>Bloque LUNES call NOV26: strikes repetidos descartados 28 strikes, de 27650 a 31000 (varias series del mes en un mismo bloque; se queda la primera fecha para los no repetidos).</li><li>Bloque MARTES call NOV26: strikes repetidos descartados 20 strikes, de 26500 a 30000 (varias series del mes en un mismo bloque; se queda la primera fecha para los no repetidos).</li><li>Bloque MIERCOLES call NOV26: strikes repetidos descartados 23 strikes, de 28100 a 30250 (varias series del mes en un mismo bloque; se queda la primera fecha para los no repetidos).</li><li>Bloque LUNES put NOV26: strikes repetidos descartados 50 strikes, de 21500 a 28900 (varias series del mes en un mismo bloque; se queda la primera fecha para los no repetidos).</li><li>Bloque MARTES put NOV26: strikes repetidos descartados 56 strikes, de 21000 a 28650 (varias series del mes en un mismo bloque; se queda la primera fecha para los no repetidos).</li><li>Bloque MIERCOLES put NOV26: strikes repetidos descartados 35 strikes, de 22000 a 28600 (varias series del mes en un mismo bloque; se queda la primera fecha para los no repetidos).</li><li>Comprobación EOO: el strike 33500 de «EMINI NASD PUT · DEC26 PUT» no está en los bloques TRIMESTRAL put leídos.</li><li>Comprobación EOO: el strike 28660 de «QRW THUR · NOV26 PUT» no está en los bloques JUEVES put leídos.</li><li>Comprobación EOO: el strike 28680 de «QRW THUR · NOV26 PUT» no está en los bloques JUEVES put leídos.</li><li>Comprobación EOO: el strike 28760 de «QRW THUR · NOV26 PUT» no está en los bloques JUEVES put leídos.</li><li>Comprobación EOO: el strike 28875 de «QRW THUR · NOV26 PUT» no está en los bloques JUEVES put leídos.</li><li>Comprobación EOO: el strike 28925 de «QRW THUR · NOV26 PUT» no está en los bloques JUEVES put leídos.</li><li>Comprobación EOO: el strike 28950 de «QRW THUR · NOV26 PUT» no está en los bloques JUEVES put leídos.</li><li>Comprobación EOO: el strike 29050 de «QRW THUR · NOV26 PUT» no está en los bloques JUEVES put leídos.</li><li>Comprobación EOO: el strike 29175 de «QRW THUR · NOV26 PUT» no está en los bloques JUEVES put leídos.</li><li>Comprobación EOO: el strike 29350 de «QRW THUR · NOV26 PUT» no está en los bloques JUEVES put leídos.</li><li>Comprobación EOO: el strike 26250 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 26825 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 26850 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 26875 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 26900 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 26925 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 26975 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27075 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27125 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27175 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27225 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27250 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27275 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27300 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27325 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27330 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27350 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27375 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27475 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27490 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27525 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27530 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27560 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27640 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27675 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27680 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 27870 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>Comprobación EOO: el strike 28030 de «QRW THUR · NOV26 CALL» no está en los bloques JUEVES call leídos.</li><li>59 strikes sin IV calculable: IV interpolada entre strikes vecinos.</li></ul></div>
+
+  
+
+  <div class="tarjeta estado-dia"><h2>Estado del día: pendiente</h2><p class="sub">Se rellena solo en cuanto esté el Daily Bulletin de este día (normalmente es el PDF que descargas al día siguiente). El máximo y el mínimo del boletín son de la sesión electrónica completa de Globex (17:00 a 16:00 de Chicago), no solo del horario regular. Si en datos/entrada hay un CSV de velas de 1 minuto de ese día, se añade la hora del toque y si el nivel se respetó o se rompió.</p></div>
+
+  <div class="tarjeta">
+    <h2>Escalera</h2>
+    <div class="tabla-scroll"><table>
+      <thead><tr><th>Nivel</th><th>Tipo</th><th>Qué hay<div class="sub" style="text-transform:none;letter-spacing:0;font-weight:400">calls/puts y GEX: suma de 12 vencimientos, del vie 13 nov al vie 18 dic</div></th><th>Coincide con NDX</th><th>Prob. tocarlo</th><th>Fiabilidad histórica</th><th>Estado hoy</th></tr></thead>
+      <tbody>
+      <tr class="cat-principal">
+        <td class="nivel num">29.000<div class="sub">zona 28.976–29.024</div></td>
+        <td><span class="tag t-calls" title="Mayor bloque de calls abiertas. Por encima de la frontera aguanta algo más que un precio cualquiera; por debajo, no.">Muro de calls</span><span class="tag t-muro">Muro</span><span class="tag t-corto" title="El flujo del charm hacia el cierre empuja el precio contra este muro (o lo aleja de este imán)">el charm lo debilita</span><div class="sub">Mayor bloque de calls abiertas. Por encima de la frontera aguanta algo más que un precio cualquiera; por debajo, no.</div></td>
+        <td>NQ: <b>2.045</b> calls · <b>1.474</b> puts<div class="sub" title="GEX por vencimiento:
+vie 13 nov: 1 M$
+lun 16 nov: -0 M$
+mar 17 nov: -0 M$
+jue 19 nov: 7 M$
+vie 20 nov: -0 M$
+vie 27 nov: -4 M$
+lun 30 nov: -7 M$
+jue 3 dic: 0 M$
+vie 4 dic: 1 M$
+vie 11 dic: 2 M$
+vie 18 dic: 9 M$">GEX neta 9 M$ · |GEX| 9 M$ · sobre todo vto. vie 18 dic</div><div class="sub"><span class="cat c-principal" title="Muro, imán o frontera, o de los que más gamma estructural tienen del día (percentil 80 o más)">Principal</span> GEX bruta estructural <b class="num">127 M$</b></div></td>
+        <td><span class="muted" title="Sin datos del NDX en la versión 1">Sin datos NDX</span></td>
+        <td class="num">20 %</td>
+        <td><span class="" title="Muro de calls · régimen local positiva (nivel por encima de la frontera) · papel techo. % de rechazo al primer toque (0,2σ) frente a 20 zonas de control a la misma distancia de la apertura.">67 % (n=21; control 63 %, +4)</span><div class="sub">Muro de calls · positiva · techo</div></td>
+        <td><span class="muted">Pendiente</span></td>
+      </tr>
+      <tr class="cat-menor fila-contexto">
+        <td class="nivel num">28.800<div class="sub">zona 28.776–28.824</div></td>
+        <td><span class="tag t-oi" title="Mucho open interest. Contexto: al primer toque no tiene ventaja sobre un precio cualquiera.">OI relevante</span><div class="sub">Mucho open interest. Contexto: al primer toque no tiene ventaja sobre un precio cualquiera. (contexto: sin ventaja histórica)</div></td>
+        <td>NQ: <b>538</b> calls · <b>518</b> puts<div class="sub" title="GEX por vencimiento:
+vie 13 nov: 3 M$
+lun 16 nov: -1 M$
+mar 17 nov: 1 M$
+mié 18 nov: -0 M$
+jue 19 nov: 0 M$
+vie 20 nov: 6 M$
+vie 27 nov: -1 M$
+lun 30 nov: -6 M$
+jue 3 dic: 0 M$
+vie 4 dic: -0 M$
+vie 11 dic: 0 M$
+vie 18 dic: 0 M$">GEX neta 2 M$ · |GEX| 2 M$ · sobre todo vto. vie 20 nov</div><div class="sub"><span class="cat c-secundario" title="Gamma estructural media del día (entre el percentil 40 y el 80)">Secundario</span> GEX bruta estructural <b class="num">39 M$</b></div><div class="sub muted">Se muestra como menor: contexto: sin ventaja histórica</div></td>
+        <td><span class="muted" title="Sin datos del NDX en la versión 1">Sin datos NDX</span></td>
+        <td class="num">39 %</td>
+        <td><span class="" title="OI relevante · régimen local positiva (nivel por encima de la frontera) · papel techo. % de rechazo al primer toque (0,2σ) frente a 20 zonas de control a la misma distancia de la apertura.">66 % (n=89; control 70 %, -3)</span><div class="sub">OI relevante · positiva · techo</div></td>
+        <td><span class="muted">Pendiente</span></td>
+      </tr>
+      <tr class="cat-menor fila-contexto">
+        <td class="nivel num">28.750<div class="sub">zona 28.726–28.774</div></td>
+        <td><span class="tag t-oi" title="Mucho open interest. Contexto: al primer toque no tiene ventaja sobre un precio cualquiera.">OI relevante</span><div class="sub">Mucho open interest. Contexto: al primer toque no tiene ventaja sobre un precio cualquiera. (contexto: sin ventaja histórica)</div></td>
+        <td>NQ: <b>807</b> calls · <b>658</b> puts<div class="sub" title="GEX por vencimiento:
+vie 13 nov: 7 M$
+lun 16 nov: -0 M$
+mar 17 nov: -0 M$
+mié 18 nov: -1 M$
+jue 19 nov: 1 M$
+vie 20 nov: 1 M$
+vie 27 nov: 4 M$
+lun 30 nov: -4 M$
+vie 4 dic: -0 M$
+vie 11 dic: 1 M$
+vie 18 dic: 1 M$">GEX neta 9 M$ · |GEX| 9 M$ · sobre todo vto. vie 18 dic</div><div class="sub"><span class="cat c-secundario" title="Gamma estructural media del día (entre el percentil 40 y el 80)">Secundario</span> GEX bruta estructural <b class="num">51 M$</b></div><div class="sub muted">Se muestra como menor: contexto: sin ventaja histórica</div></td>
+        <td><span class="muted" title="Sin datos del NDX en la versión 1">Sin datos NDX</span></td>
+        <td class="num">45 %</td>
+        <td><span class="" title="OI relevante · régimen local positiva (nivel por encima de la frontera) · papel techo. % de rechazo al primer toque (0,2σ) frente a 20 zonas de control a la misma distancia de la apertura.">66 % (n=89; control 70 %, -3)</span><div class="sub">OI relevante · positiva · techo</div></td>
+        <td><span class="muted">Pendiente</span></td>
+      </tr>
+      <tr class="cat-menor fila-contexto">
+        <td class="nivel num">28.700<div class="sub">zona 28.676–28.724</div></td>
+        <td><span class="tag t-resist" title="Gamma positiva (las coberturas venden en las subidas). Contexto: al primer toque no frena más que un precio cualquiera.">Resistencia</span><div class="sub">Gamma positiva (las coberturas venden en las subidas). Contexto: al primer toque no frena más que un precio cualquiera. (contexto: sin ventaja histórica)</div></td>
+        <td>NQ: <b>546</b> calls · <b>426</b> puts<div class="sub" title="GEX por vencimiento:
+vie 13 nov: 15 M$
+mar 17 nov: 1 M$
+mié 18 nov: 1 M$
+jue 19 nov: 1 M$
+vie 20 nov: -2 M$
+vie 27 nov: 0 M$
+lun 30 nov: -1 M$
+vie 4 dic: 0 M$
+vie 11 dic: 0 M$
+vie 18 dic: -1 M$">GEX neta 15 M$ · |GEX| 15 M$ · sobre todo vto. vie 13 nov</div><div class="sub"><span class="cat c-menor" title="Poca gamma estructural comparada con el resto de niveles del día (menos del percentil 40)">Menor</span> GEX bruta estructural <b class="num">32 M$</b></div></td>
+        <td><span class="muted" title="Sin datos del NDX en la versión 1">Sin datos NDX</span></td>
+        <td class="num">51 %</td>
+        <td><span class="" title="Resistencia · régimen local positiva (nivel por encima de la frontera) · papel techo. % de rechazo al primer toque (0,2σ) frente a 20 zonas de control a la misma distancia de la apertura.">63 % (n=111; control 61 %, +2)</span><div class="sub">Resistencia · positiva · techo</div></td>
+        <td><span class="muted">Pendiente</span></td>
+      </tr>
+      <tr class="cat-menor fila-contexto">
+        <td class="nivel num">28.600<div class="sub">zona 28.576–28.624</div></td>
+        <td><span class="tag t-resist" title="Gamma positiva (las coberturas venden en las subidas). Contexto: al primer toque no frena más que un precio cualquiera.">Resistencia</span><div class="sub">Gamma positiva (las coberturas venden en las subidas). Contexto: al primer toque no frena más que un precio cualquiera. (contexto: sin ventaja histórica)</div></td>
+        <td>NQ: <b>685</b> calls · <b>459</b> puts<div class="sub" title="GEX por vencimiento:
+vie 13 nov: 8 M$
+mar 17 nov: -0 M$
+jue 19 nov: -0 M$
+vie 20 nov: -0 M$
+vie 27 nov: -0 M$
+lun 30 nov: 3 M$
+vie 4 dic: -1 M$
+vie 18 dic: 5 M$">GEX neta 14 M$ · |GEX| 14 M$ · sobre todo vto. vie 13 nov</div><div class="sub"><span class="cat c-menor" title="Poca gamma estructural comparada con el resto de niveles del día (menos del percentil 40)">Menor</span> GEX bruta estructural <b class="num">37 M$</b></div></td>
+        <td><span class="muted" title="Sin datos del NDX en la versión 1">Sin datos NDX</span></td>
+        <td class="num">65 %</td>
+        <td><span class="" title="Resistencia · régimen local positiva (nivel por encima de la frontera) · papel techo. % de rechazo al primer toque (0,2σ) frente a 20 zonas de control a la misma distancia de la apertura.">63 % (n=111; control 61 %, +2)</span><div class="sub">Resistencia · positiva · techo</div></td>
+        <td><span class="muted">Pendiente</span></td>
+      </tr>
+      <tr class="cat-principal">
+        <td class="nivel num">28.500<div class="sub">zona 28.476–28.524</div></td>
+        <td><span class="tag t-resist" title="Gamma positiva (las coberturas venden en las subidas). Contexto: al primer toque no frena más que un precio cualquiera.">Resistencia</span><span class="tag t-iman" title="OI máximo: el strike con más open interest cerca del precio. Los datos no muestran que atraiga ni que repela: el precio llega como a cualquier otro precio a la misma distancia.">OI máximo</span><span class="tag t-oimax">objetivo · a 0,24σ: llega el 93 % de las veces (control 95 %, n=54)</span><span class="tag t-corto" title="El muro de calls de la vista corta (solo los vencimientos de los próximos días) cae dentro de la zona de este nivel">muro corto (calls)</span><span class="tag t-corto" title="El flujo del charm hacia el cierre aleja el precio de este muro (o lo lleva hacia este imán)">el charm lo refuerza</span><div class="sub">Gamma positiva (las coberturas venden en las subidas). Contexto: al primer toque no frena más que un precio cualquiera.</div></td>
+        <td>NQ: <b>1.480</b> calls · <b>1.954</b> puts<div class="sub" title="GEX por vencimiento:
+vie 13 nov: 84 M$
+jue 19 nov: 1 M$
+vie 20 nov: 7 M$
+vie 27 nov: 0 M$
+lun 30 nov: 1 M$
+vie 4 dic: 2 M$
+vie 11 dic: 0 M$
+vie 18 dic: -32 M$">GEX neta 63 M$ · |GEX| 63 M$ · sobre todo vto. vie 18 dic</div><div class="sub"><span class="cat c-principal" title="Muro, imán o frontera, o de los que más gamma estructural tienen del día (percentil 80 o más)">Principal</span> GEX bruta estructural <b class="num">110 M$</b></div></td>
+        <td><span class="muted" title="Sin datos del NDX en la versión 1">Sin datos NDX</span></td>
+        <td class="num">81 %</td>
+        <td><span class="f-mas" title="OI máximo · régimen local positiva (nivel por encima de la frontera) · papel techo. % de rechazo al primer toque (0,2σ) frente a 20 zonas de control a la misma distancia de la apertura.">70 % (n=33; control 62 %, +7)</span><div class="sub">OI máximo · positiva · techo</div></td>
+        <td><span class="muted">Pendiente</span></td>
+      </tr>
+      <tr class="cat-principal">
+        <td class="nivel num">28.433<div class="sub">zona 28.409–28.456</div></td>
+        <td><span class="tag t-frontera" title="Gamma flip: por encima el mercado tiende a calmarse; por debajo, a moverse más y todo rompe más.">Frontera</span><div class="sub">Gamma flip: por encima el mercado tiende a calmarse; por debajo, a moverse más y todo rompe más.</div></td>
+        <td><span class="muted">Cambio de gamma positiva a negativa</span></td>
+        <td><span class="muted" title="Sin datos del NDX en la versión 1">Sin datos NDX</span></td>
+        <td class="num">92 %</td>
+        <td><span class="muted">—</span></td>
+        <td><span class="muted">Pendiente</span></td>
+      </tr>
+      <tr class="cat-menor fila-contexto">
+        <td class="nivel num">28.400<div class="sub">zona 28.376–28.424</div></td>
+        <td><span class="tag t-oi" title="Mucho open interest. Contexto: al primer toque no tiene ventaja sobre un precio cualquiera.">OI relevante</span><div class="sub">Mucho open interest. Contexto: al primer toque no tiene ventaja sobre un precio cualquiera. (contexto: sin ventaja histórica)</div></td>
+        <td>NQ: <b>696</b> calls · <b>422</b> puts<div class="sub" title="GEX por vencimiento:
+vie 13 nov: 3 M$
+mar 17 nov: 1 M$
+jue 19 nov: 0 M$
+vie 20 nov: 1 M$
+vie 27 nov: 0 M$
+lun 30 nov: 2 M$
+vie 4 dic: -0 M$
+vie 11 dic: -0 M$
+vie 18 dic: 6 M$">GEX neta 13 M$ · |GEX| 13 M$ · sobre todo vto. vie 18 dic</div><div class="sub"><span class="cat c-menor" title="Poca gamma estructural comparada con el resto de niveles del día (menos del percentil 40)">Menor</span> GEX bruta estructural <b class="num">39 M$</b></div></td>
+        <td><span class="muted" title="Sin datos del NDX en la versión 1">Sin datos NDX</span></td>
+        <td class="num">97 %</td>
+        <td><span class="" title="OI relevante · régimen local negativa (nivel por debajo de la frontera) · papel techo. % de rechazo al primer toque (0,2σ) frente a 20 zonas de control a la misma distancia de la apertura.">54 % (n=56; control 52 %, +1)</span><div class="sub">OI relevante · negativa · techo</div></td>
+        <td><span class="muted">Pendiente</span></td>
+      </tr>
+      <tr class="fila-precio">
+        <td class="nivel num">28.384</td>
+        <td><span class="tag t-precio">Precio ref.</span></td>
+        <td colspan="5">Gamma <b>negativa</b> en este precio · liquidación del futuro (cierre anterior)</td>
+      </tr>
+      <tr class="cat-menor fila-contexto">
+        <td class="nivel num">28.300<div class="sub">zona 28.276–28.324</div></td>
+        <td><span class="tag t-acel" title="Gamma negativa (las coberturas empujan a favor del movimiento). Contexto: al primer toque no tiene ventaja sobre un precio cualquiera.">Aceleración</span><div class="sub">Gamma negativa (las coberturas empujan a favor del movimiento). Contexto: al primer toque no tiene ventaja sobre un precio cualquiera. (contexto: sin ventaja histórica)</div></td>
+        <td>NQ: <b>819</b> calls · <b>546</b> puts<div class="sub" title="GEX por vencimiento:
+vie 13 nov: -2 M$
+mar 17 nov: -1 M$
+mié 18 nov: -0 M$
+jue 19 nov: 1 M$
+vie 20 nov: -0 M$
+vie 27 nov: -0 M$
+lun 30 nov: -4 M$
+vie 4 dic: 16 M$
+vie 11 dic: -1 M$
+vie 18 dic: -0 M$">GEX neta 8 M$ · |GEX| 8 M$ · sobre todo vto. vie 4 dic</div><div class="sub"><span class="cat c-secundario" title="Gamma estructural media del día (entre el percentil 40 y el 80)">Secundario</span> GEX bruta estructural <b class="num">45 M$</b></div><div class="sub muted">Se muestra como menor: contexto: sin ventaja histórica</div></td>
+        <td><span class="muted" title="Sin datos del NDX en la versión 1">Sin datos NDX</span></td>
+        <td class="num">86 %</td>
+        <td><span class="f-menos" title="Aceleración · régimen local negativa (nivel por debajo de la frontera) · papel suelo. % de rechazo al primer toque (0,2σ) frente a 20 zonas de control a la misma distancia de la apertura.">56 % (n=105; control 62 %, -6)</span><div class="sub">Aceleración · negativa · suelo</div></td>
+        <td><span class="muted">Pendiente</span></td>
+      </tr>
+      <tr class="cat-menor fila-contexto">
+        <td class="nivel num">28.250<div class="sub">zona 28.226–28.274</div></td>
+        <td><span class="tag t-oi" title="Mucho open interest. Contexto: al primer toque no tiene ventaja sobre un precio cualquiera.">OI relevante</span><div class="sub">Mucho open interest. Contexto: al primer toque no tiene ventaja sobre un precio cualquiera. (contexto: sin ventaja histórica)</div></td>
+        <td>NQ: <b>446</b> calls · <b>619</b> puts<div class="sub" title="GEX por vencimiento:
+vie 13 nov: -14 M$
+lun 16 nov: 4 M$
+mié 18 nov: 5 M$
+jue 19 nov: -0 M$
+vie 20 nov: -3 M$
+vie 27 nov: -1 M$
+lun 30 nov: -1 M$
+vie 4 dic: -0 M$
+vie 11 dic: -0 M$
+vie 18 dic: -3 M$">GEX neta -14 M$ · |GEX| 14 M$ · sobre todo vto. lun 30 nov</div><div class="sub"><span class="cat c-secundario" title="Gamma estructural media del día (entre el percentil 40 y el 80)">Secundario</span> GEX bruta estructural <b class="num">45 M$</b></div><div class="sub muted">Se muestra como menor: contexto: sin ventaja histórica</div></td>
+        <td><span class="muted" title="Sin datos del NDX en la versión 1">Sin datos NDX</span></td>
+        <td class="num">78 %</td>
+        <td><span class="" title="OI relevante · régimen local negativa (nivel por debajo de la frontera) · papel suelo. % de rechazo al primer toque (0,2σ) frente a 20 zonas de control a la misma distancia de la apertura.">66 % (n=76; control 67 %, -1)</span><div class="sub">OI relevante · negativa · suelo</div></td>
+        <td><span class="muted">Pendiente</span></td>
+      </tr>
+      <tr class="cat-menor fila-contexto">
+        <td class="nivel num">28.200<div class="sub">zona 28.176–28.224</div></td>
+        <td><span class="tag t-oi" title="Mucho open interest. Contexto: al primer toque no tiene ventaja sobre un precio cualquiera.">OI relevante</span><div class="sub">Mucho open interest. Contexto: al primer toque no tiene ventaja sobre un precio cualquiera. (contexto: sin ventaja histórica)</div></td>
+        <td>NQ: <b>309</b> calls · <b>689</b> puts<div class="sub" title="GEX por vencimiento:
+vie 13 nov: -20 M$
+mié 18 nov: -1 M$
+jue 19 nov: 0 M$
+vie 20 nov: -9 M$
+vie 27 nov: -1 M$
+lun 30 nov: -0 M$
+vie 4 dic: -0 M$
+vie 11 dic: -0 M$
+vie 18 dic: -2 M$">GEX neta -33 M$ · |GEX| 33 M$ · sobre todo vto. vie 13 nov</div><div class="sub"><span class="cat c-menor" title="Poca gamma estructural comparada con el resto de niveles del día (menos del percentil 40)">Menor</span> GEX bruta estructural <b class="num">29 M$</b></div></td>
+        <td><span class="muted" title="Sin datos del NDX en la versión 1">Sin datos NDX</span></td>
+        <td class="num">70 %</td>
+        <td><span class="" title="OI relevante · régimen local negativa (nivel por debajo de la frontera) · papel suelo. % de rechazo al primer toque (0,2σ) frente a 20 zonas de control a la misma distancia de la apertura.">66 % (n=76; control 67 %, -1)</span><div class="sub">OI relevante · negativa · suelo</div></td>
+        <td><span class="muted">Pendiente</span></td>
+      </tr>
+      <tr class="cat-menor fila-contexto">
+        <td class="nivel num">28.100<div class="sub">zona 28.076–28.124</div></td>
+        <td><span class="tag t-oi" title="Mucho open interest. Contexto: al primer toque no tiene ventaja sobre un precio cualquiera.">OI relevante</span><span class="tag t-corto" title="El muro de puts de la vista corta (solo los vencimientos de los próximos días) cae dentro de la zona de este nivel">muro corto (puts)</span><div class="sub">Mucho open interest. Contexto: al primer toque no tiene ventaja sobre un precio cualquiera. (contexto: sin ventaja histórica)</div></td>
+        <td>NQ: <b>268</b> calls · <b>670</b> puts<div class="sub" title="GEX por vencimiento:
+vie 13 nov: -37 M$
+mié 18 nov: -0 M$
+jue 19 nov: 1 M$
+vie 20 nov: -5 M$
+vie 27 nov: -0 M$
+lun 30 nov: -0 M$
+vie 4 dic: 0 M$
+vie 11 dic: 0 M$
+vie 18 dic: -1 M$">GEX neta -43 M$ · |GEX| 43 M$ · sobre todo vto. vie 13 nov</div><div class="sub"><span class="cat c-menor" title="Poca gamma estructural comparada con el resto de niveles del día (menos del percentil 40)">Menor</span> GEX bruta estructural <b class="num">18 M$</b></div></td>
+        <td><span class="muted" title="Sin datos del NDX en la versión 1">Sin datos NDX</span></td>
+        <td class="num">55 %</td>
+        <td><span class="" title="OI relevante · régimen local negativa (nivel por debajo de la frontera) · papel suelo. % de rechazo al primer toque (0,2σ) frente a 20 zonas de control a la misma distancia de la apertura.">66 % (n=76; control 67 %, -1)</span><div class="sub">OI relevante · negativa · suelo</div></td>
+        <td><span class="muted">Pendiente</span></td>
+      </tr>
+      <tr class="cat-principal">
+        <td class="nivel num">28.000<div class="sub">zona 27.976–28.024</div></td>
+        <td><span class="tag t-acel" title="Gamma negativa (las coberturas empujan a favor del movimiento). Contexto: al primer toque no tiene ventaja sobre un precio cualquiera.">Aceleración</span><span class="tag t-puts" title="Mayor bloque de puts abiertas. Por encima de la frontera aguanta algo más que un precio cualquiera; por debajo, no.">Muro de puts</span><span class="tag t-ruptura">Muro débil · ruptura</span><span class="tag t-corto" title="El flujo del charm hacia el cierre aleja el precio de este muro (o lo lleva hacia este imán)">el charm lo refuerza</span><div class="sub">Por debajo de la frontera todo rompe más: el muro no protege más que un precio cualquiera.</div></td>
+        <td>NQ: <b>1.394</b> calls · <b>5.092</b> puts<div class="sub" title="GEX por vencimiento:
+vie 13 nov: -17 M$
+mar 17 nov: 1 M$
+mié 18 nov: 1 M$
+jue 19 nov: -0 M$
+vie 20 nov: -28 M$
+vie 27 nov: -2 M$
+lun 30 nov: -11 M$
+vie 4 dic: -1 M$
+vie 11 dic: -0 M$
+vie 18 dic: -76 M$">GEX neta -132 M$ · |GEX| 132 M$ · sobre todo vto. vie 18 dic</div><div class="sub"><span class="cat c-principal" title="Muro, imán o frontera, o de los que más gamma estructural tienen del día (percentil 80 o más)">Principal</span> GEX bruta estructural <b class="num">211 M$</b></div></td>
+        <td><span class="muted" title="Sin datos del NDX en la versión 1">Sin datos NDX</span></td>
+        <td class="num">42 %</td>
+        <td><span class="" title="Muro de puts · régimen local negativa (nivel por debajo de la frontera) · papel suelo. % de rechazo al primer toque (0,2σ) frente a 20 zonas de control a la misma distancia de la apertura.">53 % (n=32; control 49 %, +4)</span><div class="sub">Muro de puts · negativa · suelo</div></td>
+        <td><span class="muted">Pendiente</span></td>
+      </tr>
+      <tr class="cat-menor fila-contexto">
+        <td class="nivel num">27.500<div class="sub">zona 27.476–27.524</div></td>
+        <td><span class="tag t-acel" title="Gamma negativa (las coberturas empujan a favor del movimiento). Contexto: al primer toque no tiene ventaja sobre un precio cualquiera.">Aceleración</span><div class="sub">Gamma negativa (las coberturas empujan a favor del movimiento). Contexto: al primer toque no tiene ventaja sobre un precio cualquiera. (contexto: sin ventaja histórica)</div></td>
+        <td>NQ: <b>583</b> calls · <b>2.702</b> puts<div class="sub" title="GEX por vencimiento:
+vie 13 nov: -2 M$
+lun 16 nov: 0 M$
+mar 17 nov: -2 M$
+mié 18 nov: 0 M$
+jue 19 nov: -2 M$
+vie 20 nov: -7 M$
+vie 27 nov: -3 M$
+lun 30 nov: -16 M$
+vie 4 dic: -1 M$
+vie 11 dic: 0 M$
+vie 18 dic: -20 M$">GEX neta -52 M$ · |GEX| 52 M$ · sobre todo vto. vie 18 dic</div><div class="sub"><span class="cat c-secundario" title="Gamma estructural media del día (entre el percentil 40 y el 80)">Secundario</span> GEX bruta estructural <b class="num">80 M$</b></div><div class="sub muted">Se muestra como menor: contexto: sin ventaja histórica</div></td>
+        <td><span class="muted" title="Sin datos del NDX en la versión 1">Sin datos NDX</span></td>
+        <td class="num">6 %</td>
+        <td><span class="f-menos" title="Aceleración · régimen local negativa (nivel por debajo de la frontera) · papel suelo. % de rechazo al primer toque (0,2σ) frente a 20 zonas de control a la misma distancia de la apertura.">56 % (n=105; control 62 %, -6)</span><div class="sub">Aceleración · negativa · suelo</div></td>
+        <td><span class="muted">Pendiente</span></td>
+      </tr></tbody>
+    </table></div>
+    <p class="nota-fiab"><b>Fiabilidad histórica.</b> En el NQ, los muros por encima de la frontera rechazan el 76 % al primer toque (n=49; control 71 %); por debajo, el 54 % (n=50; control 56 %). Por debajo de la frontera todo rompe más: el muro no protege más que un precio cualquiera. <a href="file:///home/runner/work/escalera/escalera/salida/fiabilidad_NQ.html">Estudio completo</a> (200 sesiones, lun 3 nov – mié 11 nov). Fiabilidad = % de rechazo al primer toque de su tipo, régimen local y papel (techo/suelo), con su n y la ventaja frente a un precio cualquiera a la misma distancia; con n &lt; 20, «pocos datos». Es lo que pasó en el pasado, no una garantía.</p>
+    <div class="gris-0dte"><h3>Gamma 0DTE — zonas grises (no son niveles)</h3><p class="sub">Strikes donde la gamma de las opciones que vencen hoy es más de la mitad de toda su gamma y está entre la más alta del día. Pueden mover el precio durante la sesión, pero desaparecen al vencer: no tienen categoría ni etiqueta en la escala.</p><ul><li><span class="nota-gris">28.375</span> GEX 0DTE <b class="num">62 M$</b> · se dibuja 28.370–28.380</li><li><span class="nota-gris">28.510</span> GEX 0DTE <b class="num">22 M$</b> · se dibuja 28.505–28.515</li><li><span class="nota-gris">28.625</span> GEX 0DTE <b class="num">24 M$</b> · se dibuja 28.620–28.630</li><li><span class="nota-gris">28.725</span> GEX 0DTE <b class="num">24 M$</b> · se dibuja 28.720–28.730</li></ul></div>
+  </div>
+
+  <div class="graficos">
+    <div class="tarjeta"><h2>Gamma de la 0DTE por tramos de 25 puntos</h2>
+      <div class="leyenda"><span><i style="background:var(--calls)"></i>Calls</span><span><i style="background:var(--puts)"></i>Puts</span></div>
+      <div class="grafico" id="g-0dte"></div>
+      <p class="pie">Cada barra suma un tramo de 25 puntos: la barra 28.000 incluye los strikes de 28.000 a 28.024. Solo opciones que vencen en la sesión.</p></div>
+    <div class="tarjeta"><h2>Open interest por tramos (rango del 95 %)</h2>
+      <div class="leyenda"><span><i style="background:var(--calls)"></i>Calls</span><span><i style="background:var(--puts)"></i>Puts</span></div>
+      <div class="grafico" id="g-oi"></div>
+      <p class="pie">Cada barra suma un tramo de 25 puntos (la barra 28.000 incluye los strikes de 28.000 a 28.024), de todos los vencimientos incluidos. Por eso puede no coincidir con el OI de un strike concreto de la escalera.</p></div>
+  </div>
+
+  <div class="metodo">
+    <p><b>Cómo leer esto.</b> GEX = gamma × open interest × 20 $ × precio² × 1 %, con el supuesto estándar de que los creadores de mercado están largos de calls y cortos de puts (no es su posición real). La gamma se calcula en la apertura de la sesión; la volatilidad, con la liquidación del día anterior (Black-76, tiempo en días hábiles/252). La probabilidad de tocar un nivel es una aproximación lognormal (2 × probabilidad de cerrar más allá). "Qué suele hacer el precio" describe el comportamiento habitual, no una garantía. Pasa el ratón por las etiquetas para ver qué significa cada tipo.</p>
+    <p>Herramienta de contexto. No envía órdenes ni es una recomendación de inversión. Generado: 2026-11-13 15:06:24.</p>
+  </div>
+</main>
+<script type="application/json" id="datos-graficos">{"mapa_0dte": [{"tramo": 27425.0, "call": 70563.2229, "put": -91587.0833, "neto": -21023.8604}, {"tramo": 27450.0, "call": 31736.0048, "put": -156502.6948, "neto": -124766.69}, {"tramo": 27475.0, "call": 56412.6913, "put": -108757.1392, "neto": -52344.4479}, {"tramo": 27500.0, "call": 513858.35, "put": -2604280.609, "neto": -2090422.259}, {"tramo": 27525.0, "call": 56736.2993, "put": -235819.0036, "neto": -179082.7043}, {"tramo": 27550.0, "call": 178892.1209, "put": -610881.9582, "neto": -431989.8373}, {"tramo": 27575.0, "call": 145766.7475, "put": -337775.8819, "neto": -192009.1344}, {"tramo": 27600.0, "call": 319614.5427, "put": -1056279.737, "neto": -736665.1944}, {"tramo": 27625.0, "call": 384542.0764, "put": -234992.7709, "neto": 149549.3056}, {"tramo": 27650.0, "call": 427802.8724, "put": -902667.9396, "neto": -474865.0672}, {"tramo": 27675.0, "call": 355633.9499, "put": -738011.1508, "neto": -382377.2009}, {"tramo": 27700.0, "call": 929888.2454, "put": -3034964.0094, "neto": -2105075.764}, {"tramo": 27725.0, "call": 653801.2775, "put": -924785.2738, "neto": -270983.9963}, {"tramo": 27750.0, "call": 2326496.4424, "put": -4681590.0744, "neto": -2355093.632}, {"tramo": 27775.0, "call": 1214675.426, "put": -1688774.6936, "neto": -474099.2675}, {"tramo": 27800.0, "call": 2659224.8698, "put": -7836221.2905, "neto": -5176996.4207}, {"tramo": 27825.0, "call": 1101364.1038, "put": -3140210.2993, "neto": -2038846.1954}, {"tramo": 27850.0, "call": 1296270.9062, "put": -7003380.0147, "neto": -5707109.1085}, {"tramo": 27875.0, "call": 2105133.5496, "put": -2956932.6256, "neto": -851799.076}, {"tramo": 27900.0, "call": 8060149.018, "put": -10362594.9218, "neto": -2302445.9038}, {"tramo": 27925.0, "call": 738203.7588, "put": -4344283.9516, "neto": -3606080.1928}, {"tramo": 27950.0, "call": 1833821.0, "put": -3972612.0597, "neto": -2138791.0597}, {"tramo": 27975.0, "call": 1982196.4686, "put": -3459018.2513, "neto": -1476821.7827}, {"tramo": 28000.0, "call": 11696840.2921, "put": -30031486.0151, "neto": -18334645.723}, {"tramo": 28025.0, "call": 2101328.5466, "put": -9101068.7286, "neto": -6999740.182}, {"tramo": 28050.0, "call": 3228079.3116, "put": -9159789.9211, "neto": -5931710.6095}, {"tramo": 28075.0, "call": 6895540.2319, "put": -9577195.8341, "neto": -2681655.6022}, {"tramo": 28100.0, "call": 16607637.1832, "put": -55533848.9623, "neto": -38926211.7791}, {"tramo": 28125.0, "call": 5980369.2322, "put": -4067103.4346, "neto": 1913265.7976}, {"tramo": 28150.0, "call": 13581785.7866, "put": -11225418.1985, "neto": 2356367.5881}, {"tramo": 28175.0, "call": 8305373.7442, "put": -9630312.9602, "neto": -1324939.216}, {"tramo": 28200.0, "call": 28691977.46, "put": -51176098.4535, "neto": -22484120.9935}, {"tramo": 28225.0, "call": 8985606.312, "put": -12991188.6518, "neto": -4005582.3398}, {"tramo": 28250.0, "call": 13815466.4995, "put": -32687184.1554, "neto": -18871717.656}, {"tramo": 28275.0, "call": 12289527.9847, "put": -7105201.944, "neto": 5184326.0407}, {"tramo": 28300.0, "call": 42440005.6567, "put": -36392863.1135, "neto": 6047142.5432}, {"tramo": 28325.0, "call": 16316429.6403, "put": -12344003.7018, "neto": 3972425.9385}, {"tramo": 28350.0, "call": 33029597.7472, "put": -20164023.2131, "neto": 12865574.5341}, {"tramo": 28375.0, "call": 77943456.977, "put": -18080667.5214, "neto": 59862789.4556}, {"tramo": 28400.0, "call": 39107278.9084, "put": -34706351.2179, "neto": 4400927.6905}, {"tramo": 28425.0, "call": 14388947.8561, "put": -9247841.27, "neto": 5141106.5861}, {"tramo": 28450.0, "call": 19994226.8643, "put": -13913055.4426, "neto": 6081171.4217}, {"tramo": 28475.0, "call": 10151975.4013, "put": -6666571.3673, "neto": 3485404.034}, {"tramo": 28500.0, "call": 161751079.4283, "put": -53170090.8534, "neto": 108580988.5749}, {"tramo": 28525.0, "call": 9460225.6531, "put": -4293736.1556, "neto": 5166489.4975}, {"tramo": 28550.0, "call": 27507713.0129, "put": -11940116.8217, "neto": 15567596.1912}, {"tramo": 28575.0, "call": 15232346.1112, "put": -2881006.3081, "neto": 12351339.8031}, {"tramo": 28600.0, "call": 35543979.1844, "put": -27273081.6355, "neto": 8270897.5489}, {"tramo": 28625.0, "call": 35880857.9717, "put": -11190260.9909, "neto": 24690596.9807}, {"tramo": 28650.0, "call": 31842452.8022, "put": -8237917.8893, "neto": 23604534.9128}, {"tramo": 28675.0, "call": 8030691.4121, "put": -2487729.458, "neto": 5542961.9541}, {"tramo": 28700.0, "call": 27589717.2104, "put": -8825316.4532, "neto": 18764400.7571}, {"tramo": 28725.0, "call": 26281637.7399, "put": -1846542.5395, "neto": 24435095.2004}, {"tramo": 28750.0, "call": 16628838.1581, "put": -8311755.7436, "neto": 8317082.4145}, {"tramo": 28775.0, "call": 5231795.521, "put": -1127577.3537, "neto": 4104218.1673}, {"tramo": 28800.0, "call": 10215512.981, "put": -5227696.3023, "neto": 4987816.6786}, {"tramo": 28825.0, "call": 3631059.4719, "put": -432041.5362, "neto": 3199017.9357}, {"tramo": 28850.0, "call": 2109583.6085, "put": -5222683.3534, "neto": -3113099.7449}, {"tramo": 28875.0, "call": 899447.9045, "put": -216207.3409, "neto": 683240.5635}, {"tramo": 28900.0, "call": 1952323.1936, "put": -1029761.8113, "neto": 922561.3823}, {"tramo": 28925.0, "call": 639526.4508, "put": -57408.7545, "neto": 582117.6963}, {"tramo": 28950.0, "call": 758746.3363, "put": -81005.6429, "neto": 677740.6934}, {"tramo": 28975.0, "call": 189696.5873, "put": -5551.7349, "neto": 184144.8525}, {"tramo": 29000.0, "call": 1612482.5753, "put": -334609.9024, "neto": 1277872.6729}, {"tramo": 29025.0, "call": 94803.1922, "put": -1997.0975, "neto": 92806.0946}, {"tramo": 29050.0, "call": 67673.2705, "put": -130753.0244, "neto": -63079.7539}, {"tramo": 29075.0, "call": 29261.3787, "put": -8152.1546, "neto": 21109.2241}, {"tramo": 29100.0, "call": 100320.047, "put": -21175.6066, "neto": 79144.4404}, {"tramo": 29125.0, "call": 19014.2057, "put": -475.0707, "neto": 18539.135}, {"tramo": 29150.0, "call": 18587.535, "put": -2736.9158, "neto": 15850.6191}, {"tramo": 29175.0, "call": 4858.3401, "put": 0.0, "neto": 4858.3401}, {"tramo": 29200.0, "call": 19218.9122, "put": -3159.2043, "neto": 16059.7079}, {"tramo": 29225.0, "call": 2056.1534, "put": 0.0, "neto": 2056.1534}, {"tramo": 29250.0, "call": 5406.8257, "put": -836.3735, "neto": 4570.4522}, {"tramo": 29275.0, "call": 263.3697, "put": 0.0, "neto": 263.3697}, {"tramo": 29300.0, "call": 5176.9231, "put": -712.0036, "neto": 4464.9195}, {"tramo": 29325.0, "call": 320.0809, "put": 0.0, "neto": 320.0809}], "oi_tramos": [{"tramo": 27425.0, "call": 0.0, "put": 20.0, "neto": 20.0}, {"tramo": 27450.0, "call": 52.0, "put": 110.0, "neto": 162.0}, {"tramo": 27475.0, "call": 15.0, "put": 49.0, "neto": 64.0}, {"tramo": 27500.0, "call": 588.0, "put": 2725.0, "neto": 3313.0}, {"tramo": 27525.0, "call": 12.0, "put": 104.0, "neto": 116.0}, {"tramo": 27550.0, "call": 54.0, "put": 165.0, "neto": 219.0}, {"tramo": 27575.0, "call": 28.0, "put": 109.0, "neto": 137.0}, {"tramo": 27600.0, "call": 198.0, "put": 418.0, "neto": 616.0}, {"tramo": 27625.0, "call": 41.0, "put": 100.0, "neto": 141.0}, {"tramo": 27650.0, "call": 73.0, "put": 281.0, "neto": 354.0}, {"tramo": 27675.0, "call": 32.0, "put": 79.0, "neto": 111.0}, {"tramo": 27700.0, "call": 176.0, "put": 570.0, "neto": 746.0}, {"tramo": 27725.0, "call": 48.0, "put": 109.0, "neto": 157.0}, {"tramo": 27750.0, "call": 266.0, "put": 763.0, "neto": 1029.0}, {"tramo": 27775.0, "call": 68.0, "put": 87.0, "neto": 155.0}, {"tramo": 27800.0, "call": 219.0, "put": 560.0, "neto": 779.0}, {"tramo": 27825.0, "call": 38.0, "put": 132.0, "neto": 170.0}, {"tramo": 27850.0, "call": 81.0, "put": 282.0, "neto": 363.0}, {"tramo": 27875.0, "call": 52.0, "put": 117.0, "neto": 169.0}, {"tramo": 27900.0, "call": 231.0, "put": 616.0, "neto": 847.0}, {"tramo": 27925.0, "call": 19.0, "put": 107.0, "neto": 126.0}, {"tramo": 27950.0, "call": 82.0, "put": 186.0, "neto": 268.0}, {"tramo": 27975.0, "call": 36.0, "put": 95.0, "neto": 131.0}, {"tramo": 28000.0, "call": 1404.0, "put": 5119.0, "neto": 6523.0}, {"tramo": 28025.0, "call": 29.0, "put": 123.0, "neto": 152.0}, {"tramo": 28050.0, "call": 176.0, "put": 180.0, "neto": 356.0}, {"tramo": 28075.0, "call": 91.0, "put": 128.0, "neto": 219.0}, {"tramo": 28100.0, "call": 278.0, "put": 698.0, "neto": 976.0}, {"tramo": 28125.0, "call": 66.0, "put": 60.0, "neto": 126.0}, {"tramo": 28150.0, "call": 142.0, "put": 400.0, "neto": 542.0}, {"tramo": 28175.0, "call": 97.0, "put": 87.0, "neto": 184.0}, {"tramo": 28200.0, "call": 324.0, "put": 720.0, "neto": 1044.0}, {"tramo": 28225.0, "call": 68.0, "put": 110.0, "neto": 178.0}, {"tramo": 28250.0, "call": 465.0, "put": 653.0, "neto": 1118.0}, {"tramo": 28275.0, "call": 85.0, "put": 63.0, "neto": 148.0}, {"tramo": 28300.0, "call": 902.0, "put": 578.0, "neto": 1480.0}, {"tramo": 28325.0, "call": 91.0, "put": 76.0, "neto": 167.0}, {"tramo": 28350.0, "call": 170.0, "put": 180.0, "neto": 350.0}, {"tramo": 28375.0, "call": 330.0, "put": 103.0, "neto": 433.0}, {"tramo": 28400.0, "call": 730.0, "put": 458.0, "neto": 1188.0}, {"tramo": 28425.0, "call": 120.0, "put": 108.0, "neto": 228.0}, {"tramo": 28450.0, "call": 278.0, "put": 134.0, "neto": 412.0}, {"tramo": 28475.0, "call": 104.0, "put": 59.0, "neto": 163.0}, {"tramo": 28500.0, "call": 1607.0, "put": 1966.0, "neto": 3573.0}, {"tramo": 28525.0, "call": 71.0, "put": 39.0, "neto": 110.0}, {"tramo": 28550.0, "call": 183.0, "put": 100.0, "neto": 283.0}, {"tramo": 28575.0, "call": 136.0, "put": 47.0, "neto": 183.0}, {"tramo": 28600.0, "call": 711.0, "put": 470.0, "neto": 1181.0}, {"tramo": 28625.0, "call": 254.0, "put": 82.0, "neto": 336.0}, {"tramo": 28650.0, "call": 422.0, "put": 93.0, "neto": 515.0}, {"tramo": 28675.0, "call": 110.0, "put": 30.0, "neto": 140.0}, {"tramo": 28700.0, "call": 594.0, "put": 427.0, "neto": 1021.0}, {"tramo": 28725.0, "call": 330.0, "put": 24.0, "neto": 354.0}, {"tramo": 28750.0, "call": 841.0, "put": 659.0, "neto": 1500.0}, {"tramo": 28775.0, "call": 125.0, "put": 22.0, "neto": 147.0}, {"tramo": 28800.0, "call": 601.0, "put": 527.0, "neto": 1128.0}, {"tramo": 28825.0, "call": 135.0, "put": 18.0, "neto": 153.0}, {"tramo": 28850.0, "call": 218.0, "put": 209.0, "neto": 427.0}, {"tramo": 28875.0, "call": 46.0, "put": 10.0, "neto": 56.0}, {"tramo": 28900.0, "call": 420.0, "put": 444.0, "neto": 864.0}, {"tramo": 28925.0, "call": 70.0, "put": 6.0, "neto": 76.0}, {"tramo": 28950.0, "call": 173.0, "put": 15.0, "neto": 188.0}, {"tramo": 28975.0, "call": 45.0, "put": 3.0, "neto": 48.0}, {"tramo": 29000.0, "call": 2065.0, "put": 1474.0, "neto": 3539.0}, {"tramo": 29025.0, "call": 48.0, "put": 1.0, "neto": 49.0}, {"tramo": 29050.0, "call": 180.0, "put": 84.0, "neto": 264.0}, {"tramo": 29075.0, "call": 34.0, "put": 9.0, "neto": 43.0}, {"tramo": 29100.0, "call": 487.0, "put": 314.0, "neto": 801.0}, {"tramo": 29125.0, "call": 56.0, "put": 1.0, "neto": 57.0}, {"tramo": 29150.0, "call": 271.0, "put": 11.0, "neto": 282.0}, {"tramo": 29175.0, "call": 49.0, "put": 5.0, "neto": 54.0}, {"tramo": 29200.0, "call": 578.0, "put": 306.0, "neto": 884.0}, {"tramo": 29225.0, "call": 32.0, "put": 0.0, "neto": 32.0}, {"tramo": 29250.0, "call": 743.0, "put": 725.0, "neto": 1468.0}, {"tramo": 29275.0, "call": 21.0, "put": 0.0, "neto": 21.0}, {"tramo": 29300.0, "call": 683.0, "put": 236.0, "neto": 919.0}, {"tramo": 29325.0, "call": 23.0, "put": 0.0, "neto": 23.0}], "perfil": [{"precio": 27433.6192, "gex_total": -1526114351.5618}, {"precio": 27440.7154, "gex_total": -1521567077.9771}, {"precio": 27447.8115, "gex_total": -1516992334.1708}, {"precio": 27454.9076, "gex_total": -1512390405.1381}, {"precio": 27462.0037, "gex_total": -1507761555.7325}, {"precio": 27469.0999, "gex_total": -1503106027.8987}, {"precio": 27476.196, "gex_total": -1498424037.8249}, {"precio": 27483.2921, "gex_total": -1493715773.0168}, {"precio": 27490.3882, "gex_total": -1488981389.2994}, {"precio": 27497.4844, "gex_total": -1484221007.7489}, {"precio": 27504.5805, "gex_total": -1479434711.5627}, {"precio": 27511.6766, "gex_total": -1474622542.871}, {"precio": 27518.7728, "gex_total": -1469784499.4985}, {"precio": 27525.8689, "gex_total": -1464920531.6806}, {"precio": 27532.965, "gex_total": -1460030538.7442}, {"precio": 27540.0611, "gex_total": -1455114365.7585}, {"precio": 27547.1573, "gex_total": -1450171800.1667}, {"precio": 27554.2534, "gex_total": -1445202568.4051}, {"precio": 27561.3495, "gex_total": -1440206332.5214}, {"precio": 27568.4456, "gex_total": -1435182686.8004}, {"precio": 27575.5418, "gex_total": -1430131154.4096}, {"precio": 27582.6379, "gex_total": -1425051184.0738}, {"precio": 27589.734, "gex_total": -1419942146.7915}, {"precio": 27596.8301, "gex_total": -1414803332.6052}, {"precio": 27603.9263, "gex_total": -1409633947.4371}, {"precio": 27611.0224, "gex_total": -1404433110.0046}, {"precio": 27618.1185, "gex_total": -1399199848.8277}, {"precio": 27625.2146, "gex_total": -1393933099.3423}, {"precio": 27632.3108, "gex_total": -1388631701.1342}, {"precio": 27639.4069, "gex_total": -1383294395.3073}, {"precio": 27646.503, "gex_total": -1377919822.0008}, {"precio": 27653.5991, "gex_total": -1372506518.0709}, {"precio": 27660.6953, "gex_total": -1367052914.9514}, {"precio": 27667.7914, "gex_total": -1361557336.7079}, {"precio": 27674.8875, "gex_total": -1356017998.303}, {"precio": 27681.9836, "gex_total": -1350433004.0841}, {"precio": 27689.0797, "gex_total": -1344800346.5137}, {"precio": 27696.1759, "gex_total": -1339117905.1522}, {"precio": 27703.272, "gex_total": -1333383445.9129}, {"precio": 27710.3681, "gex_total": -1327594620.6004}, {"precio": 27717.4642, "gex_total": -1321748966.7484}, {"precio": 27724.5604, "gex_total": -1315843907.7709}, {"precio": 27731.6565, "gex_total": -1309876753.4401}, {"precio": 27738.7526, "gex_total": -1303844700.7032}, {"precio": 27745.8487, "gex_total": -1297744834.8523}, {"precio": 27752.9449, "gex_total": -1291574131.0574}, {"precio": 27760.041, "gex_total": -1285329456.2743}, {"precio": 27767.1371, "gex_total": -1279007571.5373}, {"precio": 27774.2332, "gex_total": -1272605134.6456}, {"precio": 27781.3294, "gex_total": -1266118703.2518}, {"precio": 27788.4255, "gex_total": -1259544738.3596}, {"precio": 27795.5216, "gex_total": -1252879608.236}, {"precio": 27802.6177, "gex_total": -1246119592.7434}, {"precio": 27809.7139, "gex_total": -1239260888.0939}, {"precio": 27816.81, "gex_total": -1232299612.0287}, {"precio": 27823.9061, "gex_total": -1225231809.4228}, {"precio": 27831.0022, "gex_total": -1218053458.3129}, {"precio": 27838.0984, "gex_total": -1210760476.3474}, {"precio": 27845.1945, "gex_total": -1203348727.6538}, {"precio": 27852.2906, "gex_total": -1195814030.1165}, {"precio": 27859.3867, "gex_total": -1188152163.059}, {"precio": 27866.4829, "gex_total": -1180358875.3202}, {"precio": 27873.579, "gex_total": -1172429893.714}, {"precio": 27880.6751, "gex_total": -1164360931.86}, {"precio": 27887.7712, "gex_total": -1156147699.3689}, {"precio": 27894.8674, "gex_total": -1147785911.3689}, {"precio": 27901.9635, "gex_total": -1139271298.3527}, {"precio": 27909.0596, "gex_total": -1130599616.3269}, {"precio": 27916.1557, "gex_total": -1121766657.2416}, {"precio": 27923.2519, "gex_total": -1112768259.6771}, {"precio": 27930.348, "gex_total": -1103600319.7638}, {"precio": 27937.4441, "gex_total": -1094258802.308}, {"precio": 27944.5402, "gex_total": -1084739752.0969}, {"precio": 27951.6364, "gex_total": -1075039305.354}, {"precio": 27958.7325, "gex_total": -1065153701.3141}, {"precio": 27965.8286, "gex_total": -1055079293.8863}, {"precio": 27972.9247, "gex_total": -1044812563.3742}, {"precio": 27980.0209, "gex_total": -1034350128.2188}, {"precio": 27987.117, "gex_total": -1023688756.7296}, {"precio": 27994.2131, "gex_total": -1012825378.7713}, {"precio": 28001.3092, "gex_total": -1001757097.369}, {"precio": 28008.4054, "gex_total": -990481200.197}, {"precio": 28015.5015, "gex_total": -978995170.9163}, {"precio": 28022.5976, "gex_total": -967296700.3236}, {"precio": 28029.6937, "gex_total": -955383697.2783}, {"precio": 28036.7899, "gex_total": -943254299.3698}, {"precio": 28043.886, "gex_total": -930906883.292}, {"precio": 28050.9821, "gex_total": -918340074.89}, {"precio": 28058.0782, "gex_total": -905552758.8456}, {"precio": 28065.1744, "gex_total": -892544087.9687}, {"precio": 28072.2705, "gex_total": -879313492.0631}, {"precio": 28079.3666, "gex_total": -865860686.3365}, {"precio": 28086.4627, "gex_total": -852185679.3243}, {"precio": 28093.5589, "gex_total": -838288780.3005}, {"precio": 28100.655, "gex_total": -824170606.1489}, {"precio": 28107.7511, "gex_total": -809832087.6693}, {"precio": 28114.8472, "gex_total": -795274475.2954}, {"precio": 28121.9434, "gex_total": -780499344.2038}, {"precio": 28129.0395, "gex_total": -765508598.7926}, {"precio": 28136.1356, "gex_total": -750304476.5128}, {"precio": 28143.2317, "gex_total": -734889551.0356}, {"precio": 28150.3279, "gex_total": -719266734.7404}, {"precio": 28157.424, "gex_total": -703439280.5122}, {"precio": 28164.5201, "gex_total": -687410782.8346}, {"precio": 28171.6162, "gex_total": -671185178.172}, {"precio": 28178.7124, "gex_total": -654766744.6301}, {"precio": 28185.8085, "gex_total": -638160100.8903}, {"precio": 28192.9046, "gex_total": -621370204.4122}, {"precio": 28200.0007, "gex_total": -604402348.9008}, {"precio": 28207.0969, "gex_total": -587262161.0357}, {"precio": 28214.193, "gex_total": -569955596.4619}, {"precio": 28221.2891, "gex_total": -552488935.0417}, {"precio": 28228.3852, "gex_total": -534868775.3682}, {"precio": 28235.4814, "gex_total": -517102028.5435}, {"precio": 28242.5775, "gex_total": -499195911.2228}, {"precio": 28249.6736, "gex_total": -481157937.9288}, {"precio": 28256.7697, "gex_total": -462995912.64}, {"precio": 28263.8659, "gex_total": -444717919.6578}, {"precio": 28270.962, "gex_total": -426332313.7574}, {"precio": 28278.0581, "gex_total": -407847709.6283}, {"precio": 28285.1542, "gex_total": -389272970.6114}, {"precio": 28292.2504, "gex_total": -370617196.7387}, {"precio": 28299.3465, "gex_total": -351889712.0837}, {"precio": 28306.4426, "gex_total": -333100051.4309}, {"precio": 28313.5387, "gex_total": -314257946.2731}, {"precio": 28320.6349, "gex_total": -295373310.1469}, {"precio": 28327.731, "gex_total": -276456223.3171}, {"precio": 28334.8271, "gex_total": -257516916.8226}, {"precio": 28341.9232, "gex_total": -238565755.8971}, {"precio": 28349.0194, "gex_total": -219613222.7804}, {"precio": 28356.1155, "gex_total": -200669898.9369}, {"precio": 28363.2116, "gex_total": -181746446.7015}, {"precio": 28370.3077, "gex_total": -162853590.3734}, {"precio": 28377.4039, "gex_total": -144002096.7829}, {"precio": 28384.5, "gex_total": -125202755.3578}, {"precio": 28391.5961, "gex_total": -106466357.7201}, {"precio": 28398.6923, "gex_total": -87803676.8465}, {"precio": 28405.7884, "gex_total": -69225445.8294}, {"precio": 28412.8845, "gex_total": -50742336.2808}, {"precio": 28419.9806, "gex_total": -32364936.4234}, {"precio": 28427.0768, "gex_total": -14103728.918}, {"precio": 28434.1729, "gex_total": 4030931.5175}, {"precio": 28441.269, "gex_total": 22028840.6409}, {"precio": 28448.3651, "gex_total": 39879967.3062}, {"precio": 28455.4613, "gex_total": 57574476.1055}, {"precio": 28462.5574, "gex_total": 75102749.9599}, {"precio": 28469.6535, "gex_total": 92455412.5836}, {"precio": 28476.7496, "gex_total": 109623350.7411}, {"precio": 28483.8458, "gex_total": 126597736.2135}, {"precio": 28490.9419, "gex_total": 143370047.3861}, {"precio": 28498.038, "gex_total": 159932090.3662}, {"precio": 28505.1341, "gex_total": 176276019.539}, {"precio": 28512.2303, "gex_total": 192394357.4635}, {"precio": 28519.3264, "gex_total": 208280014.0142}, {"precio": 28526.4225, "gex_total": 223926304.6667}, {"precio": 28533.5186, "gex_total": 239326967.8324}, {"precio": 28540.6148, "gex_total": 254476181.1412}, {"precio": 28547.7109, "gex_total": 269368576.5774}, {"precio": 28554.807, "gex_total": 283999254.3727}, {"precio": 28561.9031, "gex_total": 298363795.5665}, {"precio": 28568.9993, "gex_total": 312458273.1437}, {"precio": 28576.0954, "gex_total": 326279261.6677}, {"precio": 28583.1915, "gex_total": 339823845.3323}, {"precio": 28590.2876, "gex_total": 353089624.3594}, {"precio": 28597.3838, "gex_total": 366074719.6808}, {"precio": 28604.4799, "gex_total": 378777775.8471}, {"precio": 28611.576, "gex_total": 391197962.1193}, {"precio": 28618.6721, "gex_total": 403334971.7028}, {"precio": 28625.7683, "gex_total": 415189019.1007}, {"precio": 28632.8644, "gex_total": 426760835.5684}, {"precio": 28639.9605, "gex_total": 438051662.6645}, {"precio": 28647.0566, "gex_total": 449063243.9074}, {"precio": 28654.1528, "gex_total": 459797814.5529}, {"precio": 28661.2489, "gex_total": 470258089.5275}, {"precio": 28668.345, "gex_total": 480447249.5574}, {"precio": 28675.4411, "gex_total": 490368925.5497}, {"precio": 28682.5373, "gex_total": 500027181.2924}, {"precio": 28689.6334, "gex_total": 509426494.5512}, {"precio": 28696.7295, "gex_total": 518571736.6524}, {"precio": 28703.8256, "gex_total": 527468150.6526}, {"precio": 28710.9218, "gex_total": 536121328.2032}, {"precio": 28718.0179, "gex_total": 544537185.2299}, {"precio": 28725.114, "gex_total": 552721936.5536}, {"precio": 28732.2101, "gex_total": 560682069.5865}, {"precio": 28739.3063, "gex_total": 568424317.2443}, {"precio": 28746.4024, "gex_total": 575955630.2195}, {"precio": 28753.4985, "gex_total": 583283148.7657}, {"precio": 28760.5946, "gex_total": 590414174.145}, {"precio": 28767.6908, "gex_total": 597356139.892}, {"precio": 28774.7869, "gex_total": 604116583.0488}, {"precio": 28781.883, "gex_total": 610703115.5252}, {"precio": 28788.9791, "gex_total": 617123395.7331}, {"precio": 28796.0753, "gex_total": 623385100.6461}, {"precio": 28803.1714, "gex_total": 629495898.425}, {"precio": 28810.2675, "gex_total": 635463421.7498}, {"precio": 28817.3636, "gex_total": 641295241.9885}, {"precio": 28824.4598, "gex_total": 646998844.3276}, {"precio": 28831.5559, "gex_total": 652581603.9805}, {"precio": 28838.652, "gex_total": 658050763.5809}, {"precio": 28845.7481, "gex_total": 663413411.8592}, {"precio": 28852.8443, "gex_total": 668676463.6893}, {"precio": 28859.9404, "gex_total": 673846641.5825}, {"precio": 28867.0365, "gex_total": 678930458.6951}, {"precio": 28874.1326, "gex_total": 683934203.4053}, {"precio": 28881.2288, "gex_total": 688863925.5024}, {"precio": 28888.3249, "gex_total": 693725424.0225}, {"precio": 28895.421, "gex_total": 698524236.7516}, {"precio": 28902.5171, "gex_total": 703265631.4089}, {"precio": 28909.6133, "gex_total": 707954598.5099}, {"precio": 28916.7094, "gex_total": 712595845.9004}, {"precio": 28923.8055, "gex_total": 717193794.9443}, {"precio": 28930.9016, "gex_total": 721752578.3351}, {"precio": 28937.9978, "gex_total": 726276039.4973}, {"precio": 28945.0939, "gex_total": 730767733.5328}, {"precio": 28952.19, "gex_total": 735230929.6609}, {"precio": 28959.2861, "gex_total": 739668615.0962}, {"precio": 28966.3823, "gex_total": 744083500.2987}, {"precio": 28973.4784, "gex_total": 748478025.5301}, {"precio": 28980.5745, "gex_total": 752854368.6423}, {"precio": 28987.6706, "gex_total": 757214454.022}, {"precio": 28994.7668, "gex_total": 761559962.6119}, {"precio": 29001.8629, "gex_total": 765892342.9264}, {"precio": 29008.959, "gex_total": 770212822.9775}, {"precio": 29016.0551, "gex_total": 774522423.0265}, {"precio": 29023.1513, "gex_total": 778821969.0738}, {"precio": 29030.2474, "gex_total": 783112107.0013}, {"precio": 29037.3435, "gex_total": 787393317.2796}, {"precio": 29044.4396, "gex_total": 791665930.1544}, {"precio": 29051.5358, "gex_total": 795930141.2247}, {"precio": 29058.6319, "gex_total": 800186027.3297}, {"precio": 29065.728, "gex_total": 804433562.6579}, {"precio": 29072.8241, "gex_total": 808672634.9975}, {"precio": 29079.9203, "gex_total": 812903062.0457}, {"precio": 29087.0164, "gex_total": 817124607.6974}, {"precio": 29094.1125, "gex_total": 821336998.2346}, {"precio": 29101.2086, "gex_total": 825539938.3409}, {"precio": 29108.3048, "gex_total": 829733126.8659}, {"precio": 29115.4009, "gex_total": 833916272.2667}, {"precio": 29122.497, "gex_total": 838089107.6568}, {"precio": 29129.5931, "gex_total": 842251405.3931}, {"precio": 29136.6893, "gex_total": 846402991.1351}, {"precio": 29143.7854, "gex_total": 850543757.313}, {"precio": 29150.8815, "gex_total": 854673675.9424}, {"precio": 29157.9776, "gex_total": 858792810.728}, {"precio": 29165.0738, "gex_total": 862901328.3998}, {"precio": 29172.1699, "gex_total": 866999509.2294}, {"precio": 29179.266, "gex_total": 871087756.6768}, {"precio": 29186.3621, "gex_total": 875166606.1217}, {"precio": 29193.4583, "gex_total": 879236732.6368}, {"precio": 29200.5544, "gex_total": 883298957.7648}, {"precio": 29207.6505, "gex_total": 887354255.2651}, {"precio": 29214.7466, "gex_total": 891403755.7999}, {"precio": 29221.8428, "gex_total": 895448750.5361}, {"precio": 29228.9389, "gex_total": 899490693.6408}, {"precio": 29236.035, "gex_total": 903531203.658}, {"precio": 29243.1311, "gex_total": 907572063.7553}, {"precio": 29250.2272, "gex_total": 911615220.8377}, {"precio": 29257.3234, "gex_total": 915662783.531}, {"precio": 29264.4195, "gex_total": 919717019.0414}, {"precio": 29271.5156, "gex_total": 923780348.9069}, {"precio": 29278.6118, "gex_total": 927855343.6592}, {"precio": 29285.7079, "gex_total": 931944716.423}, {"precio": 29292.804, "gex_total": 936051315.4851}, {"precio": 29299.9001, "gex_total": 940178115.8701}, {"precio": 29306.9963, "gex_total": 944328209.968}, {"precio": 29314.0924, "gex_total": 948504797.262}, {"precio": 29321.1885, "gex_total": 952711173.2119}, {"precio": 29328.2846, "gex_total": 956950717.3528}, {"precio": 29335.3808, "gex_total": 961226880.6723}], "precio": 28384.5, "flip": 28432.5956}</script>
+<script>
+const D = JSON.parse(document.getElementById('datos-graficos').textContent);
+const fmt = (x, dec=0) => x.toLocaleString('es-ES', {minimumFractionDigits: dec, maximumFractionDigits: dec});
+
+// Barras horizontales enfrentadas: calls a la derecha, puts a la izquierda.
+// El eje vertical es el precio (de arriba abajo, como la escalera).
+function barras(id, filas, opc) {
+  const cont = document.getElementById(id);
+  if (!filas || !filas.length) { cont.innerHTML = '<p class="muted">' + opc.vacio + '</p>'; return; }
+  filas = [...filas].sort((a, b) => b.tramo - a.tramo);
+  const W = cont.clientWidth, alto = 9, sep = 2, mI = 54, mD = 12, mS = 8, mInf = 26;
+  const H = mS + filas.length * (alto + sep) + mInf;
+  const maximo = Math.max(...filas.map(f => Math.max(Math.abs(f.call), Math.abs(f.put)))) || 1;
+  const x0 = mI + (W - mI - mD) / 2, esc = (W - mI - mD) / 2 / maximo;
+  const tramoMax = filas[0].tramo, paso = opc.tramo;
+  const y = t => mS + (tramoMax - t) / paso * (alto + sep);
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.setAttribute('height', H);
+  const el = (tag, at, txt) => { const e = document.createElementNS(ns, tag);
+    for (const k in at) e.setAttribute(k, at[k]); if (txt !== undefined) e.textContent = txt; svg.appendChild(e); return e; };
+  // rejilla y etiquetas de precio cada 100 puntos (NQ) o cada D.etiquetas (ES)
+  filas.forEach(f => { if (f.tramo % (D.etiquetas || 100) === 0) {
+    el('line', {x1: mI, x2: W - mD, y1: y(f.tramo) + alto / 2, y2: y(f.tramo) + alto / 2, stroke: 'var(--linea)'});
+    el('text', {x: mI - 6, y: y(f.tramo) + alto / 2 + 4, 'text-anchor': 'end', fill: 'var(--muted)', 'font-size': 11}, fmt(f.tramo));
+  }});
+  el('line', {x1: x0, x2: x0, y1: mS, y2: H - mInf, stroke: 'var(--eje)'});
+  // barras (extremo redondeado, anclado en el cero)
+  filas.forEach(f => {
+    const c = Math.abs(f.call) * esc, p = Math.abs(f.put) * esc, yy = y(f.tramo);
+    if (c >= 0.5) el('rect', {x: x0 + 1, y: yy, width: c, height: alto, rx: 3, fill: 'var(--calls)'});
+    if (p >= 0.5) el('rect', {x: x0 - 1 - p, y: yy, width: p, height: alto, rx: 3, fill: 'var(--puts)'});
+  });
+  // líneas de referencia: precio y frontera
+  const refs = [{v: D.precio, t: 'Precio ' + fmt(D.precio), c: 'var(--texto-2)'}];
+  if (D.flip) refs.push({v: D.flip, t: 'Frontera ' + fmt(D.flip), c: '#d95926'});
+  refs.forEach(r => { if (r.v <= tramoMax + paso && r.v >= filas[filas.length - 1].tramo) {
+    const yy = y(r.v) + alto + sep;  // el tramo t ocupa de t (abajo) a t+paso (arriba)
+    el('line', {x1: mI, x2: W - mD, y1: yy, y2: yy, stroke: r.c, 'stroke-dasharray': '4 3', 'stroke-width': 1.5});
+    el('text', {x: W - mD, y: yy - 4, 'text-anchor': 'end', fill: r.c, 'font-size': 11, 'font-weight': 600}, r.t);
+  }});
+  // eje x
+  el('text', {x: mI, y: H - 8, fill: 'var(--muted)', 'font-size': 11}, '← ' + opc.izq);
+  el('text', {x: W - mD, y: H - 8, 'text-anchor': 'end', fill: 'var(--muted)', 'font-size': 11}, opc.der + ' →');
+  // capa de hover: una banda por tramo (más grande que la barra)
+  const tip = document.createElement('div'); tip.className = 'tooltip'; cont.appendChild(tip);
+  filas.forEach(f => {
+    const r = el('rect', {x: mI, y: y(f.tramo) - sep / 2, width: W - mI - mD, height: alto + sep, fill: 'transparent'});
+    r.addEventListener('mousemove', ev => {
+      tip.innerHTML = `<b>${fmt(f.tramo)}–${fmt(f.tramo + paso - 1)}</b><br>Calls: ${opc.valor(f.call)}<br>Puts: ${opc.valor(f.put)}<br>Neto: ${opc.valor(f.neto)}`;
+      const b = cont.getBoundingClientRect();
+      tip.style.left = Math.min(ev.clientX - b.left + 12, W - 170) + 'px';
+      tip.style.top = (ev.clientY - b.top + 12) + 'px'; tip.style.opacity = 1;
+    });
+    r.addEventListener('mouseleave', () => tip.style.opacity = 0);
+  });
+  cont.prepend(svg);
+}
+
+function dibujar() {
+  for (const id of ['g-0dte', 'g-oi']) document.getElementById(id).innerHTML = '';
+  barras('g-0dte', D.mapa_0dte, {tramo: D.tramo || 25, izq: 'GEX puts', der: 'GEX calls',
+    valor: v => fmt(v / 1e6, 1) + ' M$', vacio: 'No hay opciones que venzan en la sesión.'});
+  barras('g-oi', D.oi_tramos, {tramo: D.tramo || 25, izq: 'OI puts', der: 'OI calls',
+    valor: v => fmt(v) + ' contratos', vacio: 'Sin datos.'});
+}
+dibujar();
+
+// Botón «Copiar para TradingView»
+for (const boton of document.querySelectorAll('button[data-campo]')) {
+  const original = boton.textContent;
+  boton.addEventListener('click', async () => {
+    const campo = document.getElementById(boton.dataset.campo);
+    try { await navigator.clipboard.writeText(campo.value); }
+    catch (e) { campo.select(); document.execCommand('copy'); }
+    boton.textContent = 'Copiado ✓';
+    setTimeout(() => boton.textContent = original, 2000);
+  });
+}
+// Precio actual frente al rango del 68 % (la página no sabe el precio en vivo: lo escribes tú)
+const caja = document.querySelector('.recentrar');
+if (caja) {
+  const lo = parseFloat(caja.dataset.lo), hi = parseFloat(caja.dataset.hi);
+  const entrada = document.getElementById('precio-actual'), estado = document.getElementById('estado-precio');
+  const fila = document.getElementById('fila-orden'), orden = document.getElementById('orden-rec');
+  const texto0 = estado.textContent;
+  entrada.addEventListener('input', () => {
+    const p = parseFloat(entrada.value.replace(',', '.'));
+    if (!isFinite(p)) { estado.textContent = texto0; estado.className = 'sub'; fila.classList.add('oculto'); return; }
+    const fuera = p > hi ? p - hi : (p < lo ? lo - p : 0);
+    if (fuera > 0) {
+      estado.textContent = '⚠ ' + fmt(p, 2) + ' está ' + (p > hi ? 'por encima' : 'por debajo') + ' del rango del 68 % (a ' +
+        fmt(fuera, 2) + ' puntos). La frontera, la gamma y los niveles que dependen del precio pueden haber cambiado: ' +
+        'recentra la escalera con esta orden (en la Terminal, en la carpeta del proyecto) y vuelve a abrir esta página.';
+      estado.className = 'aviso-txt';
+      orden.value = caja.dataset.orden + p;
+      fila.classList.remove('oculto');
+    } else {
+      estado.textContent = '✓ ' + fmt(p, 2) + ' está dentro del rango del 68 %: no hace falta recentrar.';
+      estado.className = 'sub';
+      fila.classList.add('oculto');
+    }
+  });
+}
+let t; window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(dibujar, 150); });
+</script>
+</body></html>
