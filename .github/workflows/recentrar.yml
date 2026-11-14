@@ -1,5 +1,5 @@
-# Recentrar la escalera de hoy en el precio actual (desde la app de GitHub del iPhone:
-# Actions -> Recentrar -> Run workflow). Mismo open interest: no se compra nada a Databento.
+# Recentrar la escalera de hoy en el precio actual (desde el iPhone: Actions -> Recentrar -> Run workflow).
+# Mismo open interest: no se compra nada a Databento. Resultado en https://mvila9700.github.io/escalera/
 name: Recentrar
 on:
   workflow_dispatch:
@@ -38,5 +38,5 @@ jobs:
       - name: Guardar
         run: |
           git config user.name "escalera-bot"; git config user.email "escalera-bot@users.noreply.github.com"
-          git add -A datos/historico HOY_*.txt
+          git add -A datos/historico HOY_*.txt docs
           git diff --cached --quiet || (git commit -m "Recentrada ${{ github.event.inputs.indice }} en ${{ github.event.inputs.precio }}" && git push)
