@@ -60,6 +60,10 @@ Confluencia con QQQ/NDX (opcional; calculos/confluencia.py):
     10. (tras el 9; los 8 y 9 van como "-" si faltan) ★: Q (QQQ), N (NDX), QN (los dos) o "-"
     cq=distancia         en la cabecera: el texto trae confluencia (distancia en puntos NQ)
     LQ=desde-hasta:Q|N   niveles que solo tienen QQQ/NDX (en precio NQ), para «Mostrar niveles solo QQQ»
+Volumen de los días anteriores (opcional; SOLO referencia visual, no son niveles de la escalera):
+    VP=tipo:precio:AAAAMMDD   VAL, VAH o POC de una de las 5 sesiones anteriores que el precio aún no
+                              ha vuelto a tocar (tareas/volumen_previo.py), p. ej. VP=VAL:27650:20261109.
+                              Los indicadores antiguos lo ignoran.
 Gamma en vivo (opcional, al final): gv=… con calls, puts y σ√T por strike y grupo de
 vencimientos para que el indicador recalcule frontera, régimen y fuerza de los niveles con el
 precio actual (formato en salida/gamma_vivo.py). Los indicadores antiguos lo ignoran.
@@ -229,6 +233,8 @@ def texto_esc2(d, sym=None, decimales=None):
         partes.append(f"Z={f(z['zona_desde'])}-{f(z['zona_hasta'])}")
     for e in (d.get("confluencia") or {}).get("solo") or []:
         partes.append(f"LQ={f(e['desde'])}-{f(e['hasta'])}:{e['fuente'][0]}")   # solo QQQ (Q) o NDX (N)
+    for n in (d.get("volumen_previo") or {}).get("niveles") or []:
+        partes.append(f"VP={n['tipo']}:{f(n['precio'])}:{str(n['dia']).replace('-', '')}")   # solo referencia
     if d.get("gamma_vivo"):
         partes.append(d["gamma_vivo"])      # "gv=…": al final (opcional, salida/gamma_vivo.py)
     return "|".join(partes)
@@ -259,10 +265,10 @@ def _efecto(efecto, v):
 
 def sin_vanna_charm(texto):
     """ESC2 sin los campos opcionales nuevos (vanna y charm: ch=, va= y el 9.º campo de cada L=;
-    gamma en vivo: gv=; confluencia: cq=, LQ=; escalera extendida: LX=):
+    gamma en vivo: gv=; confluencia: cq=, LQ=; escalera extendida: LX=; volumen previo: VP=):
     sirve para comparar con textos guardados antes de añadirlos. Un 8.º campo "-" que solo
     estaba para dejar sitio al 9.º también se quita si no hay vista corta (sin "fc"/"rc")."""
-    partes = [p for p in texto.strip().split("|") if not p.startswith(("ch=", "va=", "gv=", "LQ=", "cq=", "LX=", "fb="))]
+    partes = [p for p in texto.strip().split("|") if not p.startswith(("ch=", "va=", "gv=", "LQ=", "cq=", "LX=", "fb=", "VP="))]
     con_vista = any(p.startswith(("fc=", "mc=", "mp=", "rc=")) for p in partes)
     out = []
     for p in partes:

@@ -249,6 +249,8 @@ def escalera(indice, dia, sesion):
         logging.info("%s %s: ya hay escalera del PDF; la de Databento queda en %s_databento_esc2.txt",
                      indice, sesion, base)
         return None, "ya había escalera del PDF (la de Databento queda aparte)"
+    from tareas import volumen_previo              # VAL/VAH/POC no mitigados (solo referencia; nunca falla)
+    volumen_previo.anadir(datos, config)
     ruta_json = historico.guardar(datos)
     ruta = pagina.escribir(datos, indice=indice)
     logging.info("Escalera %s (Databento) generada: %s / %s", indice, ruta_json, ruta)
@@ -280,6 +282,9 @@ def main(argv=None, hoy=None):
         return 0
     dia = boletin_de(sesion)
     indices = [a.indice] if a.indice else cfg["indices"]
+    if not indices:
+        print("databento_diario.indices está vacío: la escalera diaria la hace GitHub.")
+        return 0
     if not (a.forzar or a.coste):
         # Al iniciar sesión (RunAtLoad) y a las 08:00: si la escalera ya está, no hace nada
         hechas = [i for i in indices if ya_existe(sesion, i)]

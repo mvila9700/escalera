@@ -142,7 +142,8 @@ def velas_databento(sesion, indice, contrato_ref, config, cliente=None, hoy=None
     v = db.DBNStore.from_file(ruta).to_df(price_type="float")
     if v.empty:
         return None, f"Databento no trae velas de {simbolo} en la sesión del {sesion}"
-    v = v[["open", "high", "low", "close"]].astype(float)
+    # con el volumen (lo usa el perfil de volumen de los días anteriores: tareas/volumen_previo.py)
+    v = v[[c for c in ("open", "high", "low", "close", "volume") if c in v.columns]].astype(float)
     v.index = v.index.tz_convert("UTC")
     v = v[(v.index >= inicio) & (v.index < fin)]
     return (v, nombre) if len(v) >= 30 else (None, f"pocas velas de {simbolo} en Databento")

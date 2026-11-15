@@ -133,6 +133,8 @@ indices:
         ancho_puntos: 2.5             # NQ 5
       estado:
         umbral_rotura_puntos: 2.5     # NQ 10 (× r ≈ 2,6 → 2,5); decidido el 2026-10-28
+      volumen_previo:
+        tramo_puntos: 1               # NQ 5 (perfil de volumen de los días anteriores)
 
   GC:
     # ORO (futuros GC de COMEX). Lector propio: fuentes/cme_pdf_oro.py (sección 64, «Metals Option
@@ -327,6 +329,18 @@ vanna_charm:
   # NQ: el del ES × 0,10 (charm del NQ / charm del ES en los boletines del 23 al 30-oct-2026,
   # entre 0,06 y 0,12). PROVISIONAL: no hay escaleras del NQ reconstruidas para calibrarlo.
   charm_fuerte_contratos: 1700
+
+# Volumen de los días anteriores (2026-11-15; tareas/volumen_previo.py y calculos/volumen_previo.py).
+# SOLO REFERENCIA VISUAL: VAL, VAH y POC de las N sesiones anteriores que el precio aún no ha vuelto a
+# tocar. El estudio (documentacion/estudio_volumen_gamma_negativa_2026-11-15.md) no les encuentra ventaja:
+# no son niveles de la escalera ni cuentan en la fiabilidad. Van en el ESC2 como «VP=» (opcional).
+# Velas: las de 1 minuto de Databento por sesión que ya usa «Estado hoy» (datos/velas/databento/,
+# ≈ 0,005 $ por sesión e índice, una sola vez, con los topes de databento_diario).
+volumen_previo:
+  activo: true
+  sesiones: 5            # sesiones anteriores
+  value_area: 0.70       # parte del volumen dentro de la value area
+  tramo_puntos: 5        # tramos del perfil (NQ); el ES, 1 (indices -> ES -> parametros)
 
 # Escalera diaria automática con Databento (tareas/escalera_databento.py, sin PDF).
 # Antes de cada descarga calcula el coste exacto (gratis); si con él se pasa de un tope,

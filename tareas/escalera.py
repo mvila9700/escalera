@@ -188,6 +188,8 @@ def recentrar(indice, precio, sesion=None, forzar=False, abrir=True):
                               f"({rango[0]:g} – {rango[1]:g}) de la escalera del día, calculada en "
                               f"{original['precio_ref']:g}. Mismo open interest; cambian la gamma, la frontera, "
                               "los rangos y los niveles que dependen del precio.")
+    if original.get("volumen_previo"):
+        datos["volumen_previo"] = original["volumen_previo"]     # los mismos (el indicador los mitiga en vivo)
     ruta_json = historico.guardar_recentrada(datos, precio)
     ultimo = _ultimo_historico(indice)
     ruta = pagina.escribir(original, es_la_ultima=bool(ultimo) and ultimo["fecha_sesion"] == original["fecha_sesion"],
@@ -254,6 +256,8 @@ def main(argv=None):
             if not args.permitir_viejos:
                 raise ValueError(mensaje)
             datos["avisos"].insert(0, "DATOS ANTIGUOS (generado con --permitir-viejos): " + mensaje)
+        from tareas import volumen_previo          # VAL/VAH/POC no mitigados (solo referencia; nunca falla)
+        volumen_previo.anadir(datos, config)
         ruta_json = historico.guardar(datos)
         ruta = pagina.escribir(datos, indice=indice)
         logging.info("Escalera generada: %s / %s", ruta_json, ruta)

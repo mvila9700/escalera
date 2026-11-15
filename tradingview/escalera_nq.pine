@@ -24,14 +24,24 @@
 // con fb=N, el ES, sin etiquetas de régimen); el OI máximo (antes imán) solo dice «objetivo» a ≤ 0,25σ
 // del precio actual; los niveles de contexto, finos y grises. Los textos sin ese campo, como siempre.
 //
+// VWAP de sesión (2026-11-15): VWAP de la sesión regular anclado cada día a las 9:30 de Nueva York
+// (hlc3 × volumen de cada vela, hasta las 16:00), solo como regla de operativa: largos por encima,
+// cortos por debajo. No toca los niveles, la fiabilidad ni el ESC2.
+//
+// Volumen de días anteriores (2026-11-15): VAL, VAH y POC de las 5 sesiones anteriores que el precio aún
+// no ha vuelto a tocar (campo opcional «VP=» del ESC2; tareas/volumen_previo.py). SOLO REFERENCIA VISUAL:
+// el estudio no les encuentra ventaja estable, así que no son niveles de la escalera, no cuentan en la
+// fiabilidad ni cambian la esquina o la leyenda. Líneas grises discontinuas (line + label, no plots) que
+// se cortan cuando el precio las toca. Desactivadas por defecto.
+//
 // Límite de TradingView: 64 "plots". Las etiquetas de la escala son plots y
 // las que tienen color variable cuentan doble: 27 etiquetas × 2 + máximo,
-// mínimo y NY Open = 57. Las zonas y bandas son cajas (box), que no cuentan.
+// mínimo, NY Open, frontera corta y VWAP de sesión = 59. Las zonas y bandas son cajas (box), que no cuentan.
 // Si hay más niveles que etiquetas, se quedan sin etiqueta primero los de
 // categoría menor más alejados del precio (la zona se dibuja igual).
 
 //@version=6
-indicator("Escalera", shorttitle = "Escalera", overlay = true, max_lines_count = 20, max_boxes_count = 100)
+indicator("Escalera", shorttitle = "Escalera", overlay = true, max_lines_count = 40, max_boxes_count = 100)
 
 // ─── Entradas ──────────────────────────────────────────────────────────────
 string TEXTO = input.text_area("", "Niveles del día",
@@ -117,6 +127,16 @@ bool  verFiab = input.bool(true, "Estado de los muros, OI máximo y contexto en 
      tooltip = "Solo con el 11.º campo del texto ESC2 (estudio de fiabilidad del índice). Muros (solo si el texto trae fb=R, p. ej. el NQ): por encima de la frontera, sólidos; por debajo, discontinuos con «ruptura» (por debajo todo rompe más: el muro no protege más que un precio cualquiera). OI máximo: «objetivo» solo cerca del precio actual. Contexto (aceleración, OI relevante, resistencia: sin ventaja histórica): fino y gris.")
 float objetivoSigmas = input.float(0.25, "OI máximo «objetivo» a menos de (σ)", minval = 0, step = 0.05, group = G_FIAB)
 color colCtx = input.color(#8E877A, "Color del borde de los niveles de contexto", group = G_FIAB)
+
+string G_VWAP = "VWAP de sesión"
+bool  verVwap = input.bool(true, "VWAP de la sesión regular (desde las 9:30 NY)", inline = "vw", group = G_VWAP,
+     tooltip = "Precio medio ponderado por volumen (hlc3 × volumen de cada vela) desde las 9:30 de Nueva York hasta las 16:00. Se reinicia cada día a las 9:30; antes no se dibuja. Regla de operativa: precio encima → solo largos; debajo → solo cortos.")
+color colVwap = input.color(#E0B341, "", inline = "vw", group = G_VWAP)
+
+string G_VP = "Volumen días anteriores (referencia)"
+bool  verVP = input.bool(false, "VAL, VAH y POC no mitigados (5 sesiones)", inline = "vp", group = G_VP,
+     tooltip = "Solo si el texto trae «VP=». Value area (70 %) y POC de 9:30 a 16:00 NY de las 5 sesiones anteriores que el precio aún no ha vuelto a tocar. SOLO REFERENCIA: el estudio del 15-nov-2026 no les encuentra ventaja estable; no son niveles de la escalera. Cuando el precio toca una, la línea se corta ahí.")
+color colVP = input.color(#8E8E8E, "", inline = "vp", group = G_VP)
 
 string G_ASPECTO = "Aspecto"
 int  grosor     = input.int(1, "Grosor de máximo, mínimo y NY Open", minval = 1, maxval = 4, group = G_ASPECTO)
@@ -276,6 +296,15 @@ var float  flipTxt = na      // frontera de la escalera (en la apertura)
 var float  rfLo    = na
 var float  rfHi    = na
 var string fbTxt   = ""      // "R": el régimen cambia cómo aguantan los muros (NQ) · "N": no (ES) · "": texto antiguo
+// Volumen de días anteriores (claves "VP="; solo referencia, no son niveles)
+var array<float>  vpP     = array.new<float>()    // precio
+var array<string> vpTxt   = array.new<string>()   // «VAL lun 9»
+var array<int>    vpT0    = array.new<int>()      // cierre de esa sesión (16:00 NY): desde ahí se mira si se toca
+var array<int>    vpCorte = array.new<int>()      // vela que la tocó (na: sin tocar)
+
+// «lun», «mar»... del día (hora de Nueva York)
+diaSemana(int t) =>
+    array.get(array.from("dom", "lun", "mar", "mié", "jue", "vie", "sáb"), dayofweek(t, "America/New_York") - 1)
 
 agregar(float lo, float hi, float precio, color col, string est, int cat, string corto, string conf = "", bool ext = false, string letras = "", string fbc = "") =>
     array.push(nLo, lo)
@@ -404,6 +433,21 @@ if barstate.isfirst
                 else if formato == "ESC2" and clave == "Z"
                     [lo, hi] = rango(array.get(kv, 1))
                     zonaGris(lo, hi)
+                else if formato == "ESC2" and clave == "VP"
+                    // VP=tipo:precio:AAAAMMDD · VAL/VAH/POC de una sesión anterior sin tocar (solo referencia)
+                    array<string> c = str.split(array.get(kv, 1), ":")
+                    if array.size(c) >= 3 and str.length(array.get(c, 2)) == 8
+                        float pv = str.tonumber(array.get(c, 1))
+                        string dd = array.get(c, 2)
+                        int an = int(str.tonumber(str.substring(dd, 0, 4)))
+                        int me = int(str.tonumber(str.substring(dd, 4, 6)))
+                        int di = int(str.tonumber(str.substring(dd, 6, 8)))
+                        if not na(pv) and not na(an) and not na(me) and not na(di)
+                            int t0 = timestamp("America/New_York", an, me, di, 16, 0)
+                            array.push(vpP, pv)
+                            array.push(vpT0, t0)
+                            array.push(vpCorte, int(na))
+                            array.push(vpTxt, array.get(c, 0) + " " + diaSemana(t0) + " " + str.tostring(di))
                 else if formato == "ESCNQ1" and str.length(clave) > 0 and clave != "fecha" and clave != "contrato" and
                      clave != "68" and clave != "95" and clave != "roll"
                     // Nivel antiguo: la clave son las letras de sus tipos (p. ej. "AP").
@@ -786,9 +830,24 @@ if barstate.islast
         array.push(lineas, line.new(tNY, nyOpen, time, nyOpen, xloc = xloc.bar_time,
              extend = extend.right, color = colNY, width = math.max(2, grosor + 1)))
 
+// ─── VWAP de la sesión regular (9:30–16:00 Nueva York) ───────────────────
+// Sesión con hora de Nueva York: vale para 30 s, 1, 2 y 5 minutos (la primera vela que abre a las
+// 9:30 o después reinicia las sumas). Sin volumen en el gráfico, no hay VWAP.
+bool enRTH = timeframe.isintraday and not na(time(timeframe.period, "0930-1600", "America/New_York"))
+var float vwSumaPV = na
+var float vwSumaV  = na
+if enRTH and not enRTH[1]
+    vwSumaPV := 0.0
+    vwSumaV  := 0.0
+if enRTH and not na(vwSumaV) and not na(volume)
+    vwSumaPV += hlc3 * volume
+    vwSumaV  += volume
+float vwapSesion = enRTH and not na(vwSumaV) and vwSumaV > 0 ? vwSumaPV / vwSumaV : na
+plot(verVwap ? vwapSesion : na, "VWAP de sesión", color = colVwap, linewidth = 1, style = plot.style_linebr)
+
 // ─── Precio de cada nivel en la escala ────────────────────────────────────
 // 27 plots con color variable (cuentan 2 cada uno) + máximo, mínimo, NY Open y
-// frontera corta (color fijo: 1 cada uno) = 58 de los 64 posibles.
+// frontera corta (color fijo: 1 cada uno) = 58; con el VWAP de sesión, 59 de los 64 posibles.
 valorNivel(int i) =>
     verEscala and i < array.size(sPrecio) ? array.get(sPrecio, i) : na
 colorNivel(int i) =>
@@ -825,6 +884,34 @@ plot(verMaxMin and verEscala ? maxSesion : na, "Máximo", color = colMaxMin, dis
 plot(verMaxMin and verEscala ? minSesion : na, "Mínimo", color = colMaxMin, display = display.price_scale)
 plot(verNY and verEscala ? nyOpen : na, "NY Open", color = colNY, display = display.price_scale)
 plot(verCorta and verEscala ? fCorta : na, "Frontera corta", color = colFC, display = display.price_scale)
+
+// ─── Volumen de días anteriores (solo referencia: line + label, sin plots) ──
+// Mitigación en vivo: la primera vela posterior al cierre de esa sesión que toca el precio corta la línea.
+if verVP and array.size(vpP) > 0
+    for i = 0 to array.size(vpP) - 1
+        float pv = array.get(vpP, i)
+        if na(array.get(vpCorte, i)) and time >= array.get(vpT0, i) and high >= pv and low <= pv
+            array.set(vpCorte, i, time)
+
+var array<line>  vpLineas = array.new<line>()
+var array<label> vpEtiq   = array.new<label>()
+if barstate.islast
+    for l in vpLineas
+        line.delete(l)
+    array.clear(vpLineas)
+    for e in vpEtiq
+        label.delete(e)
+    array.clear(vpEtiq)
+    if verVP and array.size(vpP) > 0
+        for i = 0 to array.size(vpP) - 1
+            float pv = array.get(vpP, i)
+            int corte = array.get(vpCorte, i)
+            int fin = na(corte) ? time : corte
+            array.push(vpLineas, line.new(array.get(vpT0, i), pv, fin, pv, xloc = xloc.bar_time,
+                 extend = na(corte) ? extend.right : extend.none, color = colVP, style = line.style_dashed, width = 1))
+            array.push(vpEtiq, label.new(fin, pv, array.get(vpTxt, i), xloc = xloc.bar_time,
+                 style = label.style_label_left, color = color.new(color.black, 100), textcolor = colVP,
+                 size = size.small))
 
 // ─── Charm y vanna (texto de la leyenda) ───────────────────────────────────
 // "C1300" -> "compra 1300" ; "V220" -> "venta 220"
@@ -864,11 +951,11 @@ aclarar(color c) =>
     color.rgb(math.min(255, color.r(c) * 1.4 + 80), math.min(255, color.g(c) * 1.4 + 80), math.min(255, color.b(c) * 1.4 + 80))
 
 // Dos columnas: 0 = muestra de línea de la leyenda (vacía en el resto de filas), 1 = texto
-var table cuadro = table.new(posicion(), 2, 24, bgcolor = color.new(C_FONDO, 10),
+var table cuadro = table.new(posicion(), 2, 25, bgcolor = color.new(C_FONDO, 10),
      frame_color = color.new(color.white, 85), frame_width = 1, border_width = 0)
 
 if barstate.islast
-    table.clear(cuadro, 0, 0, 1, 23)
+    table.clear(cuadro, 0, 0, 1, 24)
     int fila = 0
     // Cabecera: de qué día y contrato son los niveles
     if verLeyenda and valido
@@ -920,6 +1007,12 @@ if barstate.islast
         table.cell(cuadro, 1, fila, txtF, text_color = encima and diaPositivo ? #0ca30c : encima ? C_TEXTO : C_MAL,
              text_size = size.small, text_halign = text.align_left)
         fila += 1
+    // VWAP de sesión: regla de operativa según el cierre de la última vela (con o sin niveles pegados)
+    if verVwap and not na(vwapSesion)
+        bool sobreVwap = close >= vwapSesion
+        table.cell(cuadro, 1, fila, sobreVwap ? "VWAP: precio ENCIMA → solo largos" : "VWAP: precio DEBAJO → solo cortos",
+             text_color = sobreVwap ? #0ca30c : C_MAL, text_size = size.small, text_halign = text.align_left)
+        fila += 1
     // Charm y vanna del día (solo si el texto los trae: los ESC2 antiguos no)
     if verCharm and valido and chTxt != ""
         table.cell(cuadro, 1, fila, textoCharm(chTxt), text_color = colorFlujo(chTxt), text_size = size.small,
@@ -959,17 +1052,17 @@ if barstate.islast
         array<color> colores = array.from(colC, colP, colR, colI, colA, colO, colF, colMaxMin, colNY, colG, colRef, colRango, colFC)
         array<bool> activos = array.from(verC, verP, verR, verI, verA, verO, verF, verMaxMin, verNY, verG, verRef, verRangos, verCorta)
         for i = 0 to array.size(nombres) - 1
-            if array.get(activos, i) and fila < 23
+            if array.get(activos, i) and fila < 24
                 string nm = array.get(nombres, i)
                 table.cell(cuadro, 0, fila, str.substring(nm, 0, 3), text_color = aclarar(array.get(colores, i)),
                      text_size = size.small, text_halign = text.align_left)
                 table.cell(cuadro, 1, fila, str.substring(nm, 5), text_color = C_TEXTO,
                      text_size = size.small, text_halign = text.align_left)
                 fila += 1
-        if fbTxt == "R" and verFiab and fila < 23
+        if fbTxt == "R" and verFiab and fila < 24
             table.cell(cuadro, 1, fila, "Muros: sólido = encima de la frontera · ╌╌╌ ruptura = debajo",
                  text_color = C_TEXTO, text_size = size.small, text_halign = text.align_left)
             fila += 1
-        if fila < 24
+        if fila < 25
             table.cell(cuadro, 1, fila, "Grueso = principal · normal = secundario · fino = menor",
                  text_color = C_TEXTO, text_size = size.small, text_halign = text.align_left)
