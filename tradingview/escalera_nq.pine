@@ -25,8 +25,9 @@
 // del precio actual; los niveles de contexto, finos y grises. Los textos sin ese campo, como siempre.
 //
 // VWAP de sesión (2026-11-15): VWAP de la sesión regular anclado cada día a las 9:30 de Nueva York
-// (hlc3 × volumen de cada vela, hasta las 16:00), solo como regla de operativa: largos por encima,
-// cortos por debajo. No toca los niveles, la fiabilidad ni el ESC2.
+// (hlc3 × volumen de cada vela), solo como regla de operativa: largos por encima, cortos por debajo.
+// Desde el 15-nov también fuera de la sesión: sigue (sumando todas las velas, también las de la noche)
+// hasta que se reinicia a las 9:30 del día siguiente. No toca los niveles, la fiabilidad ni el ESC2.
 //
 // Volumen de días anteriores (2026-11-15): VAL, VAH y POC de las 5 sesiones anteriores que el precio aún
 // no ha vuelto a tocar (campo opcional «VP=» del ESC2; tareas/volumen_previo.py). SOLO REFERENCIA VISUAL:
@@ -80,6 +81,8 @@ int  grosorSecundario = input.int(1, "Grosor de los secundarios", minval = 1, ma
 bool verMenor = input.bool(true, "Mostrar los niveles menores", group = G_JERARQUIA,
      tooltip = "Los de menos gamma del día (por debajo del percentil 40). Se dibujan finos y semitransparentes.")
 bool verZonas = input.bool(true, "Rellenar las zonas", group = G_JERARQUIA)
+bool vistaLimpia = input.bool(false, "Vista limpia: solo muros, OI máximo y el nivel más cercano a cada lado", group = G_JERARQUIA,
+     tooltip = "Estudio 16-nov-2026: ningún tipo de nivel frena el precio más que otro, así que para elegir el TP basta con los muros, el OI máximo y el nivel más próximo por encima y por debajo del precio actual (cada uno con su % de llegar). La frontera se ve siempre.")
 bool verExt = input.bool(true, "Niveles extendidos (más allá del 95 %)", group = G_JERARQUIA,
      tooltip = "Muros, aceleraciones y OI relevante principales y secundarios entre 2σ y 4σ (claves «LX=» del texto), con los mismos umbrales que dentro del 95 %. Se dibujan más finos, con borde discontinuo.")
 
@@ -93,15 +96,15 @@ float anchoAntiguo = input.float(0, "Ancho de zona con el texto antiguo (puntos)
      tooltip = "El texto ESCNQ1 no trae el ancho de las zonas: con 0 se dibujan líneas.")
 
 string G_RANGOS = "Rangos del día"
-bool  verRangos = input.bool(false, "Rangos 68 % y 95 % (bandas)", inline = "rg", group = G_RANGOS,
+bool  verRangos = input.bool(true, "Rangos 68 % y 95 % (bandas)", inline = "rg", group = G_RANGOS,
      tooltip = "Movimiento esperado del día: 68 % (±1σ) más oscuro, 95 % (±2σ) más claro.")
 color colRango = input.color(#9A9282, "", inline = "rg", group = G_RANGOS)
 
 string G_CORTA = "Vista corta (solo los próximos días)"
-bool  verCorta = input.bool(false, "Frontera corta", inline = "fc", group = G_CORTA,
+bool  verCorta = input.bool(true, "Frontera corta", inline = "fc", group = G_CORTA,
      tooltip = "Gamma flip con solo los vencimientos de los próximos días (7 por defecto). Línea discontinua fina.")
 color colFC = input.color(#6E5A1E, "", inline = "fc", group = G_CORTA)
-bool  verMurosCortos = input.bool(false, "Muros cortos", group = G_CORTA,
+bool  verMurosCortos = input.bool(true, "Muros cortos", group = G_CORTA,
      tooltip = "Strike con más GEX de calls / de puts en los próximos días: «C·corto» / «P·corto» en el nivel que coincide, o línea fina punteada si no coincide con ninguno.")
 bool  verRegimen = input.bool(true, "Régimen combinado en la esquina", group = G_CORTA)
 bool  verCharm = input.bool(false, "Charm y vanna en la esquina", group = G_CORTA,
@@ -119,6 +122,8 @@ bool verNivVivo = input.bool(true, "Niveles en vivo cuando el precio sale del ra
 string cuandoNV = input.string("Fuera del 68 %", "Mostrarlos", options = ["Fuera del 68 %", "Fuera del 95 %", "Siempre"], group = G_VIVO)
 float radioNV = input.float(1.5, "Buscar a ± (σ) del precio actual", minval = 0.5, step = 0.25, group = G_VIVO)
 int   cuantosNV = input.int(4, "Niveles de OI además de los dos muros", minval = 0, maxval = 8, group = G_VIVO)
+bool verProb = input.bool(true, "Probabilidad de tocar cada nivel antes de las 16:00 NY (%)", group = G_VIVO,
+     tooltip = "Desde el precio actual y con el tiempo que queda hasta el cierre de NY. Calibrada con 242 sesiones (nov-2025 a nov-2026): de los niveles marcados con un 60 %, el precio llegó a tocar alrededor del 60 %. Es la probabilidad de LLEGAR, no de rebotar: para el rebote, los niveles no han mostrado ventaja sobre un precio cualquiera. Útil para elegir TP.")
 bool verFuerza = input.bool(true, "Fuerza en vivo en cada zona (×)", group = G_VIVO,
      tooltip = "Gamma de la zona al precio actual dividida por la de la apertura: ×1.5 = la mitad más fuerte que al abrir.")
 
@@ -130,11 +135,11 @@ color colCtx = input.color(#8E877A, "Color del borde de los niveles de contexto"
 
 string G_VWAP = "VWAP de sesión"
 bool  verVwap = input.bool(true, "VWAP de la sesión regular (desde las 9:30 NY)", inline = "vw", group = G_VWAP,
-     tooltip = "Precio medio ponderado por volumen (hlc3 × volumen de cada vela) desde las 9:30 de Nueva York hasta las 16:00. Se reinicia cada día a las 9:30; antes no se dibuja. Regla de operativa: precio encima → solo largos; debajo → solo cortos.")
+     tooltip = "Precio medio ponderado por volumen (hlc3 × volumen de cada vela) desde las 9:30 de Nueva York. Se ve a todas horas: después de las 16:00 sigue sumando las velas (también las de la noche) hasta que se reinicia a las 9:30 del día siguiente. Regla de operativa: precio encima → solo largos; debajo → solo cortos.")
 color colVwap = input.color(#E0B341, "", inline = "vw", group = G_VWAP)
 
 string G_VP = "Volumen días anteriores (referencia)"
-bool  verVP = input.bool(false, "VAL, VAH y POC no mitigados (5 sesiones)", inline = "vp", group = G_VP,
+bool  verVP = input.bool(true, "VAL, VAH y POC no mitigados (5 sesiones)", inline = "vp", group = G_VP,
      tooltip = "Solo si el texto trae «VP=». Value area (70 %) y POC de 9:30 a 16:00 NY de las 5 sesiones anteriores que el precio aún no ha vuelto a tocar. SOLO REFERENCIA: el estudio del 15-nov-2026 no les encuentra ventaja estable; no son niveles de la escalera. Cuando el precio toca una, la línea se corta ahí.")
 color colVP = input.color(#8E8E8E, "", inline = "vp", group = G_VP)
 
@@ -663,6 +668,28 @@ nivelesVivo(float F, float sigma, array<float> fac, float radio, int cuantos) =>
                     res += (res != "" ? ";" : "") + str.tostring(array.get(ks, mejor)) + ":O"
     res
 
+// ─── Probabilidad de tocar (estudio 16-nov-2026, 242 sesiones del NQ) ──────────────────
+// Varianza del precio por sesión, en σ² del día (σ = medio rango del 68 %): Asia (18:00-03:00 NY)
+// 0,47², Londres (03:00-09:30) 0,44², NY (09:30-16:00) 0,74². P(tocar) = 2·(1 − Φ(d / σ_que_queda)).
+normCdf(float x) =>
+    float t = 1.0 / (1.0 + 0.2316419 * math.abs(x))
+    float d = 0.3989423 * math.exp(-x * x / 2)
+    float pr = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))))
+    x > 0 ? 1 - pr : pr
+// σ² que queda hasta las 16:00 NY (en σ² del día), según la hora de la vela
+varianzaRestante(int t) =>
+    int m = ((hour(t, "America/New_York") * 60 + minute(t, "America/New_York")) - 1080 + 1440) % 1440   // 0 = 18:00 NY
+    float r = 0.0
+    if m < 1320
+        r += 0.2209 / 540 * math.max(0, 540 - m)
+        r += 0.1936 / 390 * math.max(0, 930 - math.max(m, 540))
+        r += 0.5476 / 390 * math.max(0, 1320 - math.max(m, 930))
+    r
+probToque(float nivel, float precio, float sigma, int t) =>
+    float v = varianzaRestante(t)
+    float d = math.abs(nivel - precio)
+    v <= 0 or na(sigma) or sigma <= 0 ? na : math.min(1.0, 2 * (1 - normCdf(d / (sigma * math.sqrt(v)))))
+
 bool hayVivo = verVivo and array.size(vK) > 0 and not na(lo68) and not na(hi68)
 float sigmaV = (hi68 - lo68) / 2
 var float gexApertura = na
@@ -699,6 +726,9 @@ bool mostrarNV = hayVivo and verNivVivo and nivVivoTxt != "" and fueraNV
 // Frontera de ahora: la recalculada en vivo (bloque gv=) o, si no hay, la de la apertura.
 // Día positivo: precio de referencia por encima de la frontera de la apertura (como en el estudio).
 float fronteraAhora = hayVivo and not na(flipVivo) ? flipVivo : flipTxt
+// Régimen y amplitud (estudio 16-nov-2026): en gamma negativa el rango del día es ~8 % mayor que en positiva
+float facReg = na(fronteraAhora) ? 1.0 : close < fronteraAhora ? 1.05 : 0.97
+float sigmaP = na(sigmaV) ? na : sigmaV * facReg
 bool  diaPositivo = not na(refPrecio) and not na(flipTxt) and refPrecio >= flipTxt
 
 // ─── Dibujo (en la última vela) ───────────────────────────────────────────
@@ -724,8 +754,21 @@ if barstate.islast
             array.push(cajas, box.new(tInicioDia, array.get(gHi, i), time, array.get(gLo, i), xloc = xloc.bar_time,
                  extend = extend.right, border_color = color.new(colG, 60), border_style = line.style_dotted,
                  bgcolor = color.new(colG, 70)))
+    // Vista limpia: el nivel más cercano por encima y por debajo del precio actual
+    int iArriba = -1
+    int iAbajo = -1
     if nNiveles > 0
         for i = 0 to nNiveles - 1
+            float pc = array.get(nPrecio, i)
+            if pc > close and (iArriba < 0 or pc < array.get(nPrecio, iArriba))
+                iArriba := i
+            if pc < close and (iAbajo < 0 or pc > array.get(nPrecio, iAbajo))
+                iAbajo := i
+    if nNiveles > 0
+        for i = 0 to nNiveles - 1
+            string letV = array.get(nLet, i)
+            if vistaLimpia and i != iArriba and i != iAbajo and not (str.contains(letV, "C") or str.contains(letV, "P") or str.contains(letV, "I"))
+                continue
             int origen = array.get(nToque, i)
             int x = na(origen) ? time : origen
             int cat = array.get(nCat, i)
@@ -744,6 +787,12 @@ if barstate.islast
                 string f = i < array.size(fz) ? array.get(fz, i) : ""
                 if f != ""
                     rotulo := rotulo + (rotulo != "" ? " · " : "") + "×" + f
+            if verProb and not na(sigmaV)
+                float lo_ = array.get(nLo, i)
+                float hi_ = array.get(nHi, i)
+                float pt = close >= lo_ and close <= hi_ ? 1.0 : probToque(close > hi_ ? hi_ : lo_, close, sigmaP, time_close)
+                if not na(pt)
+                    rotulo := rotulo + (rotulo != "" ? " · " : "") + (pt >= 0.995 ? "aquí" : str.tostring(math.round(pt * 100)) + "%")
             // Fiabilidad en vivo (solo con el 11.º campo del ESC2; los textos antiguos se dibujan como siempre)
             int anchoI = array.get(nAncho, i)
             string estI = array.get(nEst, i)
@@ -807,6 +856,9 @@ if barstate.islast
                 if not na(k) and not yaEsta
                     color cv = tp == "C" ? colC : tp == "P" ? colP : colO
                     string rotV = (tp == "C" ? "Muro calls" : tp == "P" ? "Muro puts" : "OI") + " · vivo"
+                    float ptv = verProb ? probToque(k, close, sigmaP, time_close) : na
+                    if not na(ptv)
+                        rotV := rotV + " · " + str.tostring(math.round(ptv * 100)) + "%"
                     array.push(cajas, box.new(tInicioDia, k + wz, time, k - wz, xloc = xloc.bar_time, extend = extend.right,
                          border_color = cv, border_style = line.style_dotted, border_width = tp == "O" ? 1 : 2,
                          bgcolor = verZonas ? color.new(cv, tp == "O" ? 92 : 82) : color(na),
@@ -830,19 +882,20 @@ if barstate.islast
         array.push(lineas, line.new(tNY, nyOpen, time, nyOpen, xloc = xloc.bar_time,
              extend = extend.right, color = colNY, width = math.max(2, grosor + 1)))
 
-// ─── VWAP de la sesión regular (9:30–16:00 Nueva York) ───────────────────
+// ─── VWAP anclado a las 9:30 de Nueva York (se ve a todas horas) ─────────
 // Sesión con hora de Nueva York: vale para 30 s, 1, 2 y 5 minutos (la primera vela que abre a las
-// 9:30 o después reinicia las sumas). Sin volumen en el gráfico, no hay VWAP.
+// 9:30 o después reinicia las sumas). Después de las 16:00 sigue sumando todas las velas hasta el
+// reinicio del día siguiente. Sin volumen en el gráfico, no hay VWAP.
 bool enRTH = timeframe.isintraday and not na(time(timeframe.period, "0930-1600", "America/New_York"))
 var float vwSumaPV = na
 var float vwSumaV  = na
 if enRTH and not enRTH[1]
     vwSumaPV := 0.0
     vwSumaV  := 0.0
-if enRTH and not na(vwSumaV) and not na(volume)
+if not na(vwSumaV) and not na(volume)
     vwSumaPV += hlc3 * volume
     vwSumaV  += volume
-float vwapSesion = enRTH and not na(vwSumaV) and vwSumaV > 0 ? vwSumaPV / vwSumaV : na
+float vwapSesion = not na(vwSumaV) and vwSumaV > 0 ? vwSumaPV / vwSumaV : na
 plot(verVwap ? vwapSesion : na, "VWAP de sesión", color = colVwap, linewidth = 1, style = plot.style_linebr)
 
 // ─── Precio de cada nivel en la escala ────────────────────────────────────
@@ -951,11 +1004,11 @@ aclarar(color c) =>
     color.rgb(math.min(255, color.r(c) * 1.4 + 80), math.min(255, color.g(c) * 1.4 + 80), math.min(255, color.b(c) * 1.4 + 80))
 
 // Dos columnas: 0 = muestra de línea de la leyenda (vacía en el resto de filas), 1 = texto
-var table cuadro = table.new(posicion(), 2, 25, bgcolor = color.new(C_FONDO, 10),
+var table cuadro = table.new(posicion(), 2, 32, bgcolor = color.new(C_FONDO, 10),
      frame_color = color.new(color.white, 85), frame_width = 1, border_width = 0)
 
 if barstate.islast
-    table.clear(cuadro, 0, 0, 1, 24)
+    table.clear(cuadro, 0, 0, 1, 31)
     int fila = 0
     // Cabecera: de qué día y contrato son los niveles
     if verLeyenda and valido
@@ -997,6 +1050,13 @@ if barstate.islast
             table.cell(cuadro, 1, fila, "Fuera del rango · niveles en vivo: muro calls " + (mcv == "" ? "—" : mcv) +
                  " · muro puts " + (mpv == "" ? "—" : mpv), text_color = C_AVISO,
                  text_size = size.small, text_halign = text.align_left)
+            fila += 1
+    // Movimiento típico que queda hasta las 16:00 NY (misma calibración que la probabilidad de tocar)
+    if verProb and valido and not na(sigmaV)
+        float vq = varianzaRestante(time_close)
+        if vq > 0
+            table.cell(cuadro, 1, fila, "Movimiento típico que queda hasta las 16:00 NY: ±" + str.tostring(math.round(sigmaP * math.sqrt(vq))) + " pts (1σ)",
+                 text_color = C_TEXTO, text_size = size.small, text_halign = text.align_left)
             fila += 1
     // Fiabilidad de los muros en vivo (solo si el estudio del índice muestra efecto de régimen: fb=R)
     if verFiab and valido and fbTxt == "R" and not na(fronteraAhora)
