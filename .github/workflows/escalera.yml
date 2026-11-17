@@ -65,3 +65,11 @@ jobs:
           git config user.name "escalera-bot"; git config user.email "escalera-bot@users.noreply.github.com"
           git add -A datos/historico datos/oi/gasto_databento.json HOY_*.txt docs || true
           git diff --cached --quiet || (git commit -m "Escalera ${{ steps.hoy.outputs.fecha }}" && git push)
+      - name: Aviso si a las 13:00 de Madrid aun no hay escalera (GitHub te manda un email)
+        if: steps.hoy.outputs.hecha != '1'
+        run: |
+          H=${{ steps.hoy.outputs.fecha }}; HORA=$(TZ=Europe/Madrid date +%H)
+          if [ "$HORA" -ge 13 ] && { [ ! -f datos/historico/$H.json ] || [ ! -f datos/historico/ES_$H.json ]; }; then
+            echo "::error::Databento aun no tiene los datos de hoy. Plan B: sube los PDF de CME a datos/entrada (github.com/mvila9700/escalera/upload/main/datos/entrada)"
+            exit 1
+          fi
