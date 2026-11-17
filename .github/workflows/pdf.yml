@@ -1,0 +1,38 @@
+# Plan B sin Mac: si Databento se retrasa, sube los PDF de CME (secciones 40, 47 y 48) a datos/entrada
+# desde el iPhone (github.com/mvila9700/escalera/upload/main/datos/entrada) y esto genera la escalera.
+name: Escalera desde PDF
+on:
+  push:
+    paths:
+      - "datos/entrada/*.pdf"
+  workflow_dispatch:
+concurrency: escalera
+permissions:
+  contents: write
+jobs:
+  pdf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Generar
+        env:
+          TZ: Europe/Madrid
+        run: |
+          ls -l datos/entrada
+          if ls datos/entrada/Section40*.pdf >/dev/null 2>&1; then python -m tareas.escalera --indice NQ --no-abrir || echo "NQ: fallo"; fi
+          if ls datos/entrada/Section47*.pdf >/dev/null 2>&1 && ls datos/entrada/Section48*.pdf >/dev/null 2>&1; then python -m tareas.escalera --indice ES --no-abrir || echo "ES: fallo"; fi
+          tail -n 20 datos/registro.log || true
+          python -m tareas.publicar_hoy
+      - name: Guardar
+        run: |
+          git config user.name "escalera-bot"; git config user.email "escalera-bot@users.noreply.github.com"
+          git rm -q --cached datos/entrada/Section*.pdf 2>/dev/null || true
+          rm -f datos/entrada/Section*.pdf
+          git add -A datos/historico datos/entrada HOY_*.txt docs
+          git diff --cached --quiet || (git commit -m "Escalera desde PDF $(TZ=Europe/Madrid date +%F)" && git push)
