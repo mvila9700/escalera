@@ -6,18 +6,22 @@ name: Escalera diaria
 on:
   schedule:
     - cron: "*/20 6-20 * * 1-5"
+    # Arranques extra: GitHub se salta muchas ejecuciones programadas; cada una espera dentro hasta tener los datos
+    - cron: "7 6 * * 1-5"
+    - cron: "37 9 * * 1-5"
+    - cron: "17 12 * * 1-5"
   workflow_dispatch:
     inputs:
       forzar:
         description: "Rehacerla aunque ya exista (sí/no)"
         default: "no"
-concurrency: escalera
+concurrency: diaria
 permissions:
   contents: write
 jobs:
   escalera:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 340
     steps:
       - uses: actions/checkout@v4
       - name: ¿Ya está la de hoy?
@@ -53,7 +57,7 @@ jobs:
           TZ: Europe/Madrid
         run: |
           F=""; [ "${{ github.event.inputs.forzar }}" = "sí" -o "${{ github.event.inputs.forzar }}" = "si" ] && F="--forzar"
-          python -m tareas.escalera_databento --no-esperar --no-abrir $F || echo "Aún no (se reintenta en la siguiente pasada)"
+          python -m tareas.escalera_databento --no-abrir $F || echo "Aún no (se reintenta en la siguiente pasada)"
           tail -n 15 datos/registro.log || true
           python -m tareas.publicar_hoy
           # quitar los datos de más de 10 días de la caché
@@ -64,7 +68,7 @@ jobs:
         run: |
           git config user.name "escalera-bot"; git config user.email "escalera-bot@users.noreply.github.com"
           git add -A datos/historico datos/oi/gasto_databento.json HOY_*.txt docs || true
-          git diff --cached --quiet || (git commit -m "Escalera ${{ steps.hoy.outputs.fecha }}" && git push)
+          git diff --cached --quiet || (git commit -m "Escalera ${{ steps.hoy.outputs.fecha }}" && git pull --rebase -q && git push)
       - name: Aviso si a las 13:00 de Madrid aun no hay escalera (GitHub te manda un email)
         if: steps.hoy.outputs.hecha != '1'
         run: |
