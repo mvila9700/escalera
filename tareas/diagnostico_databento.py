@@ -84,22 +84,36 @@ def main():
     except Exception as e:
         print("   error:", str(e)[:600])
 
-    print("\n4) Prueba del OI adelantado (tramo del NQ solo hasta las 02:30 UTC, ≈ 0,005 $):", flush=True)
-    try:
-        from pathlib import Path
-        from tareas import databento_oi as dbo
-        from tareas.escalera_databento import _oi_anterior, _opciones_con_oi
-        tmp = Path("datos/oi/diag_adelanto.dbn.zst")
+    print("\n4) ¿A qué hora llega el OI? Tramo 00:30-05:00 UTC del NQ, últimas 6 sesiones (≈ 0,05 $):", flush=True)
+    from pathlib import Path
+    from calculos.calendario import es_habil
+    from tareas import databento_oi as dbo
+    from tareas.escalera_databento import _opciones_con_oi
+    sesiones, d = [], hoy
+    while len(sesiones) < 6:
+        if es_habil(d) and d.weekday() < 5 and d.weekday() != 0:
+            sesiones.append(d)
+        d -= timedelta(days=1)
+    for ses in sesiones:
+        bol = anterior_habil(ses - timedelta(days=1))
+        tmp = Path(f"datos/oi/diag_{ses}.dbn.zst")
         tmp.parent.mkdir(parents=True, exist_ok=True)
-        dbo.bajar(h, ("statistics", opciones, ini, f"{hoy}T02:30"), tmp)
-        oi = _opciones_con_oi(tmp, dia)
-        print(f"   opciones con OI del {dia}: {oi['instrument_id'].nunique()}; "
-              f"primero {oi['ts_recv'].min()}, último {oi['ts_recv'].max()}")
-        print("   boletín anterior en la caché:", _oi_anterior(Path(f"datos/oi/NQ_{dia}_oi.dbn.zst")))
-        tmp.unlink()
-    except Exception as e:
-        print("   error:", repr(e)[:600])
-
+        try:
+            dbo.bajar(h, ("statistics", opciones, f"{ses}T00:30", f"{ses}T05:00"), tmp)
+            todo = _opciones_con_oi(tmp)
+            oi = todo[todo["ts_ref"].dt.date == bol]
+            t = oi["ts_recv"].sort_values()
+            if len(t):
+                q = lambda f: t.iloc[min(len(t) - 1, int(f * len(t)))].strftime("%H:%M")
+                print(f"   sesión {ses} (boletín {bol}): {oi['instrument_id'].nunique()} opciones; "
+                      f"OI recibido 1.º {q(0)}, 50 % {q(.5)}, 95 % {q(.95)}, último {q(1)} UTC")
+            else:
+                print(f"   sesión {ses} (boletín {bol}): sin OI del boletín; ts_ref presentes: "
+                      f"{sorted(set(todo['ts_ref'].dt.date.astype(str)))[:5]}")
+        except Exception as e:
+            print(f"   sesión {ses}: error {repr(e)[:300]}")
+        finally:
+            tmp.unlink(missing_ok=True)
 
 if __name__ == "__main__":
     main()
