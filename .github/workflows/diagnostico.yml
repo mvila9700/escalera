@@ -1,0 +1,18 @@
+# Diagnóstico de Databento: hasta dónde llega el histórico y si el API Live ya tiene el open interest.
+# Gratis o céntimos. Se lanza a mano (Actions -> Diagnóstico Databento -> Run workflow).
+name: Diagnóstico Databento
+on: workflow_dispatch
+jobs:
+  diagnostico:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - env:
+          DATABENTO_API_KEY: ${{ secrets.DATABENTO_API_KEY }}
+        run: python -u -m tareas.diagnostico_databento
