@@ -169,15 +169,17 @@ def esperar_datos(cliente, lista, cfg, esperar=True, dormir=time.sleep, ahora=No
 
 
 # El tramo del OI va de las 00:30 a las 05:00 UTC, pero CME manda el open interest casi siempre
-# hacia la 01:30-02:00, y el histórico de Databento (sin licencia Live de CME) va 8 horas por detrás
+# entre las 02:18 y las 02:48 UTC, todo de golpe en un minuto (medido con las 6 sesiones del 12 al
+# 20-nov-2026), y el histórico de Databento (sin licencia Live de CME) va 8 horas por detrás
 # de la hora real (medido el 20-nov-2026: a las 14:08 UTC llegaba hasta las 06:08). Esperar a tener
 # hasta las 05:00 retrasaba la escalera hasta las 13:00 UTC (14:00 de Madrid). Con esto, en cuanto
 # el histórico cubre la publicación del OI (y media hora más, para que la ráfaga haya terminado),
-# baja el tramo SOLO hasta donde llega y lo da por bueno: la escalera sale hacia las 10:00 UTC.
+# baja el tramo SOLO hasta donde llega y lo da por bueno: la escalera sale hacia las 10:30-11:00 UTC
+# (11:30-12:00 de Madrid en invierno) en vez de a partir de las 13:00 UTC.
 OI_TIPO = 9
-OI_DESDE = timedelta(minutes=60)       # no lo intenta hasta tener 1 h del tramo (01:30 UTC)
-OI_CADA = timedelta(minutes=30)        # entre intento e intento (cada uno cuesta ≈ 0,005 $)
-OI_MARGEN = timedelta(minutes=30)      # el último OI recibido, al menos 30 min antes del final
+OI_DESDE = timedelta(minutes=105)      # no lo intenta hasta tener el tramo hasta las 02:15 UTC
+OI_CADA = timedelta(minutes=15)        # entre intento e intento (cada uno cuesta ≈ 0,005 $)
+OI_MARGEN = timedelta(minutes=10)      # el último OI recibido, al menos 10 min antes del final
 OI_MINIMO = 0.8                        # y al menos el 80 % de las opciones con OI del boletín anterior
 
 
