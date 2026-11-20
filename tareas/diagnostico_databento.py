@@ -84,6 +84,22 @@ def main():
     except Exception as e:
         print("   error:", str(e)[:600])
 
+    print("\n4) Prueba del OI adelantado (tramo del NQ solo hasta las 02:30 UTC, ≈ 0,005 $):", flush=True)
+    try:
+        from pathlib import Path
+        from tareas import databento_oi as dbo
+        from tareas.escalera_databento import _oi_anterior, _opciones_con_oi
+        tmp = Path("datos/oi/diag_adelanto.dbn.zst")
+        tmp.parent.mkdir(parents=True, exist_ok=True)
+        dbo.bajar(h, ("statistics", opciones, ini, f"{hoy}T02:30"), tmp)
+        oi = _opciones_con_oi(tmp, dia)
+        print(f"   opciones con OI del {dia}: {oi['instrument_id'].nunique()}; "
+              f"primero {oi['ts_recv'].min()}, último {oi['ts_recv'].max()}")
+        print("   boletín anterior en la caché:", _oi_anterior(Path(f"datos/oi/NQ_{dia}_oi.dbn.zst")))
+        tmp.unlink()
+    except Exception as e:
+        print("   error:", repr(e)[:600])
+
 
 if __name__ == "__main__":
     main()

@@ -120,18 +120,21 @@ def disponible_hasta(cliente):
     return datetime.fromisoformat(fin[:19])
 
 
-def esperar_datos(cliente, lista, cfg, esperar=True, dormir=time.sleep, ahora=None, monotonico=time.monotonic):
+def esperar_datos(cliente, lista, cfg, esperar=True, dormir=time.sleep, ahora=None, monotonico=time.monotonic,
+                  adelantar=None):
     """Espera (consultas gratis) a que Databento tenga el último tramo completo. True si ya está.
 
     El límite es `esperar_hasta` en la zona `esperar_zona` (15:15 de Nueva York). Cada intento
     queda en el registro con su hora y si el Mac ha estado dormido desde el anterior: el reloj
     monotónico de macOS no avanza durante el reposo, así que si el reloj de pared avanza mucho
-    más que él, el Mac durmió esa diferencia."""
+    más que él, el Mac durmió esa diferencia.
+
+    `adelantar(lista, hay)`, si se da, se llama en cada intento y puede quitar de `lista` (en el
+    sitio) los tramos que ya ha conseguido antes de tiempo (ver adelantar_oi)."""
     if not lista:
         return True
     zona = cfg.get("esperar_zona", "America/New_York")
     ahora = ahora or (lambda: _ahora_zona(zona))
-    necesario = max(datetime.fromisoformat(q[3]) for _, q in lista)
     hh, mm = int(cfg["esperar_hasta"][:2]), int(cfg["esperar_hasta"][3:5])
     limite = ahora().replace(hour=hh, minute=mm, second=0, microsecond=0)
     intento, previo = 0, None
@@ -147,6 +150,11 @@ def esperar_datos(cliente, lista, cfg, esperar=True, dormir=time.sleep, ahora=No
                            f"({previo[0]:%H:%M} → {t:%H:%M} {zona})")
         previo = (t, m)
         hay = disponible_hasta(cliente)
+        if adelantar is not None:
+            lista[:] = adelantar(lista, hay)
+            if not lista:
+                return True
+        necesario = max(datetime.fromisoformat(q[3]) for _, q in lista)
         madrid = t.astimezone(_ahora_zona("Europe/Madrid").tzinfo) if t.tzinfo else t
         logging.info("Intento %d a las %s Madrid (%s %s): Databento hasta %s UTC, hace falta hasta %s UTC%s",
                      intento, f"{madrid:%H:%M}", f"{t:%H:%M}", zona, hay, necesario,
@@ -160,13 +168,97 @@ def esperar_datos(cliente, lista, cfg, esperar=True, dormir=time.sleep, ahora=No
         dormir(cfg["cada_minutos"] * 60)
 
 
+# El tramo del OI va de las 00:30 a las 05:00 UTC, pero CME manda el open interest casi siempre
+# hacia la 01:30-02:00, y el histórico de Databento (sin licencia Live de CME) va 8 horas por detrás
+# de la hora real (medido el 20-nov-2026: a las 14:08 UTC llegaba hasta las 06:08). Esperar a tener
+# hasta las 05:00 retrasaba la escalera hasta las 13:00 UTC (14:00 de Madrid). Con esto, en cuanto
+# el histórico cubre la publicación del OI (y media hora más, para que la ráfaga haya terminado),
+# baja el tramo SOLO hasta donde llega y lo da por bueno: la escalera sale hacia las 10:00 UTC.
+OI_TIPO = 9
+OI_DESDE = timedelta(minutes=60)       # no lo intenta hasta tener 1 h del tramo (01:30 UTC)
+OI_CADA = timedelta(minutes=30)        # entre intento e intento (cada uno cuesta ≈ 0,005 $)
+OI_MARGEN = timedelta(minutes=30)      # el último OI recibido, al menos 30 min antes del final
+OI_MINIMO = 0.8                        # y al menos el 80 % de las opciones con OI del boletín anterior
+
+
+def _opciones_con_oi(ruta, dia=None):
+    import databento as db
+    df = db.DBNStore.from_file(ruta).to_df().reset_index()
+    df = df[df["stat_type"] == OI_TIPO]
+    if dia is not None:
+        df = df[df["ts_ref"].dt.date == dia]
+    return df
+
+
+def _oi_anterior(destino):
+    """Opciones con OI en el último boletín ya bajado del mismo índice (None si no hay)."""
+    indice = destino.name.split("_")[0]
+    previos = sorted(p for p in destino.parent.glob(f"{indice}_*_oi.dbn.zst") if p != destino)
+    if not previos:
+        return None
+    try:
+        return _opciones_con_oi(previos[-1])["instrument_id"].nunique()
+    except Exception:
+        return None
+
+
+def adelantar_oi(cliente, cfg, hoy, dia, intentado=None):
+    """Devuelve adelantar(lista, hay) para esperar_datos (ver el comentario de arriba)."""
+    from tareas import databento_oi as dbo
+    intentado = {} if intentado is None else intentado
+
+    def adelantar(lista, hay):
+        resto = []
+        for destino, q in lista:
+            ini, fin = datetime.fromisoformat(q[2]), datetime.fromisoformat(q[3])
+            ultimo = intentado.get(destino)
+            if (not destino.name.endswith("_oi.dbn.zst") or fin <= hay or hay < ini + OI_DESDE
+                    or (ultimo is not None and hay < ultimo + OI_CADA)):
+                resto.append((destino, q))
+                continue
+            intentado[destino] = hay
+            corte = hay.replace(second=0, microsecond=0)
+            q2 = (q[0], q[1], q[2], corte.strftime("%Y-%m-%dT%H:%M"))
+            tmp = destino.with_name(destino.name.replace(".dbn.zst", "_adelanto.dbn.zst"))
+            try:
+                coste = cliente.metadata.get_cost(**dbo._consulta(*q2))
+                ok, motivo = puede_gastar(coste, hoy, cfg)
+                if not ok:
+                    logging.info("OI adelantado %s: no lo bajo, %s", destino.name, motivo)
+                    resto.append((destino, q))
+                    continue
+                dbo.bajar(cliente, q2, tmp)
+                apuntar_gasto(hoy, coste)
+                oi = _opciones_con_oi(tmp, dia)
+                n, antes = oi["instrument_id"].nunique(), _oi_anterior(destino)
+                ultimo_oi = oi["ts_recv"].max().to_pydatetime().replace(tzinfo=None) if n else None
+                if n and ultimo_oi + OI_MARGEN <= corte and (antes is None or n >= OI_MINIMO * antes):
+                    tmp.replace(destino)
+                    logging.info("OI adelantado %s: %d opciones con OI (último a las %s UTC; el boletín "
+                                 "anterior, %s), tramo hasta %s UTC, %.4f $", destino.name, n,
+                                 f"{ultimo_oi:%H:%M}", antes, f"{corte:%H:%M}", coste)
+                    print(f"Open interest de {dia} ya disponible ({destino.name}, {n} opciones).", flush=True)
+                    continue
+                logging.info("OI adelantado %s: aún no (hasta %s UTC: %d opciones con OI%s; el boletín "
+                             "anterior, %s)", destino.name, f"{corte:%H:%M}", n,
+                             f", último a las {ultimo_oi:%H:%M}" if n else "", antes)
+            except Exception as e:
+                logging.info("OI adelantado %s: error %s", destino.name, e)
+            finally:
+                tmp.unlink(missing_ok=True)
+            resto.append((destino, q))
+        return resto
+    return adelantar
+
+
 def descargar(cliente, indice, dia, cfg, hoy, esperar=True, solo_coste=False):
     """Descarga lo que falte del boletín `dia`. Devuelve (coste, mensaje de error o None)."""
     from tareas import databento_oi as dbo
     lista = dbo.pendientes([dia], indice)
     if not lista:
         return 0.0, None
-    if not solo_coste and not esperar_datos(cliente, lista, cfg, esperar):
+    if not solo_coste and not esperar_datos(cliente, lista, cfg, esperar,
+                                            adelantar=adelantar_oi(cliente, cfg, hoy, dia)):
         return 0.0, NO_LLEGA
     cache = dbo.CARPETA / ("costes.json" if indice == "ES" else f"costes_{indice}.json")
     total, detalle = dbo.costes(cliente, lista, cache=cache)
