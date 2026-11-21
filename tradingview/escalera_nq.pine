@@ -81,6 +81,8 @@ int  grosorSecundario = input.int(1, "Grosor de los secundarios", minval = 1, ma
 bool verMenor = input.bool(true, "Mostrar los niveles menores", group = G_JERARQUIA,
      tooltip = "Los de menos gamma del día (por debajo del percentil 40). Se dibujan finos y semitransparentes.")
 bool verZonas = input.bool(true, "Rellenar las zonas", group = G_JERARQUIA)
+bool verClave = input.bool(true, "Marcar los niveles CLAVE (los de más open interest del día)", group = G_JERARQUIA,
+     tooltip = "Estudio 21-nov-2026 (235 sesiones): entre tus niveles, los que tienen más open interest (≥ 75 % del mayor del día) reaccionan bastante más que los de poco OI (con 0,2σ: ~70 % frente a ~56 %, igual en los dos periodos). No es una pared segura: es el nivel de la escalera que más merece tu atención.")
 bool vistaLimpia = input.bool(false, "Vista limpia: solo muros, OI máximo y el nivel más cercano a cada lado", group = G_JERARQUIA,
      tooltip = "Estudio 16-nov-2026: ningún tipo de nivel frena el precio más que otro, así que para elegir el TP basta con los muros, el OI máximo y el nivel más próximo por encima y por debajo del precio actual (cada uno con su % de llegar). La frontera se ve siempre.")
 bool verExt = input.bool(true, "Niveles extendidos (más allá del 95 %)", group = G_JERARQUIA,
@@ -296,6 +298,8 @@ var string chTxt   = ""      // charm: dirección:fuerza:contratos:0DTE:resto (o
 var string vaTxt   = ""      // vanna: dirección si baja la IV:contratos (opcional)
 var bool   hayConf = false   // el texto trae confluencia con QQQ/NDX ("cq=")
 var float  wNiv    = na      // ancho de las zonas (clave "w")
+var array<float> oiCen = array.new<float>()   // centro de cada nivel L= y su open interest (calls + puts)
+var array<float> oiVal = array.new<float>()
 var string gvTxt   = ""      // gamma en vivo: bloque "gv=" (opcional, salida/gamma_vivo.py)
 var float  flipTxt = na      // frontera de la escalera (en la apertura)
 var float  rfLo    = na
@@ -415,6 +419,10 @@ if barstate.isfirst
                         [lo, hi] = rango(array.get(c, 1))
                         [zlo, zhi] = rango(array.size(c) >= 7 ? array.get(c, 6) : "")
                         string marca = array.size(c) >= 8 ? array.get(c, 7) : "-"
+                        if array.size(c) >= 4 and not na(lo)
+                            array<string> cp = str.split(array.get(c, 3), "/")
+                            array.push(oiCen, (lo + hi) / 2)
+                            array.push(oiVal, nz(str.tonumber(array.get(cp, 0))) + (array.size(cp) > 1 ? nz(str.tonumber(array.get(cp, 1))) : 0))
                         string conf = array.size(c) >= 10 ? array.get(c, 9) : "-"     // 10.º campo: ★ (opcional)
                         // 11.º campo: fiabilidad (opcional; sin él, como siempre). "-" = sin clasificación especial
                         string fbc = array.size(c) >= 11 ? (array.get(c, 10) == "-" ? "x" : array.get(c, 10)) : ""
@@ -820,6 +828,14 @@ if barstate.islast
                     anchoI := 1
                     borde := color.new(colCtx, 40)
                     fondo := math.min(fondo + 5, 97)
+            if verClave and not ext and array.size(oiVal) > 0
+                float oiMax = array.max(oiVal)
+                float cenI = array.get(nPrecio, i)
+                for j = 0 to array.size(oiCen) - 1
+                    if math.abs(array.get(oiCen, j) - cenI) < 0.01 and oiMax > 0 and array.get(oiVal, j) >= 0.75 * oiMax
+                        rotulo := "CLAVE" + (rotulo != "" ? " · " + rotulo : "")
+                        anchoI := anchoI + 1
+                        break
             array.push(cajas, box.new(x, array.get(nHi, i), time, array.get(nLo, i), xloc = xloc.bar_time,
                  extend = extend.right, border_color = borde, border_width = anchoI,
                  border_style = estI, bgcolor = verZonas and cat < 5 ? color.new(c, fondo) : color(na),
@@ -1049,6 +1065,17 @@ if barstate.islast
                         mpv := array.get(pz, 0)
             table.cell(cuadro, 1, fila, "Fuera del rango · niveles en vivo: muro calls " + (mcv == "" ? "—" : mcv) +
                  " · muro puts " + (mpv == "" ? "—" : mpv), text_color = C_AVISO,
+                 text_size = size.small, text_halign = text.align_left)
+            fila += 1
+    // Niveles clave del día (más open interest)
+    if verClave and valido and array.size(oiVal) > 0
+        float oiM = array.max(oiVal)
+        string txtC = ""
+        for j = 0 to array.size(oiVal) - 1
+            if oiM > 0 and array.get(oiVal, j) >= 0.75 * oiM
+                txtC += (txtC != "" ? " · " : "") + str.tostring(array.get(oiCen, j), format.mintick)
+        if txtC != ""
+            table.cell(cuadro, 1, fila, "Nivel(es) CLAVE del día (más OI): " + txtC, text_color = C_AVISO,
                  text_size = size.small, text_halign = text.align_left)
             fila += 1
     // Movimiento típico que queda hasta las 16:00 NY (misma calibración que la probabilidad de tocar)
