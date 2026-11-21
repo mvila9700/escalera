@@ -108,8 +108,11 @@ def _fiabilidad(n):
             f'<div class="sub">{_e(tipo)} · {_e(f.get("local") or "")} · {_e(f["papel"])}</div>')
 
 
-def _fila_nivel(n, indice="NQ"):
+def _fila_nivel(n, indice="NQ", cl=None):
     tipos = "".join(
+        f'<span class="tag t-corto" style="border-style:solid;font-weight:800">CLAVE ({"más OI" if t == "O" else "OI nuevo"})</span>'
+        for t in _clave_de(n, cl or {}))
+    tipos += "".join(
         f'<span class="tag {CLASE_TIPO[t]}" title="{_e(QUE_SUELE_HACER[t])}">{_e(NOMBRE_TIPO.get(t, t))}</span>'
         for t in n["tipos"])
     for et in n.get("etiquetas_fiabilidad") or []:
@@ -326,6 +329,40 @@ def _linea_regimen(d):
             f'<span class="sub">(vista corta de {v["dias"]} días y escalera completa)</span></p>')
 
 
+def _claves(d):
+    """{strike: "O"|"N"} de los niveles CLAVE (salida.tradingview.claves)."""
+    try:
+        from salida.tradingview import claves
+        return {k: t for k, t in claves(d)}
+    except Exception:
+        return {}
+
+
+def _clave_de(n, cl):
+    """Etiquetas CLAVE que caen dentro de la zona del nivel n."""
+    if not cl or n.get("zona_desde") is None or n["tipos"] == ["Frontera"]:
+        return []
+    return [t for k, t in cl.items() if n["zona_desde"] <= k <= n["zona_hasta"]]
+
+
+def _bloque_claves(d, cl):
+    """Recuadro «Niveles CLAVE del día» (estudio 21-nov-2026)."""
+    if not cl:
+        return ""
+    indice = d.get("indice", "NQ")
+    items = []
+    for k, t in sorted(cl.items(), key=lambda x: -x[0]):
+        nivel = next((n for n in d["niveles"] if _clave_de(n, {k: t})), None)
+        donde = (f' · nivel <b>{_e(nivel["texto"])}</b> ({_e(", ".join(nivel["tipos"]))})' if nivel
+                 else ' · <span class="muted">no es nivel de la escalera (sale aparte en TradingView)</span>')
+        que = "el strike con MÁS open interest del día" if t == "O" else "el strike con más open interest NUEVO (abierto ayer)"
+        items.append(f'<li><b class="num" style="color:#f5c542">{_precio(k, indice)}</b> · {que}{donde}</li>')
+    return ('<div class="tarjeta corta" style="border-color:#f5c542"><h2 style="color:#f5c542">Niveles CLAVE del día</h2><ul>'
+            + "".join(items) + '</ul><p class="sub">Estudio de 236 sesiones: de todos los strikes cercanos, estos dos son los que '
+            'más reaccionan (con 0,2σ, unos +8 y +10 puntos sobre un strike cualquiera a la misma distancia). '
+            'No son paredes seguras: son los niveles que más merecen tu atención.</p></div>')
+
+
 def _bloque_vista_corta(d):
     """Recuadro «Vista corta (N días)»: frontera, muros y régimen con solo los
     vencimientos de los próximos N días. No cambia la escalera de abajo."""
@@ -468,13 +505,14 @@ def generar(d, error=None):
     config = _config_de(indice)
     tramo = config["tramo_puntos"]
     multiplicador = config["multiplicadores"][config["indices"][indice].get("subyacente", indice)]
+    cl = _claves(d)
     filas = []
     precio_puesto = False
     for n in d["niveles"]:
         if not precio_puesto and n["desde"] < d["precio_ref"]:
             filas.append(_fila_precio(d))
             precio_puesto = True
-        filas.append(_fila_nivel(n, indice))
+        filas.append(_fila_nivel(n, indice, cl))
     if not precio_puesto:
         filas.append(_fila_precio(d))
 
@@ -503,7 +541,7 @@ def generar(d, error=None):
         pie_tramo=(f"la barra {_n(ejemplo)} incluye los strikes de {_n(ejemplo)} a {_n(ejemplo + tramo - 1)}"),
         multiplicador=_n(multiplicador),
         bloque_desconocidos=_bloque_desconocidos(d),
-        bloque_corta=_bloque_vista_corta(d),
+        bloque_corta=_bloque_claves(d, cl) + _bloque_vista_corta(d),
         linea_regimen=_linea_regimen(d),
         linea_vanna_charm=_lineas_vanna_charm(d),
         sesion=_fecha_larga(d["fecha_sesion"]),
