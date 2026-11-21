@@ -81,8 +81,8 @@ int  grosorSecundario = input.int(1, "Grosor de los secundarios", minval = 1, ma
 bool verMenor = input.bool(true, "Mostrar los niveles menores", group = G_JERARQUIA,
      tooltip = "Los de menos gamma del día (por debajo del percentil 40). Se dibujan finos y semitransparentes.")
 bool verZonas = input.bool(true, "Rellenar las zonas", group = G_JERARQUIA)
-bool verClave = input.bool(true, "Marcar los niveles CLAVE (los de más open interest del día)", group = G_JERARQUIA,
-     tooltip = "Estudio 21-nov-2026 (235 sesiones): entre tus niveles, los que tienen más open interest (≥ 75 % del mayor del día) reaccionan bastante más que los de poco OI (con 0,2σ: ~70 % frente a ~56 %, igual en los dos periodos). No es una pared segura: es el nivel de la escalera que más merece tu atención.")
+bool verClave = input.bool(true, "Marcar los niveles CLAVE (más open interest y más open interest nuevo del día)", group = G_JERARQUIA,
+     tooltip = "Estudio 21-nov-2026 (236 sesiones del NQ): de todos los strikes cercanos, los dos que más reaccionan son el de MÁS open interest del día y el de más open interest NUEVO respecto a ayer (posiciones abiertas ayer). Con 0,2σ reaccionan ~+8 y ~+10 puntos más que un strike cualquiera a la misma distancia, en los dos periodos. El vencimiento 0DTE o semanal NO los hace más relevantes. No son paredes seguras: son los niveles que más merecen tu atención.")
 bool vistaLimpia = input.bool(false, "Vista limpia: solo muros, OI máximo y el nivel más cercano a cada lado", group = G_JERARQUIA,
      tooltip = "Estudio 16-nov-2026: ningún tipo de nivel frena el precio más que otro, así que para elegir el TP basta con los muros, el OI máximo y el nivel más próximo por encima y por debajo del precio actual (cada uno con su % de llegar). La frontera se ve siempre.")
 bool verExt = input.bool(true, "Niveles extendidos (más allá del 95 %)", group = G_JERARQUIA,
@@ -300,6 +300,8 @@ var bool   hayConf = false   // el texto trae confluencia con QQQ/NDX ("cq=")
 var float  wNiv    = na      // ancho de las zonas (clave "w")
 var array<float> oiCen = array.new<float>()   // centro de cada nivel L= y su open interest (calls + puts)
 var array<float> oiVal = array.new<float>()
+var array<float> klK = array.new<float>()     // niveles CLAVE del texto (KL=strike:O|N)
+var array<string> klT = array.new<string>()
 var string gvTxt   = ""      // gamma en vivo: bloque "gv=" (opcional, salida/gamma_vivo.py)
 var float  flipTxt = na      // frontera de la escalera (en la apertura)
 var float  rfLo    = na
@@ -435,6 +437,13 @@ if barstate.isfirst
                         [lo, hi] = rango(array.get(c, 1))
                         [zlo, zhi] = rango(array.size(c) >= 7 ? array.get(c, 6) : "")
                         nivel(array.get(c, 0), lo, hi, catDeLetra(array.get(c, 2)), w, zlo, zhi, "", "", true)
+                else if formato == "ESC2" and clave == "KL"
+                    // KL=strike:O (más open interest del día) | N (más open interest nuevo que ayer)
+                    array<string> c = str.split(array.get(kv, 1), ":")
+                    float kk = str.tonumber(array.get(c, 0))
+                    if not na(kk)
+                        array.push(klK, kk)
+                        array.push(klT, array.size(c) > 1 ? array.get(c, 1) : "O")
                 else if formato == "ESC2" and clave == "LQ"
                     // LQ=desde-hasta:Q|N : nivel que solo tienen QQQ/NDX (en precio NQ)
                     array<string> c = str.split(array.get(kv, 1), ":")
@@ -828,7 +837,17 @@ if barstate.islast
                     anchoI := 1
                     borde := color.new(colCtx, 40)
                     fondo := math.min(fondo + 5, 97)
-            if verClave and not ext and array.size(oiVal) > 0
+            if verClave and not ext and array.size(klK) > 0
+                // Con KL= en el texto: el strike de más OI (O) y el de más OI nuevo (N), si caen en esta zona
+                string etq = ""
+                for j = 0 to array.size(klK) - 1
+                    float kk = array.get(klK, j)
+                    if kk >= array.get(nLo, i) and kk <= array.get(nHi, i)
+                        etq := etq + (etq != "" ? "+" : "") + (array.get(klT, j) == "N" ? "OI nuevo" : "más OI")
+                if etq != ""
+                    rotulo := "CLAVE (" + etq + ")" + (rotulo != "" ? " · " + rotulo : "")
+                    anchoI := anchoI + 1
+            else if verClave and not ext and array.size(oiVal) > 0
                 float oiMax = array.max(oiVal)
                 float cenI = array.get(nPrecio, i)
                 for j = 0 to array.size(oiCen) - 1
@@ -856,6 +875,24 @@ if barstate.islast
     if hayVivo and verFlipVivo and not na(flipVivo)
         array.push(lineas, line.new(tInicioDia, flipVivo, time, flipVivo, xloc = xloc.bar_time, extend = extend.right,
              color = colFV, style = line.style_dotted, width = 2))
+    // Niveles CLAVE (KL=) que no caen dentro de ningún nivel dibujado: zona propia
+    if verClave and array.size(klK) > 0
+        float wk = na(wNiv) ? 0.0 : wNiv
+        for j = 0 to array.size(klK) - 1
+            float kk = array.get(klK, j)
+            bool dentro = false
+            if nNiveles > 0
+                for i = 0 to nNiveles - 1
+                    if kk >= array.get(nLo, i) and kk <= array.get(nHi, i)
+                        dentro := true
+            if not dentro
+                string rk = "CLAVE (" + (array.get(klT, j) == "N" ? "OI nuevo" : "más OI") + ")"
+                float pk = verProb ? probToque(kk, close, sigmaP, time_close) : na
+                if not na(pk)
+                    rk := rk + " · " + str.tostring(math.round(pk * 100)) + "%"
+                array.push(cajas, box.new(tInicioDia, kk + wk, time, kk - wk, xloc = xloc.bar_time, extend = extend.right,
+                     border_color = C_AVISO, border_width = 2, bgcolor = color.new(C_AVISO, 88),
+                     text = rk, text_color = C_AVISO, text_size = size.small, text_halign = text.align_right))
     // Niveles en vivo (punteados, «· vivo»), salvo los que ya caen dentro de un nivel del día
     if mostrarNV
         float wz = na(wNiv) ? 0.0 : wNiv
@@ -1068,12 +1105,16 @@ if barstate.islast
                  text_size = size.small, text_halign = text.align_left)
             fila += 1
     // Niveles clave del día (más open interest)
-    if verClave and valido and array.size(oiVal) > 0
-        float oiM = array.max(oiVal)
+    if verClave and valido and (array.size(klK) > 0 or array.size(oiVal) > 0)
         string txtC = ""
-        for j = 0 to array.size(oiVal) - 1
-            if oiM > 0 and array.get(oiVal, j) >= 0.75 * oiM
-                txtC += (txtC != "" ? " · " : "") + str.tostring(array.get(oiCen, j), format.mintick)
+        if array.size(klK) > 0
+            for j = 0 to array.size(klK) - 1
+                txtC += (txtC != "" ? " · " : "") + str.tostring(array.get(klK, j), format.mintick) + (array.get(klT, j) == "N" ? " (OI nuevo)" : " (más OI)")
+        else
+            float oiM = array.max(oiVal)
+            for j = 0 to array.size(oiVal) - 1
+                if oiM > 0 and array.get(oiVal, j) >= 0.75 * oiM
+                    txtC += (txtC != "" ? " · " : "") + str.tostring(array.get(oiCen, j), format.mintick)
         if txtC != ""
             table.cell(cuadro, 1, fila, "Nivel(es) CLAVE del día (más OI): " + txtC, text_color = C_AVISO,
                  text_size = size.small, text_halign = text.align_left)

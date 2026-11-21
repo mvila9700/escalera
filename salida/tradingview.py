@@ -235,9 +235,56 @@ def texto_esc2(d, sym=None, decimales=None):
         partes.append(f"LQ={f(e['desde'])}-{f(e['hasta'])}:{e['fuente'][0]}")   # solo QQQ (Q) o NDX (N)
     for n in (d.get("volumen_previo") or {}).get("niveles") or []:
         partes.append(f"VP={n['tipo']}:{f(n['precio'])}:{str(n['dia']).replace('-', '')}")   # solo referencia
+    for k, t in claves(d):
+        partes.append(f"KL={f(k)}:{t}")      # nivel CLAVE: O = más OI del día, N = más OI nuevo (ΔOI)
     if d.get("gamma_vivo"):
         partes.append(d["gamma_vivo"])      # "gv=…": al final (opcional, salida/gamma_vivo.py)
     return "|".join(partes)
+
+
+def claves(d, sigmas=1.5, paso=None):
+    """Niveles CLAVE del día (estudio 21-nov-2026, 236 sesiones del NQ): entre los strikes múltiplos de
+    `paso` a menos de `sigmas`·σ del precio de referencia, el de más open interest (calls + puts) y el
+    de más open interest NUEVO respecto al boletín anterior. Son los que más reaccionan (con 0,2σ:
+    ~+8 pp y ~+10 pp sobre un strike cualquiera a la misma distancia, en los dos periodos).
+    Devuelve [(strike, "O"|"N"), ...] (sin repetir: si coinciden, una sola entrada "O")."""
+    if paso is None:
+        paso = 50 if d.get("indice", "NQ") == "NQ" else 25
+    try:
+        tramos = (d.get("graficos") or {}).get("oi_tramos") or []
+        ref = float(d["precio_ref"]); sig = float(d["movimiento"]["desviacion"])
+        oi = {float(t["tramo"]): float(t.get("call") or 0) + float(t.get("put") or 0) for t in tramos
+              if float(t["tramo"]) % paso == 0 and abs(float(t["tramo"]) - ref) <= sigmas * sig}
+        if not oi:
+            return []
+        out = [(max(oi, key=oi.get), "O")]
+        prev = _oi_anterior(d, paso)
+        if prev:
+            delta = {k: v - prev[k] for k, v in oi.items() if k in prev}
+            if delta:
+                kn = max(delta, key=delta.get)
+                if delta[kn] > 0 and kn != out[0][0]:
+                    out.append((kn, "N"))
+        return out
+    except Exception:
+        return []
+
+
+def _oi_anterior(d, paso=50):
+    """OI por strike (múltiplos de `paso`) de la escalera anterior del mismo índice en el histórico."""
+    import json
+    from salida import historico
+    indice = d.get("indice", "NQ")
+    pref = "" if indice == "NQ" else f"{indice}_"
+    fecha = str(d.get("fecha_sesion"))
+    rutas = sorted(r for r in historico.carpeta().glob(f"{pref}2*.json")
+                   if "_recentrada_" not in r.name and (indice != "NQ" or r.name[0].isdigit()) and r.stem[len(pref):] < fecha)
+    if not rutas:
+        return None
+    prev = json.loads(rutas[-1].read_text(encoding="utf-8"))
+    tramos = (prev.get("graficos") or {}).get("oi_tramos") or []
+    return {float(t["tramo"]): float(t.get("call") or 0) + float(t.get("put") or 0) for t in tramos
+            if float(t["tramo"]) % paso == 0}
 
 
 DIRECCION = {"compra": "C", "venta": "V", "neutro": "N"}
