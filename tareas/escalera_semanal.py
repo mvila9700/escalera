@@ -277,6 +277,28 @@ def texto(r):
     return "\n".join(out) + "\n"
 
 
+def esc2_semanal(df, info, r, config):
+    """Texto ESC2 (el que se pega en el indicador de TradingView) de la semana: el mismo cálculo que
+    la escalera diaria, pero con rangos y probabilidades de toque SEMANALES, la IV del último
+    vencimiento de la semana, el precio de cierre del viernes y la IV de cada opción con su boletín."""
+    from unittest import mock
+    from calculos import escalera as esc
+    from salida import historico
+    boletin = date.fromisoformat(r["boletin_oi"])
+    viernes = date.fromisoformat(r["viernes_precio"])
+    t = r["dias_habiles"] / 252
+    iv_sem = r["iv_atm"]
+    toque = movimiento.prob_toque
+    vivas = df[df["vencimiento"] > viernes].copy()
+    info2 = dict(info, fecha_datos=viernes)          # la sesión que sale es el lunes
+    with mock.patch.object(esc, "anadir_iv", lambda d, _f, c: anadir_iv(d, boletin, c)), \
+            mock.patch.object(movimiento, "DIA", t), \
+            mock.patch.object(movimiento, "iv_atm", lambda d, p: iv_sem), \
+            mock.patch.object(movimiento, "prob_toque", lambda p, n, iv, t_=t: toque(p, n, iv, t_)):
+        res = esc.calcular(vivas, info2, config, precio_manual=r["precio_ref"])
+        return historico.desde_resultado(res)["tradingview_esc2"]
+
+
 # --- Principal --------------------------------------------------------------------
 def generar(indice, lunes, cliente, hoy):
     from fuentes import databento_oi
@@ -291,6 +313,11 @@ def generar(indice, lunes, cliente, hoy):
     liq = liquidacion_futuros(indice, previo)
     r = calcular_semana(df, info, liq, lunes, config)
     txt = texto(r)
+    tv = esc2_semanal(df, info, r, config)
+    (RAIZ / f"SEMANA_{indice}_TV.txt").write_text(tv + "\n", encoding="utf-8")
+    DOCS.mkdir(exist_ok=True)
+    (DOCS / f"semana_{indice.lower()}_tv.txt").write_text(tv + "\n", encoding="utf-8")
+    r["tradingview_esc2"] = tv
     (RAIZ / f"SEMANA_{indice}.txt").write_text(txt, encoding="utf-8")
     DOCS.mkdir(exist_ok=True)
     shutil.copyfile(RAIZ / f"SEMANA_{indice}.txt", DOCS / f"semana_{indice.lower()}.txt")
