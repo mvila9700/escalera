@@ -230,7 +230,7 @@ def texto(r):
     reg = lambda v: "POSITIVA (los muros frenan y el precio tiende a volver)" if v["regimen"] == "positiva" \
         else "NEGATIVA (más rango; los muros son objetivo más que freno)"
     fr = lambda v: (f"{f(v['frontera'])} ({'por encima' if v['frontera'] > ref else 'por debajo'} del precio, "
-                    f"a {f(abs(v['frontera'] - ref))} puntos)") if v["frontera"] else "no encontrada en ±5 %"
+                    f"a {f(abs(v['frontera'] - ref))} puntos)") if v["frontera"] else "no encontrada en ±10 %"
     lunes = date.fromisoformat(r["lunes"])
     ultima = date.fromisoformat(r["ultima_sesion"])
     out = [
@@ -282,6 +282,9 @@ def generar(indice, lunes, cliente, hoy):
     from fuentes import databento_oi
     from salida import historico
     config = configuracion.para_indice(configuracion.cargar(), indice)
+    # En una semana el precio recorre más que en un día: la frontera se busca en ±10 % (no ±5 %)
+    config["gamma_flip"] = dict(config["gamma_flip"], rango_pct=2 * config["gamma_flip"]["rango_pct"],
+                                pasos=2 * config["gamma_flip"]["pasos"] - 1)
     primera, ultima, previo, boletin = fechas_semana(lunes)
     coste = asegurar_datos(cliente, indice, boletin, previo, hoy) if cliente else 0.0
     df, info = databento_oi.leer(boletin, indice=indice)
