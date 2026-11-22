@@ -107,11 +107,12 @@ def liquidacion_futuros(indice, dia):
     liq = _del_dia(fut, LIQUIDACION, dia)
     if liq.empty:
         raise ErrorDatos(f"No hay liquidación del futuro {indice} del {dia} en Databento.")
-    return dict(zip(liq["symbol"], liq["price"]))
+    from fuentes.databento_oi import _nombre_futuro
+    return {_nombre_futuro(k, dia): float(v) for k, v in zip(liq["symbol"], liq["price"])}
 
 
 # --- Cálculo ----------------------------------------------------------------------
-def preparar(df, boletin, primera, liq_viernes, config):
+def preparar(df, boletin, primera, liq_viernes, jueves, config):
     """Opciones vivas la semana, con IV (del boletín), futuro movido al cierre del viernes y gamma
     en la apertura de la primera sesión. Devuelve (df, precio_ref, contrato_ref)."""
     df = df[df["vencimiento"] >= primera].copy()
@@ -120,15 +121,17 @@ def preparar(df, boletin, primera, liq_viernes, config):
     if df.empty:
         raise ErrorDatos("No hay opciones vivas para la semana.")
     df = anadir_iv(df, boletin, config)
-    # Futuro de referencia: el subyacente del vencimiento más próximo (el del gráfico)
-    contrato = df.loc[df["vencimiento"].idxmin(), "subyacente_real"]
-    if contrato not in liq_viernes:
-        raise ErrorDatos(f"Falta la liquidación del viernes de {contrato}.")
-    ref = float(liq_viernes[contrato])
+    # Futuro de cada opción: la tabla trae su liquidación del jueves; info["futuros"] dice de qué
+    # contrato es cada precio (DEC26: precio) y liq_viernes trae el cierre del viernes de cada uno.
     front_jueves = float(df.loc[df["vencimiento"].idxmin(), "futuro"])
-    # Cada opción, sobre su propio futuro al cierre del viernes (si no está, el mismo % que el front)
-    nuevo = df["subyacente_real"].map(liq_viernes)
-    df["futuro"] = nuevo.fillna(df["futuro"] * ref / front_jueves).astype(float)
+    contrato = next((k for k, v in jueves.items() if v == front_jueves), None)
+    if contrato not in liq_viernes:
+        raise ErrorDatos(f"Falta la liquidación del viernes del futuro {contrato}.")
+    ref = float(liq_viernes[contrato])
+    de_precio = {v: liq_viernes.get(k) for k, v in jueves.items()}
+    nuevo = df["futuro"].map(de_precio).astype(float)
+    # (si un contrato no tiene cierre del viernes, se mueve el mismo % que el de referencia)
+    df["futuro"] = nuevo.fillna(df["futuro"] * ref / front_jueves)
     df["strike_ref"] = df["strike"] + (ref - df["futuro"])
     df = anadir_gamma(df, primera, config)
     df = gex.anadir_gex(df, config)
@@ -187,7 +190,7 @@ def vista(df, ref, lo, hi, iv, t_semana, config, n=8):
 
 def calcular_semana(df, info, liq_viernes, lunes, config):
     primera, ultima, previo, boletin = fechas_semana(lunes)
-    df, ref, contrato = preparar(df, boletin, primera, liq_viernes, config)
+    df, ref, contrato = preparar(df, boletin, primera, liq_viernes, info.get("futuros", {}), config)
     semana = df[df["vencimiento"] <= ultima]
     if semana.empty:
         raise ErrorDatos(f"No hay vencimientos entre el {primera} y el {ultima}.")
@@ -235,7 +238,7 @@ def texto(r):
         f"({r['dias_habiles']} sesiones)",
         f"Generada: {r['generado']} (Madrid)",
         "",
-        f"Precio de referencia: {f(ref, 2)} = cierre (liquidación) del {r['contrato_ref']} del "
+        f"Precio de referencia: {f(ref, 2)} = cierre (liquidación) del {r['indice']} {r['contrato_ref']} del "
         f"{fecha_txt(date.fromisoformat(r['viernes_precio']))}.",
         f"Open interest: el del cierre del {fecha_txt(date.fromisoformat(r['boletin_oi']))}, solo opciones que "
         f"siguen vivas (lo del viernes ya venció). El OI del viernes aún no está publicado el domingo.",
