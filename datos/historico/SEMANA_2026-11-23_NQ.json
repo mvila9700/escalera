@@ -1,0 +1,255 @@
+{
+ "indice": "NQ",
+ "lunes": "2026-11-23",
+ "primera_sesion": "2026-11-23",
+ "ultima_sesion": "2026-11-27",
+ "dias_habiles": 4,
+ "boletin_oi": "2026-11-19",
+ "viernes_precio": "2026-11-20",
+ "contrato_ref": "DEC26",
+ "precio_ref": 25126.5,
+ "iv_atm": 0.44694345001478697,
+ "vencimiento_iv": "2026-11-27",
+ "sigma_semana": 1414.8627083520555,
+ "rango_68": [
+  23711.637291647945,
+  26541.362708352055
+ ],
+ "rango_95": [
+  22296.77458329589,
+  27956.22541670411
+ ],
+ "semana": {
+  "vencimientos": [
+   "2026-11-23",
+   "2026-11-24",
+   "2026-11-25",
+   "2026-11-27"
+  ],
+  "regimen": "negativa",
+  "gex_en_precio": -301132909.4546519,
+  "frontera": null,
+  "muro_calls": {
+   "strike": 26950.0,
+   "tipo": "calls",
+   "oi_calls": 269.0,
+   "oi_puts": 29.0,
+   "gex_neto": 2674853.908995855,
+   "distancia": 1823.5,
+   "prob_toque_semana": 0.21342694701936638
+  },
+  "muro_puts": {
+   "strike": 25000.0,
+   "tipo": "puts",
+   "oi_calls": 0.0,
+   "oi_puts": 1136.0,
+   "gex_neto": -55646845.11571476,
+   "distancia": -126.5,
+   "prob_toque_semana": 0.9285782321177858
+  },
+  "oi_maximo": {
+   "strike": 25000.0,
+   "tipo": "puts",
+   "oi_calls": 0.0,
+   "oi_puts": 1136.0,
+   "gex_neto": -55646845.11571476,
+   "distancia": -126.5,
+   "prob_toque_semana": 0.9285782321177858
+  },
+  "principales": [
+   {
+    "strike": 26500.0,
+    "tipo": "puts",
+    "oi_calls": 13.0,
+    "oi_puts": 710.0,
+    "gex_neto": -10313638.280114964,
+    "distancia": 1373.5,
+    "prob_toque_semana": 0.34457626786837614
+   },
+   {
+    "strike": 26000.0,
+    "tipo": "puts",
+    "oi_calls": 6.0,
+    "oi_puts": 403.0,
+    "gex_neto": -11814192.3392341,
+    "distancia": 873.5,
+    "prob_toque_semana": 0.543926863860869
+   },
+   {
+    "strike": 25750.0,
+    "tipo": "puts",
+    "oi_calls": 0.0,
+    "oi_puts": 128.0,
+    "gex_neto": -5168956.980355033,
+    "distancia": 623.5,
+    "prob_toque_semana": 0.6633446843722417
+   },
+   {
+    "strike": 25500.0,
+    "tipo": "puts",
+    "oi_calls": 0.0,
+    "oi_puts": 217.0,
+    "gex_neto": -11891455.82218046,
+    "distancia": 373.5,
+    "prob_toque_semana": 0.7932902855033299
+   },
+   {
+    "strike": 25000.0,
+    "tipo": "puts",
+    "oi_calls": 0.0,
+    "oi_puts": 1136.0,
+    "gex_neto": -55646845.11571476,
+    "distancia": -126.5,
+    "prob_toque_semana": 0.9285782321177858
+   },
+   {
+    "strike": 24600.0,
+    "tipo": "puts",
+    "oi_calls": 0.0,
+    "oi_puts": 707.0,
+    "gex_neto": -24642122.6025013,
+    "distancia": -526.5,
+    "prob_toque_semana": 0.70686117701327
+   },
+   {
+    "strike": 24000.0,
+    "tipo": "puts",
+    "oi_calls": 0.0,
+    "oi_puts": 310.0,
+    "gex_neto": -6508639.3377316445,
+    "distancia": -1126.5,
+    "prob_toque_semana": 0.4153068995322797
+   },
+   {
+    "strike": 23500.0,
+    "tipo": "puts",
+    "oi_calls": 0.0,
+    "oi_puts": 352.0,
+    "gex_neto": -5388598.166720928,
+    "distancia": -1626.5,
+    "prob_toque_semana": 0.23464552182098053
+   }
+  ]
+ },
+ "completa": {
+  "vencimientos": [
+   "2026-11-23",
+   "2026-11-24",
+   "2026-11-25",
+   "2026-11-27",
+   "2026-11-30",
+   "2026-12-01",
+   "2026-12-03",
+   "2026-12-04",
+   "2026-12-07",
+   "2026-12-11",
+   "2026-12-18"
+  ],
+  "regimen": "negativa",
+  "gex_en_precio": -1041308426.7754276,
+  "frontera": null,
+  "muro_calls": {
+   "strike": 27500.0,
+   "tipo": "calls",
+   "oi_calls": 1645.0,
+   "oi_puts": 1605.0,
+   "gex_neto": 606603.7608042844,
+   "distancia": 2373.5,
+   "prob_toque_semana": 0.10893983404296309
+  },
+  "muro_puts": {
+   "strike": 25000.0,
+   "tipo": "puts",
+   "oi_calls": 28.0,
+   "oi_puts": 3568.0,
+   "gex_neto": -120486929.088303,
+   "distancia": -126.5,
+   "prob_toque_semana": 0.9285782321177858
+  },
+  "oi_maximo": {
+   "strike": 24000.0,
+   "tipo": "puts",
+   "oi_calls": 28.0,
+   "oi_puts": 4777.0,
+   "gex_neto": -104132463.44416432,
+   "distancia": -1126.5,
+   "prob_toque_semana": 0.4153068995322797
+  },
+  "principales": [
+   {
+    "strike": 27000.0,
+    "tipo": "puts",
+    "oi_calls": 1046.0,
+    "oi_puts": 3656.0,
+    "gex_neto": -39752513.10938817,
+    "distancia": 1873.5,
+    "prob_toque_semana": 0.20156172331483935
+   },
+   {
+    "strike": 26500.0,
+    "tipo": "puts",
+    "oi_calls": 69.0,
+    "oi_puts": 2021.0,
+    "gex_neto": -35987468.95003866,
+    "distancia": 1373.5,
+    "prob_toque_semana": 0.34457626786837614
+   },
+   {
+    "strike": 26000.0,
+    "tipo": "puts",
+    "oi_calls": 212.0,
+    "oi_puts": 4203.0,
+    "gex_neto": -93247136.85484411,
+    "distancia": 873.5,
+    "prob_toque_semana": 0.543926863860869
+   },
+   {
+    "strike": 25500.0,
+    "tipo": "puts",
+    "oi_calls": 63.0,
+    "oi_puts": 1236.0,
+    "gex_neto": -35625230.98389527,
+    "distancia": 373.5,
+    "prob_toque_semana": 0.7932902855033299
+   },
+   {
+    "strike": 25000.0,
+    "tipo": "puts",
+    "oi_calls": 28.0,
+    "oi_puts": 3568.0,
+    "gex_neto": -120486929.088303,
+    "distancia": -126.5,
+    "prob_toque_semana": 0.9285782321177858
+   },
+   {
+    "strike": 24500.0,
+    "tipo": "puts",
+    "oi_calls": 8.0,
+    "oi_puts": 1466.0,
+    "gex_neto": -35969423.0967014,
+    "distancia": -626.5,
+    "prob_toque_semana": 0.6538551612106762
+   },
+   {
+    "strike": 24000.0,
+    "tipo": "puts",
+    "oi_calls": 28.0,
+    "oi_puts": 4777.0,
+    "gex_neto": -104132463.44416432,
+    "distancia": -1126.5,
+    "prob_toque_semana": 0.4153068995322797
+   },
+   {
+    "strike": 22500.0,
+    "tipo": "puts",
+    "oi_calls": 3.0,
+    "oi_puts": 4162.0,
+    "gex_neto": -36603436.6532219,
+    "distancia": -2626.5,
+    "prob_toque_semana": 0.04991079604189004
+   }
+  ]
+ },
+ "oi_semana_pct": 0.15538688321092375,
+ "generado": "2026-11-22 17:22"
+}

@@ -1,0 +1,39 @@
+ESCALERA DE LA SEMANA · NQ · del lunes 23 nov al viernes 27 nov (4 sesiones)
+Generada: 2026-11-22 17:22 (Madrid)
+
+Precio de referencia: 25.126,50 = cierre (liquidación) del NQ DEC26 del viernes 20 nov.
+Open interest: el del cierre del jueves 19 nov, solo opciones que siguen vivas (lo del viernes ya venció). El OI del viernes aún no está publicado el domingo.
+Los vencimientos de esta semana son el 16% del open interest vivo hasta el trimestral.
+
+RANGO ESPERADO DE LA SEMANA
+  IV ATM 44,7 % (vencimiento 2026-11-27) → 1 desviación = 1.415 puntos
+  68 %: 23.712 – 26.541
+  95 %: 22.297 – 27.956
+
+RÉGIMEN Y FRONTERA
+  Con los vencimientos de la semana: gamma NEGATIVA (más rango; los muros son objetivo más que freno)
+    Frontera semanal: no encontrada en ±5 %
+  Con todo hasta el trimestral:      gamma NEGATIVA (más rango; los muros son objetivo más que freno)
+    Frontera completa: no encontrada en ±5 %
+
+MUROS Y OI MÁXIMO (solo vencimientos de la semana)
+  Muro de calls: 26.950  (1.824 puntos por encima; OI calls 269 / puts 29; prob. de tocarlo en la semana ≈ 21%)
+  Muro de puts:  25.000  (126 puntos por debajo; OI calls 0 / puts 1.136; prob. de tocarlo en la semana ≈ 93%)
+  OI máximo:     25.000  (126 puntos por debajo; OI calls 0 / puts 1.136; prob. de tocarlo en la semana ≈ 93%)
+
+MUROS Y OI MÁXIMO (todo hasta el trimestral)
+  Muro de calls: 27.500  (2.374 puntos por encima; OI calls 1.645 / puts 1.605; prob. de tocarlo en la semana ≈ 11%)
+  Muro de puts:  25.000  (126 puntos por debajo; OI calls 28 / puts 3.568; prob. de tocarlo en la semana ≈ 93%)
+  OI máximo:     24.000  (1.126 puntos por debajo; OI calls 28 / puts 4.777; prob. de tocarlo en la semana ≈ 42%)
+
+NIVELES PRINCIPALES DE LA SEMANA (más gamma de los vencimientos de la semana, dentro del 95 %)
+    26.500  puts    1.374 pts  OI c/p 13/710  toque ≈ 34%
+    26.000  puts      874 pts  OI c/p 6/403  toque ≈ 54%
+    25.750  puts      624 pts  OI c/p 0/128  toque ≈ 66%
+    25.500  puts      374 pts  OI c/p 0/217  toque ≈ 79%
+    25.000  puts     -126 pts  OI c/p 0/1.136  toque ≈ 93%
+    24.600  puts     -526 pts  OI c/p 0/707  toque ≈ 71%
+    24.000  puts   -1.126 pts  OI c/p 0/310  toque ≈ 42%
+    23.500  puts   -1.626 pts  OI c/p 0/352  toque ≈ 23%
+
+Cómo leerla: es la foto de partida de la semana. Cada mañana la escalera diaria (HOY_*.txt) la actualiza con el OI nuevo. Por encima de la frontera los muros aguantan algo más; por debajo suelen ser objetivo. No dice la dirección: dice dónde están las zonas que importan.
