@@ -300,6 +300,29 @@ def generar(indice, lunes, cliente, hoy):
     return txt, coste
 
 
+def pagina_web():
+    """docs/semana.html: la escalera de la semana del NQ y del ES en una página para el móvil."""
+    import html
+    partes = []
+    for indice in ("NQ", "ES"):
+        ruta = RAIZ / f"SEMANA_{indice}.txt"
+        if ruta.exists():
+            partes.append(f'<h2 id="{indice.lower()}">{indice}</h2><pre>{html.escape(ruta.read_text(encoding="utf-8"))}</pre>')
+    DOCS.mkdir(exist_ok=True)
+    (DOCS / "semana.html").write_text(
+        '<!doctype html><html lang="es"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width, initial-scale=1">'
+        '<title>Escalera de la semana</title><style>'
+        ':root{color-scheme:light dark}body{font-family:-apple-system,system-ui,sans-serif;margin:0 auto;'
+        'max-width:900px;padding:16px;background:Canvas;color:CanvasText}'
+        'nav a{margin-right:16px;font-weight:600}h1{font-size:1.3em}'
+        'pre{white-space:pre-wrap;word-wrap:break-word;font-size:13px;line-height:1.45;'
+        'background:color-mix(in srgb,CanvasText 6%,Canvas);padding:12px;border-radius:8px}'
+        '</style></head><body><h1>Escalera de la semana</h1>'
+        '<nav><a href="#nq">NQ</a><a href="#es">ES</a><a href="index.html">Escalera de hoy (NQ)</a>'
+        '<a href="es.html">Hoy (ES)</a></nav>' + "".join(partes) + "</body></html>\n", encoding="utf-8")
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--indice", choices=["NQ", "ES"])
@@ -322,6 +345,7 @@ def main(argv=None):
         except Exception as e:
             logging.exception("Escalera semanal %s %s", indice, lunes)
             fallos.append(f"{indice}: {e}")
+    pagina_web()
     if fallos:
         print("\n".join(fallos), file=sys.stderr)
         return 1
