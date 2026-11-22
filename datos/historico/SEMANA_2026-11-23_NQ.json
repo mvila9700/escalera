@@ -27,8 +27,8 @@
    "2026-11-27"
   ],
   "regimen": "negativa",
-  "gex_en_precio": -301132909.4546519,
-  "frontera": null,
+  "gex_en_precio": -301132909.45465195,
+  "frontera": 27260.334379493004,
   "muro_calls": {
    "strike": 26950.0,
    "tipo": "calls",
@@ -43,7 +43,7 @@
    "tipo": "puts",
    "oi_calls": 0.0,
    "oi_puts": 1136.0,
-   "gex_neto": -55646845.11571476,
+   "gex_neto": -55646845.11571472,
    "distancia": -126.5,
    "prob_toque_semana": 0.9285782321177858
   },
@@ -52,7 +52,7 @@
    "tipo": "puts",
    "oi_calls": 0.0,
    "oi_puts": 1136.0,
-   "gex_neto": -55646845.11571476,
+   "gex_neto": -55646845.11571472,
    "distancia": -126.5,
    "prob_toque_semana": 0.9285782321177858
   },
@@ -62,7 +62,7 @@
     "tipo": "puts",
     "oi_calls": 13.0,
     "oi_puts": 710.0,
-    "gex_neto": -10313638.280114964,
+    "gex_neto": -10313638.280114971,
     "distancia": 1373.5,
     "prob_toque_semana": 0.34457626786837614
    },
@@ -71,7 +71,7 @@
     "tipo": "puts",
     "oi_calls": 6.0,
     "oi_puts": 403.0,
-    "gex_neto": -11814192.3392341,
+    "gex_neto": -11814192.339234097,
     "distancia": 873.5,
     "prob_toque_semana": 0.543926863860869
    },
@@ -80,7 +80,7 @@
     "tipo": "puts",
     "oi_calls": 0.0,
     "oi_puts": 128.0,
-    "gex_neto": -5168956.980355033,
+    "gex_neto": -5168956.98035503,
     "distancia": 623.5,
     "prob_toque_semana": 0.6633446843722417
    },
@@ -89,7 +89,7 @@
     "tipo": "puts",
     "oi_calls": 0.0,
     "oi_puts": 217.0,
-    "gex_neto": -11891455.82218046,
+    "gex_neto": -11891455.822180461,
     "distancia": 373.5,
     "prob_toque_semana": 0.7932902855033299
    },
@@ -98,7 +98,7 @@
     "tipo": "puts",
     "oi_calls": 0.0,
     "oi_puts": 1136.0,
-    "gex_neto": -55646845.11571476,
+    "gex_neto": -55646845.11571472,
     "distancia": -126.5,
     "prob_toque_semana": 0.9285782321177858
    },
@@ -146,7 +146,7 @@
    "2026-12-18"
   ],
   "regimen": "negativa",
-  "gex_en_precio": -1041308426.7754276,
+  "gex_en_precio": -1041308426.7754277,
   "frontera": null,
   "muro_calls": {
    "strike": 27500.0,
@@ -162,7 +162,7 @@
    "tipo": "puts",
    "oi_calls": 28.0,
    "oi_puts": 3568.0,
-   "gex_neto": -120486929.088303,
+   "gex_neto": -120486929.08830296,
    "distancia": -126.5,
    "prob_toque_semana": 0.9285782321177858
   },
@@ -171,7 +171,7 @@
    "tipo": "puts",
    "oi_calls": 28.0,
    "oi_puts": 4777.0,
-   "gex_neto": -104132463.44416432,
+   "gex_neto": -104132463.44416434,
    "distancia": -1126.5,
    "prob_toque_semana": 0.4153068995322797
   },
@@ -190,7 +190,7 @@
     "tipo": "puts",
     "oi_calls": 69.0,
     "oi_puts": 2021.0,
-    "gex_neto": -35987468.95003866,
+    "gex_neto": -35987468.950038664,
     "distancia": 1373.5,
     "prob_toque_semana": 0.34457626786837614
    },
@@ -208,7 +208,7 @@
     "tipo": "puts",
     "oi_calls": 63.0,
     "oi_puts": 1236.0,
-    "gex_neto": -35625230.98389527,
+    "gex_neto": -35625230.98389528,
     "distancia": 373.5,
     "prob_toque_semana": 0.7932902855033299
    },
@@ -217,7 +217,7 @@
     "tipo": "puts",
     "oi_calls": 28.0,
     "oi_puts": 3568.0,
-    "gex_neto": -120486929.088303,
+    "gex_neto": -120486929.08830296,
     "distancia": -126.5,
     "prob_toque_semana": 0.9285782321177858
    },
@@ -226,7 +226,7 @@
     "tipo": "puts",
     "oi_calls": 8.0,
     "oi_puts": 1466.0,
-    "gex_neto": -35969423.0967014,
+    "gex_neto": -35969423.09670142,
     "distancia": -626.5,
     "prob_toque_semana": 0.6538551612106762
    },
@@ -235,7 +235,7 @@
     "tipo": "puts",
     "oi_calls": 28.0,
     "oi_puts": 4777.0,
-    "gex_neto": -104132463.44416432,
+    "gex_neto": -104132463.44416434,
     "distancia": -1126.5,
     "prob_toque_semana": 0.4153068995322797
    },
@@ -251,5 +251,5 @@
   ]
  },
  "oi_semana_pct": 0.15538688321092375,
- "generado": "2026-11-22 17:22"
+ "generado": "2026-11-22 17:24"
 }

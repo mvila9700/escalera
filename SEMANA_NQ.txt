@@ -1,5 +1,5 @@
 ESCALERA DE LA SEMANA · NQ · del lunes 23 nov al viernes 27 nov (4 sesiones)
-Generada: 2026-11-22 17:22 (Madrid)
+Generada: 2026-11-22 17:24 (Madrid)
 
 Precio de referencia: 25.126,50 = cierre (liquidación) del NQ DEC26 del viernes 20 nov.
 Open interest: el del cierre del jueves 19 nov, solo opciones que siguen vivas (lo del viernes ya venció). El OI del viernes aún no está publicado el domingo.
@@ -12,9 +12,9 @@ RANGO ESPERADO DE LA SEMANA
 
 RÉGIMEN Y FRONTERA
   Con los vencimientos de la semana: gamma NEGATIVA (más rango; los muros son objetivo más que freno)
-    Frontera semanal: no encontrada en ±5 %
+    Frontera semanal: 27.260 (por encima del precio, a 2.134 puntos)
   Con todo hasta el trimestral:      gamma NEGATIVA (más rango; los muros son objetivo más que freno)
-    Frontera completa: no encontrada en ±5 %
+    Frontera completa: no encontrada en ±10 %
 
 MUROS Y OI MÁXIMO (solo vencimientos de la semana)
   Muro de calls: 26.950  (1.824 puntos por encima; OI calls 269 / puts 29; prob. de tocarlo en la semana ≈ 21%)
