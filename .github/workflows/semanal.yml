@@ -1,0 +1,63 @@
+# Escalera de la SEMANA (NQ y ES) para el análisis de los domingos a las 12:00 de Madrid.
+# Domingo por la mañana: OI del cierre del jueves (solo lo que sigue vivo) + precio de cierre del viernes.
+# Resultado: SEMANA_NQ.txt y SEMANA_ES.txt (y en la web: docs/semana_nq.txt, docs/semana_es.txt).
+name: Escalera semanal
+on:
+  schedule:
+    # Varias pasadas por si GitHub se salta alguna; si ya está la de esa semana, termina en segundos
+    - cron: "7 6 * * 0"
+    - cron: "37 7 * * 0"
+    - cron: "17 9 * * 0"
+  workflow_dispatch:
+    inputs:
+      forzar:
+        description: "Rehacerla aunque ya exista (sí/no)"
+        default: "no"
+concurrency: semanal
+permissions:
+  contents: write
+jobs:
+  semanal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: ¿Ya está la de esta semana?
+        id: semana
+        run: |
+          L=$(TZ=Europe/Madrid python3 -c "from datetime import date,timedelta;h=date.today();print(h+timedelta(days=(7-h.weekday())%7 or 7))")
+          echo "lunes=$L" >> $GITHUB_OUTPUT
+          if [ -f datos/historico/SEMANA_${L}_NQ.json ] && [ -f datos/historico/SEMANA_${L}_ES.json ] && [ "${{ github.event.inputs.forzar }}" != "sí" ] && [ "${{ github.event.inputs.forzar }}" != "si" ]; then
+            echo "hecha=1" >> $GITHUB_OUTPUT; echo "Ya está la escalera de la semana del $L."
+          fi
+      - uses: actions/setup-python@v5
+        if: steps.semana.outputs.hecha != '1'
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Instalar
+        if: steps.semana.outputs.hecha != '1'
+        run: pip install -r requirements.txt
+      - name: Datos de Databento ya descargados (caché de la escalera diaria)
+        if: steps.semana.outputs.hecha != '1'
+        uses: actions/cache@v4
+        with:
+          path: |
+            datos/oi/*.dbn.zst
+            datos/velas/databento/*.dbn.zst
+          key: oi-${{ github.run_id }}
+          restore-keys: oi-
+      - name: Generar
+        if: steps.semana.outputs.hecha != '1'
+        env:
+          DATABENTO_API_KEY: ${{ secrets.DATABENTO_API_KEY }}
+          TZ: Europe/Madrid
+        run: |
+          python -m tareas.escalera_semanal --lunes ${{ steps.semana.outputs.lunes }}
+          tail -n 5 datos/registro.log || true
+      - name: Guardar
+        if: steps.semana.outputs.hecha != '1'
+        run: |
+          git config user.name "escalera-bot"; git config user.email "escalera-bot@users.noreply.github.com"
+          git add -A SEMANA_*.txt docs/semana_*_tv.txt docs/semana_*.txt docs/semana.html datos/historico/SEMANA_* datos/oi/gasto_databento.json || true
+          git diff --cached --quiet || (git commit -m "Escalera semanal ${{ steps.semana.outputs.lunes }}" && git pull --rebase -q && git push)
