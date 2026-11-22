@@ -13,9 +13,6 @@ on:
       forzar:
         description: "Rehacerla aunque ya exista (sí/no)"
         default: "no"
-  push:
-    branches: [claude/escalera-semanal]   # solo para generar la primera (se quita antes de unir)
-    paths: [tareas/escalera_semanal.py, .github/workflows/semanal.yml]
 concurrency: semanal
 permissions:
   contents: write
@@ -30,7 +27,7 @@ jobs:
         run: |
           L=$(TZ=Europe/Madrid python3 -c "from datetime import date,timedelta;h=date.today();print(h+timedelta(days=(7-h.weekday())%7 or 7))")
           echo "lunes=$L" >> $GITHUB_OUTPUT
-          if [ "${{ github.event_name }}" != "push" ] && [ -f datos/historico/SEMANA_${L}_NQ.json ] && [ -f datos/historico/SEMANA_${L}_ES.json ] && [ "${{ github.event.inputs.forzar }}" != "sí" ] && [ "${{ github.event.inputs.forzar }}" != "si" ]; then
+          if [ -f datos/historico/SEMANA_${L}_NQ.json ] && [ -f datos/historico/SEMANA_${L}_ES.json ] && [ "${{ github.event.inputs.forzar }}" != "sí" ] && [ "${{ github.event.inputs.forzar }}" != "si" ]; then
             echo "hecha=1" >> $GITHUB_OUTPUT; echo "Ya está la escalera de la semana del $L."
           fi
       - uses: actions/setup-python@v5
